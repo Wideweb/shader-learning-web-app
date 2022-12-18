@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="content">
+    <task-result [model]="data"></task-result>
+  </div>
+  <div class="actions">
+    <a class="btn-retry" (click)="retry()">Retry</a>
+    <a class="btn-next" (click)="next()" *ngIf="data.accepted">Next</a>
+  </div>
+</div>

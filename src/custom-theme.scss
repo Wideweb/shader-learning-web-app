@@ -1,0 +1,68 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+$bright-navy-blue-palette: (
+  50: rgb(230, 230, 230),
+  100: rgb(180, 220, 220),
+  200: rgb(150, 220, 220),
+  300: rgb(100, 220, 220),
+  400: rgb(0, 200, 200),
+  500: rgb(0, 180, 180),
+  600: rgb(0, 160, 160),
+  700: rgb(0, 140, 140),
+  800: rgb(0, 120, 120),
+  900: rgb(0, 100, 100),
+  A100: rgb(220, 220, 220),
+  A200: rgb(180, 220, 220),
+  A400: rgb(150, 220, 220),
+  A700: rgb(0, 80, 80),
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: white,
+    A700: white,
+  )
+);
+
+$bluesky-primary: mat.define-palette($bright-navy-blue-palette, 700, 300, 900);
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$shader-learning-primary: mat.define-palette(mat.$indigo-palette);
+$shader-learning-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$shader-learning-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$shader-learning-theme: mat.define-light-theme((
+  color: (
+    primary: $bluesky-primary,
+    accent: $shader-learning-accent,
+    warn: $shader-learning-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($shader-learning-theme);

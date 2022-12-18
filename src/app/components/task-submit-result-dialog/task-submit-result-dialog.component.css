@@ -1,0 +1,52 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 400px;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message {
+    font-size: 20px;
+}
+
+.actions {
+    padding: 10px 10px 20px 10px;
+    display: flex;
+    justify-content: center;
+}
+
+a.btn-retry {
+    width: 100px;
+    height: 50px;
+    border-radius: 5px;
+    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: darkcyan;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: inset 0 0 1px 2px darkcyan;
+    margin-right: 10px;
+}
+
+a.btn-next {
+    background-color: darkcyan;
+    width: 100px;
+    height: 50px;
+    border-radius: 5px;
+    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

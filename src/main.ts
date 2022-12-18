@@ -1,3 +1,5 @@
+import 'codemirror/mode/clike/clike';
+
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';

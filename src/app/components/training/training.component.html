@@ -1,0 +1,3 @@
+<div *ngIf="currentTask">
+  <task [model]="currentTask" (onSubmit)="submit($event)"></task>
+</div>
