@@ -22,6 +22,7 @@
     "@angular/router": "^15.0.0",
     "@ctrl/ngx-codemirror": "^6.0.0",
     "codemirror": "^5.65.10",
+    "express": "^4.18.2",
     "rxjs": "~7.5.0",
     "three": "^0.147.0",
     "tslib": "^2.3.0",
