@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "postinstall": "ng build --aot -prod"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +24,7 @@
     "@ctrl/ngx-codemirror": "^6.0.0",
     "codemirror": "^5.65.10",
     "express": "^4.18.2",
+    "path": "^0.12.7",
     "rxjs": "~7.5.0",
     "three": "^0.147.0",
     "tslib": "^2.3.0",
