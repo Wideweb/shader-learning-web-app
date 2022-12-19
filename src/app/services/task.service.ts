@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Task, TaskSubmitResult, TaskSubmit } from '../models/task.model';
-import { HttpClient, HttpHeaders, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { CANCEL_SPINNER_TOKEN } from '../interceptors/spinner.interceptor';
+import { API } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +17,11 @@ export class TaskService {
     constructor(private http: HttpClient) {}
 
     public getNext(): Observable<Task> {
-        return this.http.get<Task>(`https://shader-learning-api.herokuapp.com/tasks/next`).pipe(shareReplay(1));
+        return this.http.get<Task>(`${API}/tasks/next`).pipe(shareReplay(1));
     }
 
     public submit(taskSubmit: TaskSubmit): Observable<TaskSubmitResult> {
-        return this.http.post<TaskSubmitResult>(`https://shader-learning-api.herokuapp.com/tasks/${taskSubmit.id}/submit`, taskSubmit, {
+        return this.http.post<TaskSubmitResult>(`${API}/tasks/${taskSubmit.id}/submit`, taskSubmit, {
             context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true)
         }).pipe(
             tap(() => this.updateScore()),
@@ -29,7 +30,7 @@ export class TaskService {
     }
 
     public updateScore() {
-        return this.http.get<number>(`https://shader-learning-api.herokuapp.com/tasks/score`, {
+        return this.http.get<number>(`${API}/tasks/score`, {
             context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true)
         }).subscribe(score => {
             this.scoreSubject.next(score);

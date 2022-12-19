@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { UserSignUp, UserLogIn, SessionData, User } from '../models/user.model';
+import { API } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,17 +16,17 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   public updateMe() {
-    return this.http.get<User>(`https://shader-learning-api.herokuapp.com/me`).subscribe(userData => {
+    return this.http.get<User>(`${API}/me`).subscribe(userData => {
       this.meSubject.next(userData);
     });
   }
 
   public signUp(user: UserSignUp): Observable<SessionData> {
-    return this.http.post<SessionData>(`https://shader-learning-api.herokuapp.com/signup`, user).pipe(tap(r => this.setSession(r)));
+    return this.http.post<SessionData>(`${API}/signup`, user).pipe(tap(r => this.setSession(r)));
   }
 
   public login(user: UserLogIn): Observable<SessionData> {
-    return this.http.post<SessionData>(`https://shader-learning-api.herokuapp.com/login`, user).pipe(tap(r => this.setSession(r)));
+    return this.http.post<SessionData>(`${API}/login`, user).pipe(tap(r => this.setSession(r)));
   }
 
   private setSession(sessionData: SessionData) {
