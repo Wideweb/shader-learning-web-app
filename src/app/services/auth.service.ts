@@ -15,17 +15,17 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   public updateMe() {
-    return this.http.get<User>(`http://localhost:3000/me`).subscribe(userData => {
+    return this.http.get<User>(`https://shader-learning-api.herokuapp.com/me`).subscribe(userData => {
       this.meSubject.next(userData);
     });
   }
 
   public signUp(user: UserSignUp): Observable<SessionData> {
-    return this.http.post<SessionData>(`http://localhost:3000/signup`, user).pipe(tap(r => this.setSession(r)));
+    return this.http.post<SessionData>(`https://shader-learning-api.herokuapp.com/signup`, user).pipe(tap(r => this.setSession(r)));
   }
 
   public login(user: UserLogIn): Observable<SessionData> {
-    return this.http.post<SessionData>(`http://localhost:3000/login`, user).pipe(tap(r => this.setSession(r)));
+    return this.http.post<SessionData>(`https://shader-learning-api.herokuapp.com/login`, user).pipe(tap(r => this.setSession(r)));
   }
 
   private setSession(sessionData: SessionData) {

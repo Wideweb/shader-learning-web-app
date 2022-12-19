@@ -1,3 +1,5 @@
-<div *ngIf="currentTask">
-  <task [model]="currentTask" (onSubmit)="submit($event)"></task>
+<div class="container">
+  <div *ngIf="currentTask">
+    <task [model]="currentTask" (onSubmit)="submit($event)"></task>
+  </div>
 </div>

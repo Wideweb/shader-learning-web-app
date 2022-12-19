@@ -61,7 +61,7 @@
 .content {
   display: flex;
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
 }
 

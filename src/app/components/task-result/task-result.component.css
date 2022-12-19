@@ -27,7 +27,7 @@
 .table {
     font-size: 15px;
     margin-bottom: 15px;
-    width: 300px;
+    max-width: 300px;
 }
 
 .row {

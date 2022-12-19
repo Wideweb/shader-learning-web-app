@@ -16,11 +16,11 @@ export class TaskService {
     constructor(private http: HttpClient) {}
 
     public getNext(): Observable<Task> {
-        return this.http.get<Task>(`http://localhost:3000/tasks/next`).pipe(shareReplay(1));
+        return this.http.get<Task>(`https://shader-learning-api.herokuapp.com/tasks/next`).pipe(shareReplay(1));
     }
 
     public submit(taskSubmit: TaskSubmit): Observable<TaskSubmitResult> {
-        return this.http.post<TaskSubmitResult>(`http://localhost:3000/tasks/${taskSubmit.id}/submit`, taskSubmit, {
+        return this.http.post<TaskSubmitResult>(`https://shader-learning-api.herokuapp.com/tasks/${taskSubmit.id}/submit`, taskSubmit, {
             context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true)
         }).pipe(
             tap(() => this.updateScore()),
@@ -29,7 +29,7 @@ export class TaskService {
     }
 
     public updateScore() {
-        return this.http.get<number>(`http://localhost:3000/tasks/score`, {
+        return this.http.get<number>(`https://shader-learning-api.herokuapp.com/tasks/score`, {
             context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true)
         }).subscribe(score => {
             this.scoreSubject.next(score);
