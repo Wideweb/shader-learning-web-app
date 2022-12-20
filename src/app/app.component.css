@@ -58,6 +58,18 @@
   color: #BBB;
 }
 
+a.user-avatar {
+  display: inline-block;
+  cursor: pointer;
+}
+
+a.user-avatar .user-avatar-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: white;
+}
+
 .content {
   display: flex;
   flex: 1;
@@ -81,4 +93,40 @@
   height: 100%;
   background: black;
   opacity: 0.1;
+}
+
+.account-details {
+  height: auto;
+  display: block;
+  line-height: normal;
+  text-align: center;
+  color: #3f3f44;
+  padding: 20px 10px 20px;
+  width: 240px;
+}
+
+.account-details .avatar-container {
+  margin: 0 auto 20px auto;
+  box-shadow: none;
+}
+
+.account-details .avatar {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.account-details .user-name {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.account-details .user-email {
+  font-size: 13px;
+  display: block;
+  color: #96a3b6;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

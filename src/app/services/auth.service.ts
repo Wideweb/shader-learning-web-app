@@ -34,6 +34,8 @@ export class AuthService {
 
     localStorage.setItem('id_token', tokenData.token);
     localStorage.setItem("expires_at", JSON.stringify(this.computeExpiresAt(tokenData.expiresIn).valueOf()) );
+
+    this.meSubject.next(sessionData.user);
   }          
 
   public logout() {

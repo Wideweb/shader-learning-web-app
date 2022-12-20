@@ -1,51 +1,57 @@
 <div class="container">
-    <form class="form" [formGroup]="form">
-        <mat-form-field>
-            <mat-label>Name</mat-label>
-            <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher">
-            
-            <mat-error *ngIf="form.get('name')?.hasError('required')">
-                Name is <strong>required</strong>
-            </mat-error>
+    <div class="logo">H</div>
+        <div class="panel">
+            <div class="panel-header">
+                <span>Get started today</span>
+            </div>
 
-            <mat-error *ngIf="form.get('name')?.hasError('USER_NAME_NOT_UNIQUE')">
-                Name is not unique
-            </mat-error>
-        </mat-form-field>
+        <form class="form" [formGroup]="form">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher">
+                
+                <mat-error *ngIf="form.get('name')?.hasError('required')">
+                    Name is <strong>required</strong>
+                </mat-error>
 
-        <mat-form-field>
-            <mat-label>Email</mat-label>
-            <input type="email" matInput formControlName="email" [errorStateMatcher]="matcher">
-            
-            <mat-error *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">
-                Please enter a valid email address
-            </mat-error>
-            
-            <mat-error *ngIf="form.get('email')?.hasError('required')">
-                Email is <strong>required</strong>
-            </mat-error>
+                <mat-error *ngIf="form.get('name')?.hasError('USER_NAME_NOT_UNIQUE')">
+                    Name is not unique
+                </mat-error>
+            </mat-form-field>
 
-            <mat-error *ngIf="form.get('email')?.hasError('EMAIL_NOT_UNIQUE')">
-                Email is not unique
-            </mat-error>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="email" [errorStateMatcher]="matcher">
+                
+                <mat-error *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">
+                    Please enter a valid email address
+                </mat-error>
+                
+                <mat-error *ngIf="form.get('email')?.hasError('required')">
+                    Email is <strong>required</strong>
+                </mat-error>
 
-        <mat-form-field>
-            <mat-label>Password</mat-label>
-            <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher">
-            
-            <mat-error *ngIf="form.get('password')?.hasError('required')">
-                Password is <strong>required</strong>
-            </mat-error>
-        </mat-form-field>
-    </form>
+                <mat-error *ngIf="form.get('email')?.hasError('EMAIL_NOT_UNIQUE')">
+                    Email is not unique
+                </mat-error>
+            </mat-form-field>
 
-    <div class="actions-container">
-        <a class="btn-cancel" (click)="toLogIn()">
-            <span>Login</span>
-        </a>
-        <a class="btn-submit" (click)="signUp()">
-            <span>Sign Up</span>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher">
+                
+                <mat-error *ngIf="form.get('password')?.hasError('required')">
+                    Password is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <div class="action">
+                <button type="submit" class="btn-submit" (click)="signUp()">Sign Up</button>
+            </div>
+        </form>
+
+        <a class="panel-footer" (click)="toLogIn()">
+            Already have an account?&nbsp;<span>Log In</span>  
         </a>
     </div>
 </div>
