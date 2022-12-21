@@ -19,6 +19,12 @@
     padding-top: 20px;;
 }
 
+@media screen and (max-width: 800px) {
+    mat-card {
+        box-shadow: none;
+    }
+}
+
 .header {
     padding-bottom: 20px;
     display: flex;
