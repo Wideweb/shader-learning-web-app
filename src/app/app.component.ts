@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { User } from './models/user.model';
+import { distinctUntilChanged, map, Observable, skip, skipWhile } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { Spinner } from './services/spinner.service';
 import { TaskService } from './services/task.service';
@@ -21,12 +20,16 @@ export class AppComponent implements OnInit {
     this.score$ = this.tasks.score$;
     this.userName$ = this.auth.me$.pipe(map(u => u?.name || ''));
     this.userEmail$ = this.auth.me$.pipe(map(u => u?.email || ''));
+
+    this.userEmail$.pipe(
+      distinctUntilChanged(),
+      skipWhile(email => !email)
+    ).subscribe(() => this.tasks.updateScore());
   }
   
   ngOnInit(): void {
     if (this.auth.isLoggedIn()) {
       this.auth.updateMe();
-      this.tasks.updateScore();
     }
   }
 
