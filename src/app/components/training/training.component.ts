@@ -4,7 +4,7 @@ import { TaskService } from 'src/app/services/task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dialog.component';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
-import { takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'training',
@@ -16,6 +16,8 @@ export class TrainingComponent implements OnInit {
 
   public taskSubmitResult: TaskSubmitResult | null = null;
 
+  readonly loaded$ = new BehaviorSubject<boolean>(false);
+
   constructor(private taskService: TaskService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -23,9 +25,11 @@ export class TrainingComponent implements OnInit {
   }
   
   next(): void {
+    this.loaded$.next(false);
     this.currentTask = null;
     this.taskService.getNext().subscribe(task => {
       this.currentTask = task;
+      this.loaded$.next(true);
     });
   }
 

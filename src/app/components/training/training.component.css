@@ -4,3 +4,28 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+.ending {
+    margin-top: 50px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ending h2 {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.ending h3 {
+    font-size: 20px;
+}
+
+.ending mat-icon {
+    margin-top: 30px;
+    font-size: 100px;
+    width: 100px;
+    height: 100px;
+    color: darkcyan;
+}
