@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -38,7 +37,7 @@ export class SignUpComponent {
 
     this.form.setErrors({});
     this.auth.signUp(this.form.value)
-    .pipe(tap({
+    .subscribe({
       error: (e) => {
         this.form.setErrors({[e.error.code]: true})
         if (e.error.code == 'USER_NAME_NOT_UNIQUE') {
@@ -52,11 +51,11 @@ export class SignUpComponent {
         if (e.error.code == 'PASSWORD_NOT_MATCH') {
           this.form.controls['password'].setErrors({'PASSWORD_NOT_MATCH': true});
         }
-
-        return e;
-      } 
-    }))
-    .subscribe(() => this.router.navigateByUrl('/'));
+      },
+      complete: () => {
+        this.router.navigateByUrl('/');
+      }
+    });
   }
 
   toLogIn() {

@@ -4,6 +4,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { CANCEL_SPINNER_TOKEN } from '../interceptors/spinner.interceptor';
 import { API } from 'src/environments/environment';
+import { GlService } from './gl.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +15,17 @@ export class TaskService {
 
     public score$ = this.scoreSubject.asObservable();
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private gl: GlService) {}
 
     public getNext(): Observable<Task> {
         return this.http.get<Task>(`${API}/tasks/next`).pipe(shareReplay(1));
     }
 
-    public submit(taskSubmit: TaskSubmit): Observable<TaskSubmitResult> {
-        return this.http.post<TaskSubmitResult>(`${API}/tasks/${taskSubmit.id}/submit`, taskSubmit, {
+    public submit(taskSubmit: TaskSubmit, task: Task): Observable<TaskSubmitResult> {
+        
+        const match = this.gl.compare(taskSubmit.vertexShader, taskSubmit.fragmentShader, task.vertexShader, task.fragmentShader);
+
+        return this.http.post<TaskSubmitResult>(`${API}/tasks/${taskSubmit.id}/submit`, {...taskSubmit, match}, {
             context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true)
         }).pipe(
             tap(() => this.updateScore()),

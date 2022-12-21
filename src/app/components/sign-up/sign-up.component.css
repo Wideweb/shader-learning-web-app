@@ -97,6 +97,7 @@ a.panel-footer {
 .panel a.panel-footer>span {
     color: darkcyan;
     text-decoration: underline;
+    white-space: nowrap;
 }
 
 @media screen and (max-width: 500px) {

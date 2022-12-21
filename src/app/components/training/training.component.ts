@@ -31,10 +31,10 @@ export class TrainingComponent implements OnInit {
 
   submit(taskSubmit: TaskSubmit): void {
     this.taskSubmitResult = null;
-    const submitRequiest = this.taskService.submit(taskSubmit);
+    const submitRequiest = this.taskService.submit(taskSubmit, this.currentTask!);
     
     const submitDialog = this.dialog
-      .open(TaskSubmitDialogComponent, { disableClose: true, });
+      .open(TaskSubmitDialogComponent, { disableClose: true });
 
     submitDialog
       .afterClosed()
