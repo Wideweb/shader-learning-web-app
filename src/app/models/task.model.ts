@@ -32,3 +32,12 @@ export interface TaskSubmit {
     vertexShader: string;
     fragmentShader: string;
 }
+
+export interface UserTaskResultDto {
+    id: number;
+    name: string;
+    order: number;
+    accepted: boolean;
+    rejected: boolean;
+    score: number;
+}

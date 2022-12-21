@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Task, TaskSubmitResult, TaskSubmit } from '../models/task.model';
+import { Task, TaskSubmitResult, TaskSubmit, UserTaskResultDto } from '../models/task.model';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { CANCEL_SPINNER_TOKEN } from '../interceptors/spinner.interceptor';
@@ -19,6 +19,10 @@ export class TaskService {
 
     public getNext(): Observable<Task> {
         return this.http.get<Task>(`${API}/tasks/next`).pipe(shareReplay(1));
+    }
+
+    public getProgress(): Observable<UserTaskResultDto[]> {
+        return this.http.get<UserTaskResultDto[]>(`${API}/tasks/progress`).pipe(shareReplay(1));
     }
 
     public submit(taskSubmit: TaskSubmit, task: Task): Observable<TaskSubmitResult> {

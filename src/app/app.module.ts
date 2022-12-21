@@ -9,6 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule} from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +28,8 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
+import { TrainingProgressComponent } from './components/progress/training-progress.component';
+import { UserTaskResultStatusPipe } from './components/progress/user-task-result-status.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +43,8 @@ import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
     TaskSubmitResultDialogComponent,
     SignUpComponent,
     LoginComponent,
+    TrainingProgressComponent,
+    UserTaskResultStatusPipe,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +61,9 @@ import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
     MatIconModule,
     MatMenuModule,
     MatDividerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatCardModule,
   ],
   providers: [
     {

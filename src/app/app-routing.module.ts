@@ -3,12 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { TrainingProgressComponent } from './components/progress/training-progress.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { TrainingComponent } from './components/training/training.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NotAuthGuard } from './guards/not-auth.guard';
 
 const routes: Routes = [
+  { path: 'progress', component: TrainingProgressComponent, canActivate:[AuthGuard] },
   { path: 'training', component: TrainingComponent, canActivate:[AuthGuard] },
   { path: 'sign-up', component: SignUpComponent, canActivate:[NotAuthGuard] },
   { path: 'login', component: LoginComponent, canActivate:[NotAuthGuard] },

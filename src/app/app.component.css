@@ -101,7 +101,7 @@ a.user-avatar .user-avatar-icon {
   line-height: normal;
   text-align: center;
   color: #3f3f44;
-  padding: 20px 10px 20px;
+  padding: 20px 10px 15px;
   width: 240px;
 }
 
@@ -129,4 +129,11 @@ a.user-avatar .user-avatar-icon {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.account-details .user-rank {
+  margin-top: 15px;
+  font-size: 15px;
+  color: black;
+  font-weight: 500;
 }
