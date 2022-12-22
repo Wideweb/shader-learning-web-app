@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChange, OnChanges, SimpleChanges} from '@angular/core';
+import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/app.constants';
 import { Task, TaskSubmit, TaskHint } from 'src/app/models/task.model';
 
 @Component({
@@ -6,7 +7,7 @@ import { Task, TaskSubmit, TaskHint } from 'src/app/models/task.model';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
-export class TaskComponent {
+export class TaskComponent implements OnChanges {
   @Input()
   public model!: Task;
 
@@ -15,22 +16,11 @@ export class TaskComponent {
 
   public visibleHints: TaskHint[] = [];
 
-  public userVertexShader: string = `
-    void main() {
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `;
+  @Input()
+  public userVertexShader: string = DEFAULT_VERTEX_SHADER;
 
-  public userFragmentShader: string = 
-`uniform vec2 iResolution;
-uniform float iTime;
-
-void main() {
-  // Normalized pixel coordinates (from 0 to 1)
-  vec2 uv = gl_FragCoord.xy / iResolution.xy;
-
-  gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-}`;
+  @Input()
+  public userFragmentShader: string = DEFAULT_FRAGMENT_SHADER;
 
   public userFragmentShaderApplied: string = this.userFragmentShader;
 
@@ -40,6 +30,18 @@ void main() {
   };
 
   public compileTrigger = 0;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('userVertexShader' in changes) {
+      this.userVertexShader = this.userVertexShader || DEFAULT_VERTEX_SHADER;
+      this.run();
+    }
+
+    if ('userFragmentShader' in changes) {
+      this.userFragmentShader = this.userFragmentShader || DEFAULT_FRAGMENT_SHADER;
+      this.run();
+    }
+  }
 
   run(): void {
     this.userFragmentShaderApplied = this.userFragmentShader;

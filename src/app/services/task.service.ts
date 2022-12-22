@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Task, TaskSubmitResult, TaskSubmit, UserTaskResultDto } from '../models/task.model';
+import { Task, TaskSubmitResult, TaskSubmit, UserTaskResultDto, UserTask, CreateTaskDto, UpdateTaskDto, TaskListDto } from '../models/task.model';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { CANCEL_SPINNER_TOKEN } from '../interceptors/spinner.interceptor';
@@ -17,8 +17,32 @@ export class TaskService {
 
     constructor(private http: HttpClient, private gl: GlService) {}
 
-    public getNext(): Observable<Task> {
-        return this.http.get<Task>(`${API}/tasks/next`).pipe(shareReplay(1));
+    public get(id: number): Observable<Task> {
+        return this.http.get<Task>(`${API}/tasks/${id}/get`).pipe(shareReplay(1));
+    }
+
+    public create(task: CreateTaskDto): Observable<number> {
+        return this.http.post<number>(`${API}/tasks/create`, task).pipe(shareReplay(1));
+    }
+
+    public update(task: UpdateTaskDto): Observable<number> {
+        return this.http.put<number>(`${API}/tasks/${task.id}/update`, task).pipe(shareReplay(1));
+    }
+
+    public list(): Observable<TaskListDto[]> {
+        return this.http.get<TaskListDto[]>(`${API}/tasks/list`).pipe(shareReplay(1));
+    }
+
+    public toggleVisibility(id: number): Observable<boolean> {
+        return this.http.get<boolean>(`${API}/tasks/${id}/toggleVisibility`).pipe(shareReplay(1));
+    }
+
+    public getUserTask(id: number): Observable<UserTask> {
+        return this.http.get<UserTask>(`${API}/tasks/${id}/userTask`).pipe(shareReplay(1));
+    }
+
+    public getNext(): Observable<UserTask> {
+        return this.http.get<UserTask>(`${API}/tasks/next`).pipe(shareReplay(1));
     }
 
     public getProgress(): Observable<UserTaskResultDto[]> {

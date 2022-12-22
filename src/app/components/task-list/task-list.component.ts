@@ -2,20 +2,20 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserTaskResultDto } from 'src/app/models/task.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { TaskListDto } from 'src/app/models/task.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'training-progress',
-  templateUrl: './training-progress.component.html',
-  styleUrls: ['./training-progress.component.css']
+  selector: 'task-list',
+  templateUrl: './task-list.component.html',
+  styleUrls: ['./task-list.component.css']
 })
-export class TrainingProgressComponent implements OnInit, AfterViewInit {
+export class TaskListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  readonly displayedColumns: string[] = ['name', 'score', 'status', 'action-open'];
+  readonly displayedColumns: string[] = ['order', 'name', 'cost', 'threshold', 'action-open'];
 
-  readonly dataSource: MatTableDataSource<UserTaskResultDto>;
+  readonly dataSource: MatTableDataSource<TaskListDto>;
 
   readonly loaded$ = new BehaviorSubject<boolean>(false);
 
@@ -29,9 +29,17 @@ export class TrainingProgressComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loaded$.next(false);
-    this.taskService.getProgress().subscribe(data => {
+    this.taskService.list().subscribe(data => {
       this.dataSource.data = data;
       this.loaded$.next(true);
-    })
+    });
+  }
+
+  toggleTaskVisibility(task: TaskListDto) {
+    this.taskService.toggleVisibility(task.id).subscribe(visibility => (task.visibility = visibility));
+  }
+
+  deleteTask(task: TaskListDto) {
+
   }
 }

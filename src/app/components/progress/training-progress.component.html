@@ -1,6 +1,6 @@
 <div class="container">
 
-    <div class="progress-card">
+    <div class="card">
 
         <mat-card>
 
@@ -31,6 +31,13 @@
                             <ng-container matColumnDef="status">
                                 <th mat-header-cell *matHeaderCellDef> Status </th>
                                 <td mat-cell *matCellDef="let element"> {{element | userTaskResultStatus}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action-open">
+                                <th mat-header-cell *matHeaderCellDef class="actions-column"></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a class="action-link" routerLink="/training/{{element.id}}"><mat-icon>open_in_new</mat-icon></a>
+                                </td>
                             </ng-container>
                         
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

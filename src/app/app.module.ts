@@ -30,6 +30,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { TrainingProgressComponent } from './components/progress/training-progress.component';
 import { UserTaskResultStatusPipe } from './components/progress/user-task-result-status.pipe';
+import { TaskCreateComponent } from './components/task-create/task-create.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { UserTaskResultStatusPipe } from './components/progress/user-task-result
     LoginComponent,
     TrainingProgressComponent,
     UserTaskResultStatusPipe,
+    TaskCreateComponent,
+    TaskListComponent,
   ],
   imports: [
     BrowserModule,

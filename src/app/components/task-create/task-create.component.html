@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    <div class="header">
+                        <mat-icon class="icon">add_circle</mat-icon>&nbsp;<span>Create Task</span>
+                    </div>
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+
+                <form class="form" [formGroup]="form">
+                    <div class="form-row">
+                        <mat-form-field>
+                            <mat-label>Name</mat-label>
+                            <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher" autocomplete="off">
+                            
+                            <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+
+                            <mat-error *ngIf="form.get('name')?.hasError('TASK_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                        <mat-form-field>
+                            <mat-label>Cost</mat-label>
+                            <input type="text" matInput formControlName="cost" [errorStateMatcher]="matcher" autocomplete="off">
+                            
+                            <mat-error *ngIf="form.get('cost')?.hasError('pattern') && !form.get('cost')?.hasError('required')">Please enter a valid cost value</mat-error>
+                            
+                            <mat-error *ngIf="form.get('cost')?.hasError('required')">Cost is <strong>required</strong></mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                        <mat-form-field>
+                            <mat-label>Threshold (1 - 100)</mat-label>
+                            <input type="text" matInput formControlName="threshold" [errorStateMatcher]="matcher" autocomplete="off">
+                            
+                            <mat-error *ngIf="form.get('threshold')?.hasError('pattern') && !form.get('threshold')?.hasError('required')">Please enter a valid threshold value</mat-error>
+                            
+                            <mat-error *ngIf="form.get('threshold')?.hasError('required')">threshold is <strong>required</strong></mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+
+                <div class="form-row">
+                    <div class="scene">
+                        <app-gl-scene
+                        [vertexShader]="vertexShader"
+                        [fragmentShader]="fragmentShaderApplied"
+                        [compileTrigger]="compileTrigger"
+                        (onError)="handleFragmentShaderCompilationError($event)"
+                        (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                        </app-gl-scene>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="code-editor-container">
+                        <div class="code">
+                        <ngx-codemirror
+                            [(ngModel)]="fragmentShader"
+                            [options]="{
+                            tabSize: 2,
+                            autofocus: false,
+                            lineNumbers: true,
+                            mode: 'x-shader/x-fragment'
+                            }"
+                        ></ngx-codemirror>
+                        </div>
+                    
+                        <div class="toolbar">
+                        <a class="btn-run" (click)="run()">
+                            <span class="btn-run-ico"></span>
+                        </a>
+                        </div>
+                    
+                        <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
+                        <pre>{{ programOutput.message }}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action">
+                    <button class="btn-submit" (click)="save()">{{ isNew() ? 'Create' : 'Update' }}</button>
+                </div>
+
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

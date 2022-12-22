@@ -1,7 +1,7 @@
 <div class="container">
   <ng-container *ngIf="loaded$ | async">
     <div *ngIf="currentTask">
-      <task [model]="currentTask" (onSubmit)="submit($event)"></task>
+      <task [model]="currentTask" [userVertexShader]="userVertexShader" [userFragmentShader]="userFragmentShader" (onSubmit)="submit($event)"></task>
     </div>
 
     <div *ngIf="!currentTask" class="ending">

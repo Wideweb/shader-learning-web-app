@@ -10,26 +10,18 @@
                 <mat-label>Name</mat-label>
                 <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher">
 
-                <mat-error *ngIf="form.get('name')?.hasError('required')">
-                    Name is <strong>required</strong>
-                </mat-error>
+                <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
 
-                <mat-error *ngIf="form.get('name')?.hasError('USER_NAME_NOT_FOUND')">
-                    Name is not found
-                </mat-error>
+                <mat-error *ngIf="form.get('name')?.hasError('USER_NAME_NOT_FOUND')">Name is not found</mat-error>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Password</mat-label>
                 <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher">
                 
-                <mat-error *ngIf="form.get('password')?.hasError('required')">
-                    Password is <strong>required</strong>
-                </mat-error>
+                <mat-error *ngIf="form.get('password')?.hasError('required')">Password is <strong>required</strong></mat-error>
 
-                <mat-error *ngIf="form.get('password')?.hasError('PASSWORD_NOT_MATCH')">
-                    Password does not match
-                </mat-error>
+                <mat-error *ngIf="form.get('password')?.hasError('PASSWORD_NOT_MATCH')">Password does not match</mat-error>
             </mat-form-field>
 
             <div class="action">
@@ -37,8 +29,6 @@
             </div>
         </form>
 
-        <a class="panel-footer" (click)="toSignUp()">
-            New to Shader Learnig?&nbsp;<span>Sign Up</span>  
-        </a>
+        <a class="panel-footer" (click)="toSignUp()">New to Shader Learnig?&nbsp;<span>Sign Up</span></a>
     </div>
 </div>

@@ -50,15 +50,15 @@
 }
 
 .table > table th {
-    width: 30%;
-}
-
-.table > table th.actions-column {
-    width: 10%;
+    width: 20%;
 }
 
 .table .action-link {
     display: inline-block;
     color: darkcyan;
     padding-top: 3px 5px;
+}
+
+.table .action-link + .action-link {
+    padding-left: 10px;
 }

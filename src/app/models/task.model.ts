@@ -1,5 +1,5 @@
 export interface Task {
-    id: string;
+    id: number;
     level: number;
     vertexShader: string;
     fragmentShader: string;
@@ -7,6 +7,31 @@ export interface Task {
     restrictions: TaskRestriction[];
     order: number;
     cost: number;
+}
+
+export interface CreateTaskDto {
+    name: string;
+    vertexShader: string;
+    fragmentShader: string;
+    hints: TaskHint[];
+    restrictions: TaskRestriction[];
+    order: number;
+    cost: number;
+    threshold: number;
+    visibility: boolean;
+}
+
+export interface UpdateTaskDto {
+    id: number
+    name: string;
+    vertexShader: string;
+    fragmentShader: string;
+    hints: TaskHint[];
+    restrictions: TaskRestriction[];
+    order: number;
+    cost: number;
+    threshold: number;
+    visibility: boolean;
 }
 
 export interface TaskHint {
@@ -28,7 +53,13 @@ export interface TaskSubmitResult {
 }
 
 export interface TaskSubmit {
-    id: string;
+    id: number;
+    vertexShader: string;
+    fragmentShader: string;
+}
+
+export interface UserTask {
+    task: Task,
     vertexShader: string;
     fragmentShader: string;
 }
@@ -40,4 +71,13 @@ export interface UserTaskResultDto {
     accepted: boolean;
     rejected: boolean;
     score: number;
+}
+
+export interface TaskListDto {
+    id: number;
+    name: string;
+    order: number;
+    cost: number;
+    threshold: number;
+    visibility: boolean;
 }
