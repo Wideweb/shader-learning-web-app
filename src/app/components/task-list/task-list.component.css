@@ -53,6 +53,10 @@
     width: 20%;
 }
 
+.table > table th.actions-column {
+    min-width: 130px;
+}
+
 .table .action-link {
     display: inline-block;
     color: darkcyan;
