@@ -109,3 +109,30 @@ a.btn-run {
 mat-form-field {
     width: 100%;
 }
+
+.description-markdown {
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    resize: none;
+    height: 196px;
+    background: #fff;
+    min-height: 140px;
+    max-height: 500px;
+    padding: 5px;
+    box-shadow: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.description-markdown-compiled {
+    min-height: 140px;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.section-header {
+    font-size: 20px;
+    padding-bottom: 10px;
+}

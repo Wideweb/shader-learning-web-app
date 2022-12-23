@@ -6,6 +6,8 @@ import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/app.cons
 import { Task } from 'src/app/models/task.model';
 import { Spinner } from 'src/app/services/spinner.service';
 import { TaskService } from 'src/app/services/task.service';
+import * as marked from 'marked';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -41,15 +43,20 @@ export class TaskCreateComponent implements OnInit {
 
   public task: Task | null = null;
 
+  public compiledMarkdown: string = '';
+
   constructor(private taskService: TaskService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private spinner: Spinner) {
     this.form = this.fb.group({
       name: new FormControl('', [Validators.required]),
       cost: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
       threshold: new FormControl('', [Validators.required, Validators.pattern(/^([1-9]\d{0,1}|100)$/)]),
+      description: new FormControl(this.getPlaceHolder(), [Validators.required]),
     });
   }
 
   ngOnInit(): void {
+    
+
     this.id = this.route.snapshot.params['id'];
     if (this.id) {
       this.taskService.get(this.id).subscribe(task => {
@@ -117,6 +124,7 @@ export class TaskCreateComponent implements OnInit {
       threshold: Number.parseInt(this.form.value.threshold),
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
+      description: this.form.value.description as string,
       visibility: true,
     })
   }
@@ -132,6 +140,7 @@ export class TaskCreateComponent implements OnInit {
       threshold: Number.parseInt(this.form.value.threshold),
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
+      description: this.form.value.description as string,
       visibility: true,
     })
   }
@@ -155,5 +164,44 @@ export class TaskCreateComponent implements OnInit {
       error: false,
       message: 'Program successfully compiled.'
     };
+  }
+
+  public markdownTapChanged(event: MatTabChangeEvent) {
+    if (event.index == 1) {
+      this.compiledMarkdown = marked.Parser.parse(marked.Lexer.lex(this.form.value.description));
+    }
+  }
+
+  public compileMarkdown(): string {
+    return marked.Parser.parse(marked.Lexer.lex(this.getPlaceHolder()));
+  }
+
+  private getPlaceHolder() {
+    return (`# Title
+## Title
+### Title
+#### Title
+
+**bold**
+
+*italic*
+
+inline \`code\`
+
+### code block
+\`\`\`
+const foo = () => {
+  return 1;
+}
+\`\`\`
+
+### unorderd list
+- item 1
+* item 2
+
+### orderd list
+1. item a
+2. item b`
+      );
   }
 }

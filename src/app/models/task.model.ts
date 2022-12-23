@@ -1,12 +1,13 @@
 export interface Task {
     id: number;
-    level: number;
+    name: string;
     vertexShader: string;
     fragmentShader: string;
     hints: TaskHint[];
     restrictions: TaskRestriction[];
     order: number;
     cost: number;
+    description: string;
 }
 
 export interface CreateTaskDto {
@@ -18,6 +19,7 @@ export interface CreateTaskDto {
     order: number;
     cost: number;
     threshold: number;
+    description: string;
     visibility: boolean;
 }
 
@@ -31,6 +33,7 @@ export interface UpdateTaskDto {
     order: number;
     cost: number;
     threshold: number;
+    description: string;
     visibility: boolean;
 }
 

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, SimpleChange, OnChanges, SimpleChanges} from '@angular/core';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/app.constants';
 import { Task, TaskSubmit, TaskHint } from 'src/app/models/task.model';
+import * as marked from 'marked';
 
 @Component({
   selector: 'task',
@@ -31,6 +32,8 @@ export class TaskComponent implements OnChanges {
 
   public compileTrigger = 0;
 
+  public compiledDescription = '';
+
   ngOnChanges(changes: SimpleChanges): void {
     if ('userVertexShader' in changes) {
       this.userVertexShader = this.userVertexShader || DEFAULT_VERTEX_SHADER;
@@ -40,6 +43,12 @@ export class TaskComponent implements OnChanges {
     if ('userFragmentShader' in changes) {
       this.userFragmentShader = this.userFragmentShader || DEFAULT_FRAGMENT_SHADER;
       this.run();
+    }
+
+    if ('model' in changes) {
+      if (this.model) {
+        this.compiledDescription = marked.Parser.parse(marked.Lexer.lex(this.model.description));
+      }
     }
   }
 

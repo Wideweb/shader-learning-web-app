@@ -1,24 +1,35 @@
 <div class="container">
-  <div class="demo-container">
-    <div class="demo-item target-result">
-      <h2>Target</h2>
-      <div class="scene">
-        <app-gl-scene [vertexShader]="model.vertexShader" [fragmentShader]="model.fragmentShader"></app-gl-scene>
+  <h1>{{model.name}}</h1>
+
+  <div class="section" *ngIf="model?.description">
+    <h2>Description</h2>
+    <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
+  </div>
+
+  <div class="section">
+
+    <div class="demo-container">
+      <div class="demo-item target-result">
+        <h2>Target</h2>
+        <div class="scene">
+          <app-gl-scene [vertexShader]="model.vertexShader" [fragmentShader]="model.fragmentShader"></app-gl-scene>
+        </div>
+      </div>
+
+      <div class="demo-item user-result">
+        <h2>Your Result</h2>
+        <div class="scene">
+          <app-gl-scene
+            [vertexShader]="userVertexShader"
+            [fragmentShader]="userFragmentShaderApplied"
+            [compileTrigger]="compileTrigger"
+            (onError)="handleFragmentShaderCompilationError($event)"
+            (onSuccess)="handleFragmentShaderCompilationSuccess()">
+          </app-gl-scene>
+        </div>
       </div>
     </div>
 
-    <div class="demo-item user-result">
-      <h2>Your Result</h2>
-      <div class="scene">
-        <app-gl-scene
-          [vertexShader]="userVertexShader"
-          [fragmentShader]="userFragmentShaderApplied"
-          [compileTrigger]="compileTrigger"
-          (onError)="handleFragmentShaderCompilationError($event)"
-          (onSuccess)="handleFragmentShaderCompilationSuccess()">
-        </app-gl-scene>
-      </div>
-    </div>
   </div>
 
   <!-- <div *ngIf="hasHints()">
@@ -31,27 +42,29 @@
     </ul>
   </div> -->
 
-  <div class="code-editor-container">
-    <div class="code">
-      <ngx-codemirror
-        [(ngModel)]="userFragmentShader"
-        [options]="{
-          tabSize: 2,
-          autofocus: false,
-          lineNumbers: true,
-          mode: 'x-shader/x-fragment'
-        }"
-      ></ngx-codemirror>
-    </div>
+  <div class="section">
+    <div class="code-editor-container">
+      <div class="code">
+        <ngx-codemirror
+          [(ngModel)]="userFragmentShader"
+          [options]="{
+            tabSize: 2,
+            autofocus: false,
+            lineNumbers: true,
+            mode: 'x-shader/x-fragment'
+          }"
+        ></ngx-codemirror>
+      </div>
 
-    <div class="toolbar">
-      <a class="btn-run" (click)="run()">
-        <span class="btn-run-ico"></span>
-      </a>
-    </div>
+      <div class="toolbar">
+        <a class="btn-run" (click)="run()">
+          <span class="btn-run-ico"></span>
+        </a>
+      </div>
 
-    <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
-      <pre>{{ programOutput.message }}</pre>
+      <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
+        <pre>{{ programOutput.message }}</pre>
+      </div>
     </div>
   </div>
 

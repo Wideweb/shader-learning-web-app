@@ -59,7 +59,6 @@
 .code-editor-container {
     width: 100%;
     border: 1px solid #ddd;
-    margin-top: 20px;
 }
 
 .code-editor-container .toolbar {
@@ -122,4 +121,12 @@ a.btn-submit {
     color: white;
     font-weight: bold;
     cursor: pointer;
+}
+
+.section {
+    width: 100%;
+}
+
+.section + .section {
+    margin-top: 20px;
 }
