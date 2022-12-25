@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,6 +34,7 @@ import { TrainingProgressComponent } from './components/progress/training-progre
 import { UserTaskResultStatusPipe } from './components/progress/user-task-result-status.pipe';
 import { TaskCreateComponent } from './components/task-create/task-create.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
+import { HasPermissionDirective } from './directives/has-permission.directive';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,7 @@ import { TaskListComponent } from './components/task-list/task-list.component';
     UserTaskResultStatusPipe,
     TaskCreateComponent,
     TaskListComponent,
+    HasPermissionDirective,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,7 @@ import { TaskListComponent } from './components/task-list/task-list.component';
     MatPaginatorModule,
     MatCardModule,
     MatTabsModule,
+    MatCheckboxModule,
   ],
   providers: [
     {

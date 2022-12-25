@@ -13,10 +13,13 @@ export class AuthService {
 
   public me$ = this.meSubject.asObservable();
 
+  public me: User | null = null;
+
   constructor(private http: HttpClient) {}
 
   public updateMe() {
     return this.http.get<User>(`${API}/me`).subscribe(userData => {
+      this.me = userData;
       this.meSubject.next(userData);
     });
   }
@@ -34,6 +37,8 @@ export class AuthService {
 
     localStorage.setItem('id_token', tokenData.token);
     localStorage.setItem("expires_at", JSON.stringify(this.computeExpiresAt(tokenData.expiresIn).valueOf()) );
+
+    this.me = sessionData.user;
 
     this.meSubject.next(sessionData.user);
   }          

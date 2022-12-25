@@ -8,6 +8,9 @@ export interface Task {
     order: number;
     cost: number;
     description: string;
+    likes: number;
+    dislikes: number;
+    createdBy: number;
 }
 
 export interface CreateTaskDto {
@@ -65,6 +68,8 @@ export interface UserTask {
     task: Task,
     vertexShader: string;
     fragmentShader: string;
+    liked: boolean;
+    disliked: boolean;
 }
 
 export interface UserTaskResultDto {

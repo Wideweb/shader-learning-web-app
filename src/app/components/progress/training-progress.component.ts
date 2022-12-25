@@ -13,7 +13,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class TrainingProgressComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  readonly displayedColumns: string[] = ['name', 'score', 'status', 'action-open'];
+  readonly displayedColumns: string[] = ['name', 'score', 'status'];
 
   readonly dataSource: MatTableDataSource<UserTaskResultDto>;
 

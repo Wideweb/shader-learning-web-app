@@ -12,16 +12,31 @@ export class TaskComponent implements OnChanges {
   @Input()
   public model!: Task;
 
-  @Output()
-  public onSubmit = new EventEmitter<TaskSubmit>();
-
-  public visibleHints: TaskHint[] = [];
-
   @Input()
   public userVertexShader: string = DEFAULT_VERTEX_SHADER;
 
   @Input()
   public userFragmentShader: string = DEFAULT_FRAGMENT_SHADER;
+
+  @Input()
+  public liked: boolean = false;
+
+  @Input()
+  public disliked: boolean = false;
+
+  @Input()
+  public canEdit: boolean = false;
+
+  @Output()
+  public onSubmit = new EventEmitter<TaskSubmit>();
+
+  @Output()
+  public onLike = new EventEmitter<boolean>();
+
+  @Output()
+  public onDislike = new EventEmitter<boolean>();
+
+  public visibleHints: TaskHint[] = [];
 
   public userFragmentShaderApplied: string = this.userFragmentShader;
 
@@ -92,5 +107,13 @@ export class TaskComponent implements OnChanges {
 
   isHintRevealed(hint: TaskHint) {
     return this.visibleHints.includes(hint);
+  }
+
+  like() {
+    this.onLike.emit();
+  }
+
+  dislike() {
+    this.onDislike.emit();
   }
 }

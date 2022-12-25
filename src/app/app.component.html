@@ -15,23 +15,33 @@
           </div>
           <div class="user-name">{{ userName$ | async }}</div>
           <div class="user-email">{{ userEmail$ | async }}</div>
-          <div class="user-rank"><span>Rank: </span>&nbsp;<span>{{ score$ | async }}</span></div>
+          <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>{{ score$ | async }}</span></div>
         </div>
-        <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/progress">
-          <mat-icon>checklist</mat-icon>
-          <span>Progress</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/task-list">
-          <mat-icon>list</mat-icon>
-          <span>Tasks</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/create-task">
-          <mat-icon>add_circle</mat-icon>
-          <span>Create Task</span>
-        </button>
+        
+        <ng-container *hasPermission="['task_submit']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/progress">
+            <mat-icon>checklist</mat-icon>
+            <span>Progress</span>
+          </button>
+        </ng-container>
+        
+        <ng-container *hasPermission="['task_view_all']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/task-list">
+            <mat-icon>list</mat-icon>
+            <span>Tasks</span>
+          </button>
+        </ng-container>
+
+        <ng-container *hasPermission="['task_create']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/create-task">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Task</span>
+          </button>
+        </ng-container>
+        
         <!-- <mat-divider></mat-divider>
         <button mat-menu-item>
           <mat-icon>tune</mat-icon>

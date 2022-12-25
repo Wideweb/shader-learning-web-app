@@ -68,4 +68,12 @@ export class TaskService {
             this.scoreSubject.next(score);
         });
     }
+
+    public like(taskId: number, value: boolean): Observable<{likes: number; dislikes: number, updated: boolean}> {
+        return this.http.put<{likes: number; dislikes: number, updated: boolean}>(`${API}/tasks/${taskId}/like`, {value}).pipe(shareReplay(1));
+    }
+
+    public dislike(taskId: number, value: boolean): Observable<{likes: number; dislikes: number, updated: boolean}> {
+        return this.http.put<{likes: number; dislikes: number, updated: boolean}>(`${API}/tasks/${taskId}/dislike`, {value}).pipe(shareReplay(1));
+    }
 }

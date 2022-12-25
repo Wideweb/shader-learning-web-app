@@ -51,6 +51,7 @@ export class TaskCreateComponent implements OnInit {
       cost: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
       threshold: new FormControl('', [Validators.required, Validators.pattern(/^([1-9]\d{0,1}|100)$/)]),
       description: new FormControl(this.getPlaceHolder(), [Validators.required]),
+      visibility: false,
     });
   }
 

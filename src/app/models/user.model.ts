@@ -13,7 +13,7 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    roleId: number;
+    permissions: string[];
 }
 
 export interface TokenData {

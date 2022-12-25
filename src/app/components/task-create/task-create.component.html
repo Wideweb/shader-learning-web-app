@@ -61,52 +61,59 @@
                             </mat-tab-group>
                         </div>
                     </div>
+
+                    <div class="form-section">
+
+                        <div class="section-header">
+                            Program
+                        </div>
+    
+                        <div class="form-row">
+                            <div class="scene">
+                                <app-gl-scene
+                                [vertexShader]="vertexShader"
+                                [fragmentShader]="fragmentShaderApplied"
+                                [compileTrigger]="compileTrigger"
+                                (onError)="handleFragmentShaderCompilationError($event)"
+                                (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                                </app-gl-scene>
+                            </div>
+                        </div>
+    
+                        <div class="form-row">
+                            <div class="code-editor-container">
+                                <div class="code">
+                                <ngx-codemirror
+                                    [(ngModel)]="fragmentShader"
+                                    [ngModelOptions]="{standalone: true}"
+                                    [options]="{
+                                    tabSize: 2,
+                                    autofocus: false,
+                                    lineNumbers: true,
+                                    mode: 'x-shader/x-fragment'
+                                    }"
+                                ></ngx-codemirror>
+                                </div>
+                            
+                                <div class="toolbar">
+                                <a class="btn-run" (click)="run()">
+                                    <span class="btn-run-ico"></span>
+                                </a>
+                                </div>
+                            
+                                <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
+                                <pre>{{ programOutput.message }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *hasPermission="['task_visibility']" class="form-section">
+                        <div class="form-row">
+                            <mat-checkbox formControlName="visibility" color="primary">Visible</mat-checkbox>
+                        </div>
+                    </div>
                 </form>
-
-                <div class="form-section">
-
-                    <div class="section-header">
-                        Program
-                    </div>
-
-                    <div class="form-row">
-                        <div class="scene">
-                            <app-gl-scene
-                            [vertexShader]="vertexShader"
-                            [fragmentShader]="fragmentShaderApplied"
-                            [compileTrigger]="compileTrigger"
-                            (onError)="handleFragmentShaderCompilationError($event)"
-                            (onSuccess)="handleFragmentShaderCompilationSuccess()">
-                            </app-gl-scene>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="code-editor-container">
-                            <div class="code">
-                            <ngx-codemirror
-                                [(ngModel)]="fragmentShader"
-                                [options]="{
-                                tabSize: 2,
-                                autofocus: false,
-                                lineNumbers: true,
-                                mode: 'x-shader/x-fragment'
-                                }"
-                            ></ngx-codemirror>
-                            </div>
-                        
-                            <div class="toolbar">
-                            <a class="btn-run" (click)="run()">
-                                <span class="btn-run-ico"></span>
-                            </a>
-                            </div>
-                        
-                            <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
-                            <pre>{{ programOutput.message }}</pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="action">
                     <button class="btn-submit" (click)="save()">{{ isNew() ? 'Create' : 'Update' }}</button>

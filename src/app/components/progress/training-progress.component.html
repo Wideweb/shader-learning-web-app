@@ -20,7 +20,9 @@
                 
                             <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef> Task </th>
-                            <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+                            <td mat-cell *matCellDef="let element">
+                                <a class="action-link" routerLink="/training/{{element.id}}">{{element.name}}</a>
+                            </td>
                             </ng-container>
                 
                             <ng-container matColumnDef="score">

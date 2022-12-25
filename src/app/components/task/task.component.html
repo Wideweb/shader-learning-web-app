@@ -1,9 +1,15 @@
 <div class="container">
-  <h1>{{model.name}}</h1>
+  <h1 class="header">{{model.name}}<a *ngIf="canEdit" class="action-link" routerLink="/create-task/{{model.id}}"><mat-icon>edit</mat-icon></a></h1>
+  <div class="header-tools">
+    <a class="like-btn" [ngClass]="{ selected: liked }" (click)="like()"><mat-icon class="like-icon">thumb_up</mat-icon><span class="counter">{{ model.likes }}</span></a>
+    <a class="like-btn" [ngClass]="{ selected: disliked }" (click)="dislike()"><mat-icon class="like-icon">thumb_down</mat-icon><span class="counter">{{ model.dislikes }}</span></a>
+  </div>
 
   <div class="section" *ngIf="model?.description">
-    <h2>Description</h2>
     <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
+    <div class="created-by">
+      <span>Created By:</span>&nbsp;<a class="name">Alexander</a>
+    </div>
   </div>
 
   <div class="section">
@@ -69,7 +75,7 @@
   </div>
 
   <div class="actions-container">
-    <a class="btn-submit" (click)="submit()">
+    <a *hasPermission="['task_submit']" class="btn-submit" (click)="submit()">
       <span>Submit</span>
     </a>
   </div>

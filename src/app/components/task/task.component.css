@@ -123,6 +123,60 @@ a.btn-submit {
     cursor: pointer;
 }
 
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.header .action-link {
+    margin-left: 10px;
+}
+
+.header-tools {
+    display: flex;
+    width: 100%;
+    text-align: start;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.like-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #999;
+    margin-right: 10px;
+    padding: 5px 8px;
+}
+
+.like-btn:hover {
+    border-radius: 5px;
+    background-color: #eee;
+}
+
+mat-icon.like-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #bbb;
+    margin-right: 5px;
+}
+
+.like-btn.selected mat-icon.like-icon {
+    color: darkcyan;
+}
+
+.like-btn .counter {
+    font-size: 13px;
+}
+
+.created-by {
+    margin-top: 10px;
+    color: #888;
+}
+
 .section {
     width: 100%;
 }
