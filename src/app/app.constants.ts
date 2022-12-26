@@ -16,4 +16,4 @@ void main() {
 }
 `
 
-export const ROLE_ADMINISTRATOR = 1;
+export const MATCH_THRESHOLD = 0.05;

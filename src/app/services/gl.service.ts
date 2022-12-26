@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import * as Pixelmatch from 'pixelmatch';
 import * as THREE from 'three';
+import { MATCH_THRESHOLD } from '../app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -77,20 +79,9 @@ export class GlService {
             return 0;
         }
 
-        let matches = 0;
-        for (let i = 0; i < width * height; i++) {
-            const index = i * 4;
-            if (
-                texture1[index + 0] == texture2[index + 0] &&
-                texture1[index + 1] == texture2[index + 1] &&
-                texture1[index + 2] == texture2[index + 2] &&
-                texture1[index + 3] == texture2[index + 3]
-            ) {
-                matches++;
-            }
-        }
+        const mismatches = Pixelmatch(texture1, texture2, null, width, height, { threshold: MATCH_THRESHOLD, includeAA: true });
 
-        const matchDegree = matches / (width * height);
+        const matchDegree = 1.0 - mismatches / (width * height);
         return matchDegree;
     }
 }

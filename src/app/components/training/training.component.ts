@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dialog.component';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
 import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
-import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER, ROLE_ADMINISTRATOR } from 'src/app/app.constants';
+import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/app.constants';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PermissionService } from 'src/app/services/permission.service';
