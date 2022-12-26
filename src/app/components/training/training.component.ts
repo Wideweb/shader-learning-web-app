@@ -47,7 +47,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   public get canEdit(): boolean {
-    let isOwner = this.userTask?.task.createdBy === this.auth.me?.id;
+    let isOwner = this.userTask?.task?.createdBy === this.auth.me?.id;
     return (isOwner || this.permissions.hasAll(['task_edit_all'])) && this.permissions.hasAll(['task_edit']);
   }
 

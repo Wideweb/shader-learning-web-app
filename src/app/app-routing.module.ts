@@ -8,10 +8,14 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { TaskCreateComponent } from './components/task-create/task-create.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { TrainingComponent } from './components/training/training.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserRankedListComponent } from './components/user-ranked-list/user-ranked-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NotAuthGuard } from './guards/not-auth.guard';
 
 const routes: Routes = [
+  { path: 'user-profile/:id', component: UserProfileComponent, canActivate:[AuthGuard] },
+  { path: 'users-rating', component: UserRankedListComponent, canActivate:[AuthGuard] },
   { path: 'progress', component: TrainingProgressComponent, canActivate:[AuthGuard] },
   { path: 'create-task', component: TaskCreateComponent, canActivate:[AuthGuard] },
   { path: 'create-task/:id', component: TaskCreateComponent, canActivate:[AuthGuard] },

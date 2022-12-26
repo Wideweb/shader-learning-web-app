@@ -25,3 +25,17 @@ export interface SessionData {
     user: User;
     tokenData: TokenData;
 }
+
+export interface UserRankedListDto {
+    id: number;
+    name: string;
+    rank: number;
+    solved: number;
+}
+
+export interface UserProfileDto {
+    id: number;
+    name: string;
+    rank: number;
+    solved: number;
+}

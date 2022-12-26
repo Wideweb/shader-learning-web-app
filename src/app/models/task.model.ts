@@ -10,7 +10,7 @@ export interface Task {
     description: string;
     likes: number;
     dislikes: number;
-    createdBy: number;
+    createdBy: { id: number; name: string };
 }
 
 export interface CreateTaskDto {

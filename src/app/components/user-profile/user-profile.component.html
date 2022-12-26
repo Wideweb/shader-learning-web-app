@@ -1,0 +1,40 @@
+<div class="container" *ngIf="model">
+    <div class="column">
+        <div class="card user-info-card">
+            <mat-card>
+                <mat-card-content>
+
+                    <div class="card-section profile-section">
+                        <mat-icon class="profile-icon">account_box</mat-icon>
+                        <span class="user-name">{{ model.name }}</span>
+                    </div>
+
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card card-number">
+            <mat-card>
+                <mat-card-content>
+
+                    <div class="card-title">Rank</div>
+                    <div class="card-counter">{{ model.rank }}</div>
+                
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="card card-number">
+            <mat-card>
+                <mat-card-content>
+
+                    <div class="card-title">Solved Tasks</div>
+                    <div class="card-counter">{{ model.solved }}</div>
+                
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

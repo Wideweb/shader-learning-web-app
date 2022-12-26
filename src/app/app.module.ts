@@ -35,6 +35,8 @@ import { UserTaskResultStatusPipe } from './components/progress/user-task-result
 import { TaskCreateComponent } from './components/task-create/task-create.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { HasPermissionDirective } from './directives/has-permission.directive';
+import { UserRankedListComponent } from './components/user-ranked-list/user-ranked-list.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { HasPermissionDirective } from './directives/has-permission.directive';
     TaskCreateComponent,
     TaskListComponent,
     HasPermissionDirective,
+    UserRankedListComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,7 +8,7 @@
   <div class="section" *ngIf="model?.description">
     <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
     <div class="created-by">
-      <span>Created By:</span>&nbsp;<a class="name">Alexander</a>
+      <span>Created By:</span>&nbsp;<a class="name">{{ model.createdBy.name }}</a>
     </div>
   </div>
 

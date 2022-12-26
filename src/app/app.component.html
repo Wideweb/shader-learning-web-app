@@ -9,14 +9,24 @@
         <mat-icon class="user-avatar-icon">face_retouching_natural</mat-icon>
       </a>
       <mat-menu #menu="matMenu">
-        <div class="account-details">
-          <div class="avatar-container">
-            <mat-icon class="avatar">face_retouching_natural</mat-icon>
+        <button button mat-menu-item routerLink="/user-profile/{{ userId$ | async }}">
+          <div class="account-details">
+            <div class="avatar-container">
+              <mat-icon class="avatar">face_retouching_natural</mat-icon>
+            </div>
+            <div class="user-name">{{ userName$ | async }}</div>
+            <div class="user-email">{{ userEmail$ | async }}</div>
+            <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>{{ score$ | async }}</span></div>
           </div>
-          <div class="user-name">{{ userName$ | async }}</div>
-          <div class="user-email">{{ userEmail$ | async }}</div>
-          <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>{{ score$ | async }}</span></div>
-        </div>
+        </button>
+
+        <ng-container *hasPermission="['users-rating']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/users-rating">
+            <mat-icon>stars</mat-icon>
+            <span>Users Rating</span>
+          </button>
+        </ng-container>
         
         <ng-container *hasPermission="['task_submit']">
           <mat-divider></mat-divider>

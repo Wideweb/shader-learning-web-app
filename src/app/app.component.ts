@@ -13,11 +13,13 @@ export class AppComponent implements OnInit {
   title = 'shader-learning';
 
   public score$: Observable<number>;
+  public userId$: Observable<string | null>;
   public userName$: Observable<string | null>;
   public userEmail$: Observable<string | null>;
   
   constructor(private auth: AuthService, private tasks: TaskService, private spinner: Spinner) {
     this.score$ = this.tasks.score$;
+    this.userId$ = this.auth.me$.pipe(map(u => u?.id || ''));
     this.userName$ = this.auth.me$.pipe(map(u => u?.name || ''));
     this.userEmail$ = this.auth.me$.pipe(map(u => u?.email || ''));
 
