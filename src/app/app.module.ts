@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -37,6 +37,15 @@ import { TaskListComponent } from './components/task-list/task-list.component';
 import { HasPermissionDirective } from './directives/has-permission.directive';
 import { UserRankedListComponent } from './components/user-ranked-list/user-ranked-list.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { AppInitService } from './services/app-init.service';
+import { Observable } from 'rxjs';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+
+export function initializeAppFactory(appInitService: AppInitService) {
+  return (): Observable<any> => {
+    return appInitService.init();
+  }
+}
 
 @NgModule({
   declarations: [
@@ -57,6 +66,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     HasPermissionDirective,
     UserRankedListComponent,
     UserProfileComponent,
+    UnauthorizedComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,6 +90,12 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     MatCheckboxModule,
   ],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAppFactory,
+      deps: [AppInitService],
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

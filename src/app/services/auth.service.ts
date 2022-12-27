@@ -17,11 +17,13 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  public updateMe() {
-    return this.http.get<User>(`${API}/me`).subscribe(userData => {
+  public updateMe(): Observable<User> {
+    const request = this.http.get<User>(`${API}/me`);
+    request.subscribe(userData => {
       this.me = userData;
       this.meSubject.next(userData);
     });
+    return request;
   }
 
   public signUp(user: UserSignUp): Observable<SessionData> {

@@ -1,0 +1,31 @@
+:host {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.container {
+    margin-top: 50px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+mat-icon {
+    margin-top: 30px;
+    font-size: 100px;
+    width: 100px;
+    height: 100px;
+    color: darkcyan;
+}

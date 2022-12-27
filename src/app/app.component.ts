@@ -29,11 +29,7 @@ export class AppComponent implements OnInit {
     ).subscribe(() => this.tasks.updateScore());
   }
   
-  ngOnInit(): void {
-    if (this.auth.isLoggedIn()) {
-      this.auth.updateMe();
-    }
-  }
+  ngOnInit(): void { }
 
   public isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
