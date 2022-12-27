@@ -40,6 +40,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { AppInitService } from './services/app-init.service';
 import { Observable } from 'rxjs';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Observable<any> => {
@@ -88,6 +89,7 @@ export function initializeAppFactory(appInitService: AppInitService) {
     MatCardModule,
     MatTabsModule,
     MatCheckboxModule,
+    DragDropModule,
   ],
   providers: [
     {

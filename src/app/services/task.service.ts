@@ -33,6 +33,10 @@ export class TaskService {
         return this.http.get<TaskListDto[]>(`${API}/tasks/list`).pipe(shareReplay(1));
     }
 
+    public reorder(oldOrder: number, newOrder: number) {
+        return this.http.put<boolean>(`${API}/tasks/reorder`, { oldOrder, newOrder }).pipe(shareReplay(1));
+    }
+
     public toggleVisibility(id: number): Observable<boolean> {
         return this.http.get<boolean>(`${API}/tasks/${id}/toggleVisibility`).pipe(shareReplay(1));
     }

@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TaskListDto } from 'src/app/models/task.model';
 import { BehaviorSubject } from 'rxjs';
 import { PermissionService } from 'src/app/services/permission.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'task-list',
@@ -14,7 +15,7 @@ import { PermissionService } from 'src/app/services/permission.service';
 export class TaskListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  readonly displayedColumns: string[] = ['order', 'name', 'cost', 'threshold', 'actions'];
+  readonly displayedColumns: string[] = ['drag', 'order', 'name', 'cost', 'threshold', 'actions'];
 
   readonly dataSource: MatTableDataSource<TaskListDto>;
 
@@ -42,6 +43,10 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.load();
+  }
+
+  load() {
     this.loaded$.next(false);
     this.taskService.list().subscribe(data => {
       this.dataSource.data = data;
@@ -55,5 +60,21 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   deleteTask(task: TaskListDto) {
 
+  }
+
+  onListDrop(event: CdkDragDrop<TaskListDto[]>) {
+    moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
+    this.dataSource.data = [...this.dataSource.data];
+
+    this.taskService.reorder(event.previousIndex + 1, event.currentIndex + 1).subscribe(result => {
+      if (!result) {
+        moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
+        this.dataSource.data = [...this.dataSource.data];
+      }
+
+      this.taskService.list().subscribe(data => {
+        this.dataSource.data = data;
+      });
+    })
   }
 }
