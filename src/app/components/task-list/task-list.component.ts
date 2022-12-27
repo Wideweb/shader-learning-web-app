@@ -63,6 +63,10 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 
   onListDrop(event: CdkDragDrop<TaskListDto[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
     moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
     this.dataSource.data = [...this.dataSource.data];
 
