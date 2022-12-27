@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
 import { UserSignUp, UserLogIn, SessionData, User } from '../models/user.model';
 import { API } from 'src/environments/environment';
 
@@ -18,6 +18,12 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   public updateMe(): Observable<User> {
+    if (this.isLoggedOut()) {
+      this.me = null;
+      this.meSubject.next(null);
+      return EMPTY;
+    }
+
     const request = this.http.get<User>(`${API}/me`);
     request.subscribe(userData => {
       this.me = userData;
