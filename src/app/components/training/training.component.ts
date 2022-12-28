@@ -6,7 +6,7 @@ import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dia
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
 import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/app.constants';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PermissionService } from 'src/app/services/permission.service';
 
@@ -28,18 +28,27 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private auth: AuthService, private permissions: PermissionService, private taskService: TaskService, private dialog: MatDialog, private route: ActivatedRoute) { }
+  moduleId: number = -1;
+
+  constructor(
+    private auth: AuthService,
+    private permissions: PermissionService,
+    private taskService: TaskService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params['id'];
-    this.next(id);
+    this.moduleId = this.route.snapshot.params['moduleId'];
+    const taskId = this.route.snapshot.params['taskId'];
+    this.next(taskId);
   }
   
   next(id: number | null = null): void {
     this.loaded$.next(false);
     this.userTask = null;
 
-    const request = id ? this.taskService.getUserTask(id) : this.taskService.getNext();
+    const request = id ? this.taskService.getUserTask(id) : this.taskService.getNext(this.moduleId);
     request.subscribe(userTask => {
       this.userTask = userTask;
       this.loaded$.next(true);
@@ -81,6 +90,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   retry(): void { }
+
+  edit() {
+    this.router.navigate([`module/${this.moduleId}/task/${this.userTask?.task.id}/edit`]);
+  }
 
   like() {
     const value = !this.userTask!.liked;

@@ -28,6 +28,9 @@ export class TaskComponent implements OnChanges {
   public canEdit: boolean = false;
 
   @Output()
+  public onEdit = new EventEmitter<void>();
+
+  @Output()
   public onSubmit = new EventEmitter<TaskSubmit>();
 
   @Output()
@@ -115,5 +118,9 @@ export class TaskComponent implements OnChanges {
 
   dislike() {
     this.onDislike.emit();
+  }
+
+  edit() {
+    this.onEdit.emit();
   }
 }

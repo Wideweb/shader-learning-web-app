@@ -41,6 +41,11 @@ import { AppInitService } from './services/app-init.service';
 import { Observable } from 'rxjs';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ModuleListComponent } from './components/module-list/module-list.component';
+import { ModuleComponent } from './components/module/module.component';
+import { TaskTableComponent } from './components/task-table/task-table.component';
+import { ModuleCreateComponent } from './components/module-create/module-create.component';
+import { ModuleViewComponent } from './components/module-view/module-view.component';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Observable<any> => {
@@ -68,6 +73,11 @@ export function initializeAppFactory(appInitService: AppInitService) {
     UserRankedListComponent,
     UserProfileComponent,
     UnauthorizedComponent,
+    ModuleListComponent,
+    ModuleComponent,
+    TaskTableComponent,
+    ModuleCreateComponent,
+    ModuleViewComponent,
   ],
   imports: [
     BrowserModule,

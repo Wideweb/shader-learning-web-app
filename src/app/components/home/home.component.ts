@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'home',
@@ -49,10 +48,4 @@ export class HomeComponent {
         gl_FragColor = vec4(c, 1.0);
     }
     `;
-
-  constructor(private router: Router) { }
-
-  play(): void {
-    this.router.navigate(['training']);
-  }
 }

@@ -1,18 +1,30 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TaskListDto } from 'src/app/models/task.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { PermissionService } from 'src/app/services/permission.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
-  selector: 'task-list',
-  templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css']
+  selector: 'task-table',
+  templateUrl: './task-table.component.html',
+  styleUrls: ['./task-table.component.css']
 })
-export class TaskListComponent implements OnInit, AfterViewInit {
+export class TaskTableComponent implements AfterViewInit {
+  @Input()
+  public data: TaskListDto[] = [];
+
+  @Output()
+  public onReorderTasks = new EventEmitter<{ oldOrder: number, newOrder: number }>();
+
+  @Output()
+  public onEditTask = new EventEmitter<number>();
+
+  @Output()
+  public onOpenTask = new EventEmitter<number>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   readonly displayedColumns: string[] = ['drag', 'order', 'name', 'cost', 'threshold', 'actions'];
@@ -20,6 +32,8 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   readonly dataSource: MatTableDataSource<TaskListDto>;
 
   readonly loaded$ = new BehaviorSubject<boolean>(false);
+
+  readonly canReorder$: Observable<boolean>;
 
   constructor(private taskService: TaskService, private permissions: PermissionService) {
     this.dataSource = new MatTableDataSource([] as any);
@@ -36,22 +50,30 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         }
       }
     });
+
+    this.canReorder$ = this.permissions.hasAny$(['task_reorder'])
+    this.canReorder$.subscribe(has => {
+      if (has && !this.displayedColumns.includes('drag')) {
+        this.displayedColumns.push('drag');
+      }
+
+      if (!has && this.displayedColumns.includes('drag')) {
+        const index = this.displayedColumns.indexOf('drag');
+        if (index > -1) {
+          this.displayedColumns.splice(index, 1);
+        }
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnInit(): void {
-    this.load();
-  }
-
-  load() {
-    this.loaded$.next(false);
-    // this.taskService.list().subscribe(data => {
-    //   this.dataSource.data = data;
-    //   this.loaded$.next(true);
-    // });
+  ngOnChanges(changes: SimpleChange): void {
+    if ('data' in changes) {
+      this.dataSource.data = [...this.data];
+    }
   }
 
   toggleTaskVisibility(task: TaskListDto) {
@@ -67,18 +89,16 @@ export class TaskListComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
+  moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
     this.dataSource.data = [...this.dataSource.data];
+    this.onReorderTasks.emit({ oldOrder: event.previousIndex, newOrder: event.currentIndex });
+  }
 
-    // this.taskService.reorder(event.previousIndex + 1, event.currentIndex + 1).subscribe(result => {
-    //   if (!result) {
-    //     moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
-    //     this.dataSource.data = [...this.dataSource.data];
-    //   }
+  openTask(task: TaskListDto) {
+    this.onOpenTask.emit(task.id);
+  }
 
-    //   this.taskService.list().subscribe(data => {
-    //     this.dataSource.data = data;
-    //   });
-    // })
+  editTask(task: TaskListDto) {
+    this.onEditTask.emit(task.id);
   }
 }

@@ -39,6 +39,8 @@ export class TaskCreateComponent implements OnInit {
 
   public matcher = new MyErrorStateMatcher();
 
+  public moduleId: number = -1;
+
   public id: number = -1;
 
   public task: Task | null = null;
@@ -56,9 +58,8 @@ export class TaskCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-
-    this.id = this.route.snapshot.params['id'];
+    this.moduleId = Number.parseInt(this.route.snapshot.params['moduleId']);
+    this.id = this.route.snapshot.params['taskId'];
     if (this.id) {
       this.taskService.get(this.id).subscribe(task => {
         if (!task) {
@@ -77,6 +78,10 @@ export class TaskCreateComponent implements OnInit {
 
   isNew() {
     return !this.id;
+  }
+
+  cancel() {
+    this.router.navigate([`module/${this.moduleId}/view`]);
   }
 
   save() {
@@ -109,9 +114,7 @@ export class TaskCreateComponent implements OnInit {
           this.form.controls['name'].setErrors({'TASK_NAME_NOT_UNIQUE': true});
         }
       },
-      next: (id) => {
-        this.router.navigate(['.', {id}]).then(() => window.location.reload());
-      }
+      next: () => this.router.navigate([`module/${this.moduleId}/view`])
     });
   }
 
@@ -120,13 +123,13 @@ export class TaskCreateComponent implements OnInit {
       name: this.form.value.name,
       hints: [],
       restrictions: [],
-      order: 0,
       cost: Number.parseInt(this.form.value.cost),
       threshold: Number.parseInt(this.form.value.threshold),
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
       description: this.form.value.description as string,
-      visibility: true,
+      visibility: this.form.value.visibility,
+      moduleId: this.moduleId
     })
   }
 
@@ -142,7 +145,8 @@ export class TaskCreateComponent implements OnInit {
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
       description: this.form.value.description as string,
-      visibility: true,
+      visibility: this.form.value.visibility,
+      moduleId: this.moduleId
     })
   }
 

@@ -3,6 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { ModuleCreateComponent } from './components/module-create/module-create.component';
+import { ModuleListComponent } from './components/module-list/module-list.component';
+import { ModuleViewComponent } from './components/module-view/module-view.component';
+import { ModuleComponent } from './components/module/module.component';
 import { TrainingProgressComponent } from './components/progress/training-progress.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { TaskCreateComponent } from './components/task-create/task-create.component';
@@ -19,17 +23,25 @@ const routes: Routes = [
 
   { path: 'users-rating', component: UserRankedListComponent, canActivate:[AuthGuard], data: { permissions: ['users-rating'] } },
   
+  { path: 'module-list', component: ModuleListComponent, canActivate:[AuthGuard] },
+
+  { path: 'module-create', component: ModuleCreateComponent, canActivate:[AuthGuard] },
+
+  { path: 'module/:moduleId', component: ModuleComponent, canActivate:[AuthGuard] },
+
+  { path: 'module/:moduleId/view', component: ModuleViewComponent, canActivate:[AuthGuard] },
+
+  { path: 'module/:moduleId/edit', component: ModuleCreateComponent, canActivate:[AuthGuard] },
+
   { path: 'progress', component: TrainingProgressComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   
-  { path: 'create-task', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
+  { path: 'module/:moduleId/task-create', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
   
-  { path: 'create-task/:id', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_edit'] } },
+  { path: 'module/:moduleId/task/:taskId/edit', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_edit'] } },
   
-  { path: 'task-list', component: TaskListComponent, canActivate:[AuthGuard], data: { permissions: ['task_view_all'] } },
+  { path: 'module/:moduleId/training', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   
-  { path: 'training', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
-  
-  { path: 'training/:id', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+  { path: 'module/:moduleId/training/:taskId', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   
   { path: 'sign-up', component: SignUpComponent, canActivate:[NotAuthGuard] },
   

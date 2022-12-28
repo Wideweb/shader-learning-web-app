@@ -41,6 +41,11 @@
     height: 30px;
 }
 
+.action {
+    display: flex;
+    flex-direction: row;
+}
+
 .code-editor-container {
     width: 100%;
     border: 1px solid #ddd;
@@ -120,9 +125,4 @@ mat-form-field {
 .section-header {
     font-size: 20px;
     padding-bottom: 10px;
-}
-
-.action {
-    display: flex;
-    flex-direction: row;
 }

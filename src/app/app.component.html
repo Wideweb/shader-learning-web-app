@@ -20,6 +20,14 @@
           </div>
         </button>
 
+        <ng-container>
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/module-list">
+            <mat-icon>explore</mat-icon>
+            <span>Explore</span>
+          </button>
+        </ng-container>
+
         <ng-container *hasPermission="['users-rating']">
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/users-rating">
@@ -36,21 +44,21 @@
           </button>
         </ng-container>
         
-        <ng-container *hasPermission="['task_view_all']">
+        <!-- <ng-container *hasPermission="['task_view_all']">
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/task-list">
             <mat-icon>list</mat-icon>
             <span>Tasks</span>
           </button>
-        </ng-container>
+        </ng-container> -->
 
-        <ng-container *hasPermission="['task_create']">
+        <!-- <ng-container *hasPermission="['task_create']">
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/create-task">
             <mat-icon>add_circle</mat-icon>
             <span>Create Task</span>
           </button>
-        </ng-container>
+        </ng-container> -->
         
         <!-- <mat-divider></mat-divider>
         <button mat-menu-item>

@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    <div class="header">
+                        <mat-icon class="icon">add_circle</mat-icon>&nbsp;<span>{{ isNew() ? 'Create' : 'Update' }} Module</span>
+                    </div>
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+
+                <form class="form" [formGroup]="form">
+                    <div class="form-row">
+                        <mat-form-field>
+                            <mat-label>Name</mat-label>
+                            <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher" autocomplete="off">
+                            
+                            <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+
+                            <mat-error *ngIf="form.get('name')?.hasError('TASK_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                        <mat-form-field>
+                            <mat-label>Description</mat-label>
+                            <textarea matInput formControlName="description" [errorStateMatcher]="matcher" autocomplete="off"></textarea>
+                            
+                            <mat-error *ngIf="form.get('description')?.hasError('required')">Description is <strong>required</strong></mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-row">
+                            <mat-checkbox formControlName="locked" color="primary">Locked</mat-checkbox>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="action">
+                    <button *ngIf="!isNew()" class="btn btn-cancel" (click)="cancel()">Cancel</button>
+                    <button class="btn btn-submit" (click)="save()">{{ isNew() ? 'Create' : 'Update' }}</button>
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

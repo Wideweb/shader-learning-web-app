@@ -19,11 +19,11 @@ export interface CreateTaskDto {
     fragmentShader: string;
     hints: TaskHint[];
     restrictions: TaskRestriction[];
-    order: number;
     cost: number;
     threshold: number;
     description: string;
     visibility: boolean;
+    moduleId: number;
 }
 
 export interface UpdateTaskDto {
@@ -38,6 +38,7 @@ export interface UpdateTaskDto {
     threshold: number;
     description: string;
     visibility: boolean;
+    moduleId: number;
 }
 
 export interface TaskHint {

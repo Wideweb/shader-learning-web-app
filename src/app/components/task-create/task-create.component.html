@@ -116,7 +116,8 @@
                 </form>
 
                 <div class="action">
-                    <button class="btn-submit" (click)="save()">{{ isNew() ? 'Create' : 'Update' }}</button>
+                    <button class="btn btn-cancel" (click)="cancel()">Cancel</button>
+                    <button class="btn btn-submit" (click)="save()">{{ isNew() ? 'Create' : 'Update' }}</button>
                 </div>
 
             </mat-card-content>

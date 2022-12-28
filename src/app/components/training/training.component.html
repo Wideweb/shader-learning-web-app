@@ -8,6 +8,7 @@
         [liked]="userTask.liked"
         [disliked]="userTask.disliked"
         [canEdit]="canEdit"
+        (onEdit)="edit()"
         (onLike)="like()"
         (onDislike)="dislike()"
         (onSubmit)="submit($event)">
