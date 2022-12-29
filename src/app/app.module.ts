@@ -19,7 +19,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GlSceneComponent } from './components/gl-scene/gl-scene.component';
 import { TaskComponent } from './components/task/task.component';
-import { TrainingComponent } from './components/training/training.component';
+import { TaskTrainingComponent } from './components/task-training/task-training.component';
 import { TaskResultComponent } from './components/task-result/task-result.component';
 import { HomeComponent } from './components/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -48,6 +48,7 @@ import { ModuleViewComponent } from './components/module-view/module-view.compon
 import { ModuleViewTaskTableComponent } from './components/module-view/task-table/task-table.component';
 import { ModuleEditComponent } from './components/module-edit/module-edit.component';
 import { ModuleEditTaskTableComponent } from './components/module-edit/task-table/task-table.component';
+import { ModuleTrainingComponent } from './components/module-training/module-training.component';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Observable<any> => {
@@ -61,7 +62,7 @@ export function initializeAppFactory(appInitService: AppInitService) {
     GlSceneComponent,
     TaskComponent,
     TaskResultComponent,
-    TrainingComponent,
+    TaskTrainingComponent,
     HomeComponent,
     TaskSubmitDialogComponent,
     TaskSubmitResultDialogComponent,
@@ -81,7 +82,8 @@ export function initializeAppFactory(appInitService: AppInitService) {
     ModuleViewComponent,
     ModuleViewTaskTableComponent,
     ModuleEditComponent,
-    ModuleEditTaskTableComponent
+    ModuleEditTaskTableComponent,
+    ModuleTrainingComponent,
   ],
   imports: [
     BrowserModule,

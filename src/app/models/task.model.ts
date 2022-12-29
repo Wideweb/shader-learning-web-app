@@ -1,5 +1,6 @@
 export interface Task {
     id: number;
+    moduleId: number;
     name: string;
     vertexShader: string;
     fragmentShader: string;

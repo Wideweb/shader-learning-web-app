@@ -6,13 +6,12 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { ModuleCreateComponent } from './components/module-create/module-create.component';
 import { ModuleEditComponent } from './components/module-edit/module-edit.component';
 import { ModuleListComponent } from './components/module-list/module-list.component';
+import { ModuleTrainingComponent } from './components/module-training/module-training.component';
 import { ModuleViewComponent } from './components/module-view/module-view.component';
 import { ModuleComponent } from './components/module/module.component';
 import { TrainingProgressComponent } from './components/progress/training-progress.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { TaskCreateComponent } from './components/task-create/task-create.component';
-import { TaskListComponent } from './components/task-list/task-list.component';
-import { TrainingComponent } from './components/training/training.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UserRankedListComponent } from './components/user-ranked-list/user-ranked-list.component';
@@ -40,9 +39,9 @@ const routes: Routes = [
   
   { path: 'module/:moduleId/task/:taskId/edit', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_edit'] } },
   
-  { path: 'module/:moduleId/training', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+  { path: 'module/:moduleId/training', component: ModuleTrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   
-  { path: 'module/:moduleId/training/:taskId', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+  { path: 'module/:moduleId/training/:taskId', component: ModuleTrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
 
   { path: 'progress', component: TrainingProgressComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   

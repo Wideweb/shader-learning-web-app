@@ -1,22 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { TaskSubmit, TaskSubmitResult, UserTask } from 'src/app/models/task.model';
 import { TaskService } from 'src/app/services/task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dialog.component';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
-import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/app.constants';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PermissionService } from 'src/app/services/permission.service';
 
 @Component({
-  selector: 'training',
-  templateUrl: './training.component.html',
-  styleUrls: ['./training.component.css']
+  selector: 'task-training',
+  templateUrl: './task-training.component.html',
+  styleUrls: ['./task-training.component.css']
 })
-export class TrainingComponent implements OnInit, OnDestroy {
+export class TaskTrainingComponent implements OnDestroy {
+  @Input()
   public userTask: UserTask | null = null;
+
+  @Output()
+  public onNext = new EventEmitter<void>();
+
+  @Output()
+  public onAccepted = new EventEmitter<void>();
 
   public userVertexShader: string = DEFAULT_VERTEX_SHADER;
 
@@ -24,38 +31,16 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   public taskSubmitResult: TaskSubmitResult | null = null;
 
-  readonly loaded$ = new BehaviorSubject<boolean>(false);
-
   destroy$: Subject<boolean> = new Subject<boolean>();
-
-  moduleId: number = -1;
 
   constructor(
     private auth: AuthService,
     private permissions: PermissionService,
     private taskService: TaskService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
     private router: Router) { }
 
-  ngOnInit(): void {
-    this.moduleId = this.route.snapshot.params['moduleId'];
-    const taskId = this.route.snapshot.params['taskId'];
-    this.next(taskId);
-  }
-  
-  next(id: number | null = null): void {
-    this.loaded$.next(false);
-    this.userTask = null;
-
-    const request = id ? this.taskService.getUserTask(id) : this.taskService.getNext(this.moduleId);
-    request.subscribe(userTask => {
-      this.userTask = userTask;
-      this.loaded$.next(true);
-    });
-  }
-
-  public get canEdit(): boolean {
+  get canEdit(): boolean {
     let isOwner = this.userTask?.task?.createdBy === this.auth.me?.id;
     return (isOwner || this.permissions.hasAll(['task_edit_all'])) && this.permissions.hasAll(['task_edit']);
   }
@@ -76,6 +61,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
         this.taskSubmitResult = result;
         submitDialog.close();
         this.showSubmitResult(result);
+        if (result.accepted) {
+          this.onAccepted.emit();
+        }
       });
   }
 
@@ -86,13 +74,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
         data: taskSubmitResult
       })
       .afterClosed()
-      .subscribe(result => result ? this.next() : this.retry());
+      .subscribe(result => result ? this.onNext.emit() : this.retry());
   }
 
   retry(): void { }
 
   edit() {
-    this.router.navigate([`module/${this.moduleId}/task/${this.userTask?.task.id}/edit`]);
+    this.router.navigate([`module/${this.userTask?.task.moduleId}/task/${this.userTask?.task.id}/edit`]);
   }
 
   like() {

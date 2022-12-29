@@ -21,7 +21,7 @@ export class ModuleViewComponent implements OnInit {
 
     this.moduleService.getUserProgress(id).subscribe(model => {
       this.model = model;
-    })
+    });
   }
 
   openTask(taskId: number) {
