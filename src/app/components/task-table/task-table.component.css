@@ -1,3 +1,8 @@
+:host {
+    width: 100%;
+    display: block;
+}
+
 .table {
     flex: 1;
     min-height: 315px;
@@ -59,7 +64,7 @@
     text-align: left;
 }
 
-.cdk-drag-preview td.actions-column {
+td.actions-column {
     min-width: 130px;
 }
 

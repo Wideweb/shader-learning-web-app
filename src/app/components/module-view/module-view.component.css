@@ -39,4 +39,5 @@ h1 {
 
 .tasks-section .table {
     margin-bottom: 10px;
+    overflow-x: auto;
 }
