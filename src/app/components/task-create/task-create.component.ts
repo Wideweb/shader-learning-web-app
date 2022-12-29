@@ -81,7 +81,7 @@ export class TaskCreateComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate([`module/${this.moduleId}/view`]);
+    this.router.navigate([`module/${this.moduleId}/edit`]);
   }
 
   save() {
@@ -114,7 +114,7 @@ export class TaskCreateComponent implements OnInit {
           this.form.controls['name'].setErrors({'TASK_NAME_NOT_UNIQUE': true});
         }
       },
-      next: () => this.router.navigate([`module/${this.moduleId}/view`])
+      next: () => this.router.navigate([`module/${this.moduleId}/edit`])
     });
   }
 

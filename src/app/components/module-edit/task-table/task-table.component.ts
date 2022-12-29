@@ -8,11 +8,11 @@ import { PermissionService } from 'src/app/services/permission.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
-  selector: 'task-table',
+  selector: 'module-edit-task-table',
   templateUrl: './task-table.component.html',
   styleUrls: ['./task-table.component.css']
 })
-export class TaskTableComponent implements AfterViewInit {
+export class ModuleEditTaskTableComponent implements AfterViewInit {
   @Input()
   public data: TaskListDto[] = [];
 

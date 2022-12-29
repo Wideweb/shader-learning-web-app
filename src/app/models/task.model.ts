@@ -80,6 +80,7 @@ export interface UserTaskResultDto {
     accepted: boolean;
     rejected: boolean;
     score: number;
+    match: number;
 }
 
 export interface TaskListDto {

@@ -59,7 +59,12 @@ export class ModuleCreateComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate([`module/${this.id}/view`]);
+    if (this.isNew()) {
+      this.router.navigate([`module-list`]);
+      return;
+    }
+
+    this.router.navigate([`module/${this.id}/edit`]);
   }
 
   save() {
@@ -80,7 +85,7 @@ export class ModuleCreateComponent implements OnInit {
         }
       },
       next: (id) => {
-        this.router.navigate([`module/${id}/view`]);
+        this.router.navigate([`module/${id}/edit`]);
       }
     });
   }

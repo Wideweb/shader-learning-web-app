@@ -9,7 +9,10 @@
 
         <mat-card *ngFor="let module of modules">
             <mat-card-header>
-                <mat-card-subtitle>{{ module.name }}</mat-card-subtitle>
+                <mat-card-subtitle>
+                    <span>{{ module.name }}</span>
+                </mat-card-subtitle>
+                <a *hasPermission="['module_edit']" class="action-link action-link-edit" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a>
             </mat-card-header>
             <mat-card-content>
                 <p class="description">{{ module.description }}</p>

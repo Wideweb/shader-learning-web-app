@@ -43,9 +43,11 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ModuleListComponent } from './components/module-list/module-list.component';
 import { ModuleComponent } from './components/module/module.component';
-import { TaskTableComponent } from './components/task-table/task-table.component';
 import { ModuleCreateComponent } from './components/module-create/module-create.component';
 import { ModuleViewComponent } from './components/module-view/module-view.component';
+import { ModuleViewTaskTableComponent } from './components/module-view/task-table/task-table.component';
+import { ModuleEditComponent } from './components/module-edit/module-edit.component';
+import { ModuleEditTaskTableComponent } from './components/module-edit/task-table/task-table.component';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Observable<any> => {
@@ -75,9 +77,11 @@ export function initializeAppFactory(appInitService: AppInitService) {
     UnauthorizedComponent,
     ModuleListComponent,
     ModuleComponent,
-    TaskTableComponent,
     ModuleCreateComponent,
     ModuleViewComponent,
+    ModuleViewTaskTableComponent,
+    ModuleEditComponent,
+    ModuleEditTaskTableComponent
   ],
   imports: [
     BrowserModule,

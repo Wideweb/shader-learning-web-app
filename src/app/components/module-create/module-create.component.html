@@ -4,7 +4,7 @@
             <mat-card-header>
                 <mat-card-title>
                     <div class="header">
-                        <mat-icon class="icon">add_circle</mat-icon>&nbsp;<span>{{ isNew() ? 'Create' : 'Update' }} Module</span>
+                        <mat-icon class="icon">add_circle</mat-icon>&nbsp;<span>{{ isNew() ? 'Create' : 'Edit' }} Module</span>
                     </div>
                 </mat-card-title>
             </mat-card-header>
@@ -40,7 +40,7 @@
                 </form>
 
                 <div class="action">
-                    <button *ngIf="!isNew()" class="btn btn-cancel" (click)="cancel()">Cancel</button>
+                    <button class="btn btn-cancel" (click)="cancel()">Cancel</button>
                     <button class="btn btn-submit" (click)="save()">{{ isNew() ? 'Create' : 'Update' }}</button>
                 </div>
 

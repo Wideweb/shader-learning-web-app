@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ModuleCreateComponent } from './components/module-create/module-create.component';
+import { ModuleEditComponent } from './components/module-edit/module-edit.component';
 import { ModuleListComponent } from './components/module-list/module-list.component';
 import { ModuleViewComponent } from './components/module-view/module-view.component';
 import { ModuleComponent } from './components/module/module.component';
@@ -31,9 +32,9 @@ const routes: Routes = [
 
   { path: 'module/:moduleId/view', component: ModuleViewComponent, canActivate:[AuthGuard] },
 
-  { path: 'module/:moduleId/edit', component: ModuleCreateComponent, canActivate:[AuthGuard] },
+  { path: 'module/:moduleId/edit', component: ModuleEditComponent, canActivate:[AuthGuard] },
 
-  { path: 'progress', component: TrainingProgressComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+  { path: 'module/:moduleId/edit/profile', component: ModuleCreateComponent, canActivate:[AuthGuard] },
   
   { path: 'module/:moduleId/task-create', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
   
@@ -42,6 +43,8 @@ const routes: Routes = [
   { path: 'module/:moduleId/training', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   
   { path: 'module/:moduleId/training/:taskId', component: TrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+
+  { path: 'progress', component: TrainingProgressComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
   
   { path: 'sign-up', component: SignUpComponent, canActivate:[NotAuthGuard] },
   

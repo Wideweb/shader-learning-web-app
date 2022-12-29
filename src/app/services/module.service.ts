@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, shareReplay } from 'rxjs';
 import { API } from 'src/environments/environment';
 import { GlService } from './gl.service';
-import { CreateModuleDto, ModuleDto, ModuleListDto, UpdateModuleDto } from '../models/module.model';
+import { CreateModuleDto, ModuleDto, ModuleListDto, UpdateModuleDto, UserModuleProgressDto } from '../models/module.model';
 import { TaskListDto } from '../models/task.model';
 
 @Injectable({
@@ -19,6 +19,10 @@ export class ModuleService {
 
     public get(moduleId: number): Observable<ModuleDto> {
         return this.http.get<ModuleDto>(`${API}/modules/${moduleId}/get`).pipe(shareReplay(1));
+    }
+
+    public getUserProgress(moduleId: number): Observable<UserModuleProgressDto> {
+        return this.http.get<UserModuleProgressDto>(`${API}/modules/${moduleId}/user/progress`).pipe(shareReplay(1));
     }
 
     public create(module: CreateModuleDto): Observable<number> {

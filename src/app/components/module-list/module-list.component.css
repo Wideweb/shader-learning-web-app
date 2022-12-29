@@ -84,3 +84,9 @@ mat-card-footer {
 .lock-icon {
     color: #777;
 }
+
+.action-link-edit {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
