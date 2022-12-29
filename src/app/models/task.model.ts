@@ -76,6 +76,7 @@ export interface UserTask {
 
 export interface UserTaskResultDto {
     id: number;
+    moduleId: number;
     name: string;
     order: number;
     accepted: boolean;
@@ -86,6 +87,7 @@ export interface UserTaskResultDto {
 
 export interface TaskListDto {
     id: number;
+    moduleId: number;
     name: string;
     order: number;
     cost: number;
