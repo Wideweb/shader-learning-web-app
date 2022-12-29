@@ -22,10 +22,10 @@
                     <div class="number">{{ module.tasks }}</div>
                     <div class="title">Tasks</div>
                 </div>
-                <!-- <div class="tasks-info">
+                <div class="tasks-info">
                     <div class="number">&nbsp;</div>
-                    <div class="title">{{0}}%</div>
-                </div> -->
+                    <div class="title">{{ (module.acceptedTasks / module.tasks * 100) | number:'1.0-0' }}%</div>
+                </div>
                 <div class="action" *ngIf="!module.locked">
                     <a routerLink="/module/{{ module.id }}/view"><mat-icon>arrow_forward</mat-icon></a>
                 </div>

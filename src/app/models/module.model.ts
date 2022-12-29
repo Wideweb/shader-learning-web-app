@@ -30,6 +30,7 @@ export interface ModuleListDto {
   tasks: number;
   order: number;
   locked: boolean;
+  acceptedTasks: number;
 }
 
 export interface UserModuleProgressDto {
