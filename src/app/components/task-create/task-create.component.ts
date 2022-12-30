@@ -139,7 +139,6 @@ export class TaskCreateComponent implements OnInit {
       name: this.form.value.name,
       hints: this.task!.hints,
       restrictions: this.task!.restrictions,
-      order: this.task!.order,
       cost: Number.parseInt(this.form.value.cost),
       threshold: Number.parseInt(this.form.value.threshold),
       vertexShader: this.vertexShader,

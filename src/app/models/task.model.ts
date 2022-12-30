@@ -34,7 +34,6 @@ export interface UpdateTaskDto {
     fragmentShader: string;
     hints: TaskHint[];
     restrictions: TaskRestriction[];
-    order: number;
     cost: number;
     threshold: number;
     description: string;
