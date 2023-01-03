@@ -1,9 +1,19 @@
+import { filter, map, ReplaySubject } from "rxjs";
 import { LocalService } from "./local-storage.service";
 
 export class AuthToken {
-    private hasExpiration = true;
 
-    constructor(private valueKey: string, private expirationTimeKey: string, private storage: LocalService) {}
+    public isExpired$: ReplaySubject<boolean>;
+
+    constructor(private valueKey: string, private lifeKey: string, private storage: LocalService) { 
+        this.isExpired$ = new ReplaySubject(1);
+        this.isExpired$.next(this.isExpired());
+
+        this.storage.message$.pipe(
+            filter(message => message.key == valueKey || message.key == lifeKey),
+            map(() => this.isExpired())
+        ).subscribe(this.isExpired$);
+    }
 
     public getValue(): string {
         return this.storage.getData(this.valueKey);;
@@ -17,34 +27,45 @@ export class AuthToken {
     public setValue(value: string): void {
         this.storage.saveData(this.valueKey, value);
     }    
+
+    public getLife() {
+        return Number.parseInt(this.storage.getData(this.lifeKey));
+    }
     
     public setLife(life: number) {
-        this.hasExpiration = life > 0;
-        this.storage.saveData(this.expirationTimeKey, JSON.stringify(this.computeExpiresAt(life).valueOf()));
+        this.storage.saveData(this.lifeKey, JSON.stringify(life));
+        this.isExpired$.next(this.isExpired());
     }
 
     public isExpired(): boolean {
-        return this.hasExpiration && this.getExpiresAt() < this.getNowUTC();
+        const life = this.getLife();
+        if (Number.isNaN(life)) {
+            return true;
+        }
+
+        const hasExpiration = life > 0;
+        return hasExpiration && this.getExpiresAt() < this.getNowUTC();
     }
 
     public getExpiresAt(): number {
-        if (!this.hasExpiration) {
-            Number.MAX_VALUE;
-        }
+        const life = this.getLife();
 
-        const expiration = this.storage.getData(this.expirationTimeKey);
-        if (!expiration) {
+        if (Number.isNaN(life)) {
             return 0;
         }
 
-        const expiresAt = JSON.parse(expiration);
-        return expiresAt
+        const hasExpiration = life > 0;
+        if (!hasExpiration) {
+            Number.MAX_VALUE;
+        }
+
+        return this.computeExpiresAt(life);
     }
 
     public clear() {
         this.storage.removeData(this.valueKey);
-        this.storage.removeData(this.expirationTimeKey);
-        this.hasExpiration = true;
+        this.storage.removeData(this.lifeKey);
+        this.isExpired$.next(true);
     }
 
     private getNowUTC(): number {

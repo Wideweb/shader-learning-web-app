@@ -31,8 +31,17 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     handleError(request: HttpRequest<any>, next: HttpHandler, error: any): Observable<HttpEvent<any>> {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
+        if (!(error instanceof HttpErrorResponse)) {
+            return throwError(() => error);
+        }
+
+        if (error.status === 401) {
             return this.handle401Error(request, next);
+        }
+
+        if (error.status === 403) {
+            console.log('Unauthorized')
+            this.router.navigate(['/home']);
         }
 
         return throwError(() => error);
@@ -54,7 +63,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     this.isRefreshing = false;
                     this.auth.clearSession();
                     console.log('Unauthorized')
-                    this.router.navigate(['/login']);
+                    this.router.navigate(['/home']);
                     return throwError(() => err);
                 })
             );

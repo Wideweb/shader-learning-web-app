@@ -1,10 +1,10 @@
-<div class="toolbar" role="banner" *ngIf="isLoggedIn()">
+<div class="toolbar" role="banner" *ngIf="isLoggedIn$ | async">
     <a class="home-logo" routerLink="/">H</a>
     <div class="spacer"></div>
     <!-- <div class="actions" *ngIf="isLoggedIn()">
       <span>Score:&nbsp;</span><span>{{ score$ | async }}</span>
     </div> -->
-    <div class="actions" *ngIf="isLoggedIn()">
+    <div class="actions" *ngIf="isLoggedIn$ | async">
       <a mat-icon-button [matMenuTriggerFor]="menu" class="user-avatar">
         <mat-icon class="user-avatar-icon">face_retouching_natural</mat-icon>
       </a>

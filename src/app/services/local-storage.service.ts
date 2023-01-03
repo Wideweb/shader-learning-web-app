@@ -1,14 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import  *  as CryptoJS from  'crypto-js';
+import { filter, fromEvent, ReplaySubject, Subject, takeUntil } from 'rxjs';
+
+export interface LocalServiceEvent {
+    key: string | null;
+    value: string | null;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocalService {
+export class LocalService implements OnDestroy {
 
-constructor() { }
+    public message$ = new ReplaySubject<LocalServiceEvent>(1);
 
     private key = 'shader-learning';
+
+    private destroy$: Subject<boolean> = new Subject<boolean>();
+
+    constructor() {
+        fromEvent<StorageEvent>(window, 'storage')
+            .pipe(
+                filter(event => event.storageArea === localStorage),
+                takeUntil(this.destroy$),
+            )
+            .subscribe(event => {
+                this.message$.next({key: event.key, value: event.newValue })
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
+    }
 
     public saveData(key: string, value: string) {
         localStorage.setItem(key, this.encrypt(value));

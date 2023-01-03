@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, EMPTY, finalize, Observable, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, finalize, map, Observable, shareReplay, tap, throwError } from 'rxjs';
 import { UserSignUp, UserLogIn, SessionData, User } from '../models/user.model';
 import { API } from 'src/environments/environment';
 import { LocalService } from './local-storage.service';
@@ -63,6 +63,10 @@ export class AuthService {
   }
 
   public refreshAccessToke() {
+    if (this.refreshToken.isExpired()) {
+      return throwError(() => 'Unauthorized');
+    }
+
     const body = { refreshToken: this.refreshToken.getValue() };
     return this.http.post<{ token: string; expiresIn: number }>(`${API}/refreshToken`, body)
       .pipe(
@@ -75,6 +79,14 @@ export class AuthService {
 
   public getAccessToken() {
     return this.accessToken.getValue();
+  }
+
+  public get isLoggedIn$(): Observable<boolean> {
+    return this.refreshToken.isExpired$.pipe(map(isExpired => !isExpired));
+  }
+
+  public get isLoggedOut$(): Observable<boolean> {
+    return this.refreshToken.isExpired$;
   }
 
   public isLoggedIn() {
