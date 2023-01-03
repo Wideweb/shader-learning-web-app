@@ -44,6 +44,7 @@ export class AuthToken {
     public clear() {
         this.storage.removeData(this.valueKey);
         this.storage.removeData(this.expirationTimeKey);
+        this.hasExpiration = true;
     }
 
     private getNowUTC(): number {
