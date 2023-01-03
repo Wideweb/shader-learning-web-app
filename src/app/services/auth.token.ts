@@ -1,6 +1,8 @@
 import { LocalService } from "./local-storage.service";
 
 export class AuthToken {
+    private hasExpiration = true;
+
     constructor(private valueKey: string, private expirationTimeKey: string, private storage: LocalService) {}
 
     public getValue(): string {
@@ -17,14 +19,19 @@ export class AuthToken {
     }    
     
     public setLife(life: number) {
+        this.hasExpiration = life > 0;
         this.storage.saveData(this.expirationTimeKey, JSON.stringify(this.computeExpiresAt(life).valueOf()));
     }
 
     public isExpired(): boolean {
-        return this.getExpiresAt() < this.getNowUTC();
+        return this.hasExpiration && this.getExpiresAt() < this.getNowUTC();
     }
 
     public getExpiresAt(): number {
+        if (!this.hasExpiration) {
+            Number.MAX_VALUE;
+        }
+
         const expiration = this.storage.getData(this.expirationTimeKey);
         if (!expiration) {
             return 0;
