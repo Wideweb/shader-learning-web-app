@@ -14,6 +14,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,6 +50,7 @@ import { ModuleViewTaskTableComponent } from './components/module-view/task-tabl
 import { ModuleEditComponent } from './components/module-edit/module-edit.component';
 import { ModuleEditTaskTableComponent } from './components/module-edit/task-table/task-table.component';
 import { ModuleTrainingComponent } from './components/module-training/module-training.component';
+import { ServerErrorInterceptor } from './interceptors/server-error.interceptor';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Observable<any> => {
@@ -106,6 +108,7 @@ export function initializeAppFactory(appInitService: AppInitService) {
     MatTabsModule,
     MatCheckboxModule,
     DragDropModule,
+    MatSnackBarModule,
   ],
   providers: [
     {
@@ -117,6 +120,11 @@ export function initializeAppFactory(appInitService: AppInitService) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServerErrorInterceptor,
       multi: true,
     },
     {

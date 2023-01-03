@@ -50,22 +50,21 @@ export class LoginComponent implements OnDestroy {
       return;
     }
 
-    this.form.setErrors({});
+    this.form.setErrors(null);
     this.auth.login(this.form.value)
-    .pipe()
-    .subscribe({
-      error: (e) => {
-        this.form.setErrors({[e.error.code]: true})
-        if (e.error.code == 'USER_NAME_NOT_FOUND') {
-          this.form.controls['name'].setErrors({'USER_NAME_NOT_FOUND': true});
-        }
+      .pipe()
+      .subscribe({
+        error: (e) => {
+          if (e.error.code == 'USER_NAME_NOT_FOUND') {
+            this.form.controls['name'].setErrors({'USER_NAME_NOT_FOUND': true});
+          }
 
-        if (e.error.code == 'PASSWORD_NOT_MATCH') {
-          this.form.controls['password'].setErrors({'PASSWORD_NOT_MATCH': true});
-        }
-      },
-      complete: () => this.navigate(),
-    });
+          if (e.error.code == 'PASSWORD_NOT_MATCH') {
+            this.form.controls['password'].setErrors({'PASSWORD_NOT_MATCH': true});
+          }
+        },
+        complete: () => this.navigate(),
+      });
   }
 
   toSignUp() {

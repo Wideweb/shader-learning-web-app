@@ -79,7 +79,6 @@ export class ModuleCreateComponent implements OnInit {
     const request = this.isNew() ? this.doCreateRequest() : this.doUpdateRequest();
     request.subscribe({
       error: (e) => {
-        this.form.setErrors({[e.error.code]: true})
         if (e.error.code == 'MODULE_NAME_NOT_UNIQUE') {
           this.form.controls['name'].setErrors({'MODULE_NAME_NOT_UNIQUE': true});
         }

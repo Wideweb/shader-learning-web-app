@@ -109,7 +109,6 @@ export class TaskCreateComponent implements OnInit {
     const request = this.isNew() ? this.doCreateRequest() : this.doUpdateRequest();
     request.subscribe({
       error: (e) => {
-        this.form.setErrors({[e.error.code]: true})
         if (e.error.code == 'TASK_NAME_NOT_UNIQUE') {
           this.form.controls['name'].setErrors({'TASK_NAME_NOT_UNIQUE': true});
         }
