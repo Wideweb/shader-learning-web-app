@@ -17,8 +17,10 @@ export interface User {
 }
 
 export interface TokenData {
-    token: string;
-    expiresIn: number;
+    accessToken: string;
+    accessTokenLife: number;
+    refreshToken: string;
+    refreshTokenLife: number;
 }
 
 export interface SessionData {

@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, finalize, Observable, shareReplay, tap } from 'rxjs';
 import { UserSignUp, UserLogIn, SessionData, User } from '../models/user.model';
 import { API } from 'src/environments/environment';
+import { LocalService } from './local-storage.service';
+import { AuthToken } from './auth.token';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
+  private accessToken: AuthToken;
+
+  private refreshToken: AuthToken;
 
   private meSubject = new BehaviorSubject<User | null>(null);
 
@@ -15,7 +21,10 @@ export class AuthService {
 
   public me: User | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private storage: LocalService) {
+    this.accessToken = new AuthToken('accessToken', 'accessTokenExpiresAt', this.storage);
+    this.refreshToken = new AuthToken('refreshToken', 'refreshTokenExpiresAt', this.storage);
+  }
 
   public updateMe(): Observable<User> {
     if (this.isLoggedOut()) {
@@ -33,54 +42,62 @@ export class AuthService {
   }
 
   public signUp(user: UserSignUp): Observable<SessionData> {
-    return this.http.post<SessionData>(`${API}/signup`, user).pipe(tap(r => this.setSession(r)));
+    return this.http.post<SessionData>(`${API}/signup`, user).pipe(
+      tap(r => this.setSession(r)),
+      shareReplay(1),
+    );
   }
 
   public login(user: UserLogIn): Observable<SessionData> {
-    return this.http.post<SessionData>(`${API}/login`, user).pipe(tap(r => this.setSession(r)));
+    return this.http.post<SessionData>(`${API}/login`, user).pipe(
+      tap(r => this.setSession(r)),
+      shareReplay(1),
+    );
   }
 
-  private setSession(sessionData: SessionData) {
-    const tokenData = sessionData.tokenData;
-
-    localStorage.setItem('id_token', tokenData.token);
-    localStorage.setItem("expires_at", JSON.stringify(this.computeExpiresAt(tokenData.expiresIn).valueOf()) );
-
-    this.me = sessionData.user;
-
-    this.meSubject.next(sessionData.user);
-  }          
-
   public logout() {
-    localStorage.removeItem("id_token");
-    localStorage.removeItem("expires_at");
+    return this.http.post<SessionData>(`${API}/logout`, null).pipe(
+      finalize(() => this.clearSession()),
+      shareReplay(1),
+    );
+  }
+
+  public refreshAccessToke() {
+    const body = { refreshToken: this.refreshToken.getValue() };
+    return this.http.post<{ token: string; expiresIn: number }>(`${API}/refreshToken`, body)
+      .pipe(
+        tap(data => {
+          this.accessToken.set(data.token, data.expiresIn);
+        }),
+        shareReplay(1),
+      );
+  }      
+
+  public getAccessToken() {
+    return this.accessToken.getValue();
   }
 
   public isLoggedIn() {
-    return this.getExpiresAt() > this.getNowUTC();
+    return !this.refreshToken.isExpired();
   }
 
   public isLoggedOut() {
     return !this.isLoggedIn();
   }
 
-  private getNowUTC(): number {
-    var date = new Date();
-    var nowUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-    return nowUTC;
+  public clearSession() {
+    this.accessToken.clear();
+    this.refreshToken.clear();
   }
 
-  private computeExpiresAt(expiresIn: number): number {
-    return this.getNowUTC() + expiresIn * 1000;
-  }
+  private setSession(sessionData: SessionData) {
+    const tokenData = sessionData.tokenData;
 
-  private getExpiresAt(): number {
-    const expiration = localStorage.getItem("expires_at");
-    if (!expiration) {
-      return 0;
-    }
+    this.accessToken.set(tokenData.accessToken, tokenData.accessTokenLife);
+    this.refreshToken.set(tokenData.refreshToken, tokenData.refreshTokenLife);
 
-    const expiresAt = JSON.parse(expiration);
-    return expiresAt
+    this.me = sessionData.user;
+
+    this.meSubject.next(sessionData.user);
   } 
 }
