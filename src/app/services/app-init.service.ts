@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class AppInitService {
 
   public init(): Observable<any> {
     return forkJoin([
-      this.auth.updateMe(),
+      this.auth.updateMe().pipe(catchError(error => of(error))),
     ]);
   }
 }
