@@ -1,0 +1,37 @@
+<div class="page-container" *ngIf="module && (loaded$ | async) == true">
+
+  <div class="page">
+
+    <div class="page-scroll">
+
+      <div class="page-content-wrapper">
+
+        <div class="page-header">
+          {{module.name}}&nbsp;<a *hasPermission="['module_edit']" class="action-link" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a>
+        </div>
+
+        <div class="page-content">
+          <div class="section">
+            <div class="description">{{ module.description }}</div>
+            <div class="created-by">
+              <span>Created By:</span>&nbsp;<a class="name" routerLink="/user-profile/{{module.createdBy.id}}">{{ module.createdBy.name }}</a>
+            </div>
+          </div>
+          <div class="section tasks-section">
+            <div class="table">
+              <moduel-view-task-table
+                [data]="module.tasks"
+                (onOpenTask)="openTask($event)">
+              </moduel-view-task-table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+  

@@ -1,0 +1,54 @@
+<div class="page-container">
+
+    <div class="page">
+
+        <div class="page-scroll">
+
+            <div class="page-content-wrapper">
+
+                <div class="page-header">
+                    <mat-icon class="icon">add_circle</mat-icon>&nbsp;<span>Create Module</span>
+                </div>
+
+                <div class="page-content">
+                    <form class="form" [formGroup]="form">
+                        <div class="form-row">
+                            <mat-form-field>
+                                <mat-label>Name</mat-label>
+                                <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher" autocomplete="off">
+                                
+                                <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+    
+                                <mat-error *ngIf="form.get('name')?.hasError('MODULE_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
+                            </mat-form-field>
+                        </div>
+    
+                        <div class="form-row">
+                            <mat-form-field>
+                                <mat-label>Description</mat-label>
+                                <textarea matInput formControlName="description" [errorStateMatcher]="matcher" autocomplete="off"></textarea>
+                                
+                                <mat-error *ngIf="form.get('description')?.hasError('required')">Description is <strong>required</strong></mat-error>
+                            </mat-form-field>
+                        </div>
+    
+                        <div class="form-section">
+                            <div class="form-row">
+                                <mat-checkbox formControlName="locked" color="primary">Locked</mat-checkbox>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="page-footer">
+        <div class="actions">
+            <button class="btn btn-cancel" (click)="cancel()">Cancel</button>
+            <button class="btn btn-submit" (click)="save()">Create</button>
+        </div>
+    </div>   
+
+</div>

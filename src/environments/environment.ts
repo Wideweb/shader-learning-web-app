@@ -1,3 +1,5 @@
 const API = 'http://localhost:3000';
 
-export { API }
+const PRODUCTION = false;
+
+export { API, PRODUCTION }

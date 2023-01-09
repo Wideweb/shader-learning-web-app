@@ -1,0 +1,80 @@
+
+<div class="container" *ngIf="module">
+
+  <div class="section details-section">
+
+    <form class="form" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-field form-field-editable">
+          <label class="label">Name <a *ngIf="!isNameEditActive" (click)="startNameEdit()"><mat-icon>mode_edit</mat-icon></a></label>
+
+          <div class="view" *ngIf="!isNameEditActive">
+            <span>{{ form.get('name')?.value }}</span>
+          </div>
+
+          <div class="edit" *ngIf="isNameEditActive">
+            <mat-form-field>
+              <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher" autocomplete="off">
+              
+              <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+              <mat-error *ngIf="form.get('name')?.hasError('MODULE_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
+            </mat-form-field>
+  
+            <div class="actions">
+              <a (click)="saveName()"><mat-icon>done</mat-icon></a>
+              <a (click)="cancelNameEdit()"><mat-icon>cancel</mat-icon></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field form-field-editable">
+          <label class="label">Description <a *ngIf="!isDescriptionEditActive" (click)="startDescriptionEdit()"><mat-icon>mode_edit</mat-icon></a></label>
+
+          <div class="view" *ngIf="!isDescriptionEditActive">
+            <span>{{ form.get('description')?.value }}</span>
+          </div>
+
+          <div class="edit" *ngIf="isDescriptionEditActive">
+            <mat-form-field>
+              <textarea matInput formControlName="description" [errorStateMatcher]="matcher" autocomplete="off"></textarea>
+              
+              <mat-error *ngIf="form.get('description')?.hasError('required')">Description is <strong>required</strong></mat-error>
+            </mat-form-field>
+  
+            <div class="actions">
+              <a (click)="saveDescription()"><mat-icon>done</mat-icon></a>
+              <a (click)="cancelDescriptionEdit()"><mat-icon>cancel</mat-icon></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-row flex-row-space-between">
+          <mat-checkbox formControlName="locked" color="primary" (click)="togglLock()">Locked</mat-checkbox>
+
+          <div class="created-by">
+            <span>Created By:</span>&nbsp;<a class="name" routerLink="/user-profile/{{module.createdBy.id}}">{{ module.createdBy.name }}</a>
+          </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div class="section tasks-section">
+    <div class="table">
+      <module-edit-task-table
+        [data]="module.tasks"
+        (onReorderTasks)="reorderTasks($event)"
+        (onEditTask)="editTask($event)"
+        (onToggleTaskVisibility)="toggleTaskVisibility($event)"
+      >
+      </module-edit-task-table>
+    </div>
+  </div>
+    
+  </div>
+  

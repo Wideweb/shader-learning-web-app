@@ -1,3 +1,5 @@
 const API = 'https://shader-learning-api.herokuapp.com';
 
-export { API }
+const PRODUCTION = true;
+
+export { API, PRODUCTION }

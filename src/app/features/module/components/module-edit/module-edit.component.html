@@ -1,0 +1,39 @@
+<div class="page-container" *ngIf="loaded$ | async">
+
+    <div class="page">
+
+        <div class="page-scroll">
+
+            <div class="page-content-wrapper">
+
+                <div class="page-header">
+                    <span>Edit Module</span>
+                </div>
+
+                <div class="page-content">
+                    <module-edit-form
+                        [module]="module$ | async"
+                        [error]="error$ | async"
+                        [isNameEditActive]="(nameEdit$ | async) == true"
+                        [isDescriptionEditActive]="(descriptionEdit$ | async) == true"
+                        (onModuleNameSave)="saveModuleName($event)"
+                        (onModuleDescriptionSave)="saveModuleDescription($event)"
+                        (onToggleLock)="toggleLock()"
+                        (onEditTask)="editTask($event)"
+                        (onReorderTasks)="reorderTasks($event)"
+                        (onToggleTaskVisibility)="toggleTaskVisibility($event)"
+                    >
+                    </module-edit-form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="page-footer">
+        <div class="actions">
+            <button *hasPermission="['task_create']" class="btn btn-submit" (click)="addTask()">Add Task</button>
+        </div>
+    </div>   
+
+</div>

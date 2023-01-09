@@ -1,0 +1,84 @@
+:host {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-self: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.section {
+    width: 100%;
+}
+
+.created-by {
+    margin-top: 10px;
+    color: #888;
+}
+
+h1 {
+    padding-bottom: 15px;
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.section + .section {
+    margin-top: 20px;
+}
+
+.tasks-section .table {
+    margin-bottom: 10px;
+    overflow-x: auto;
+}
+
+.flex-row-space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-row + .form-row {
+    margin-top: 20px;
+}
+
+.form-field-editable .label {
+    height: 30px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.form-field-editable .label mat-icon {
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.form-field-editable .edit {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.form-field-editable .edit mat-form-field {
+    flex: 1;
+}
+
+.form-field-editable .edit .actions {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    box-sizing: border-box;
+    padding-top: 15px;
+}
+
+.form-field-editable .edit .actions a {
+    margin-left: 10px;
+}

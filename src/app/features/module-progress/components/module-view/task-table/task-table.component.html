@@ -1,0 +1,31 @@
+<ng-container *ngIf="empty">
+    <span>No Tasks</span>
+</ng-container>
+
+
+<ng-container *ngIf="!empty">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Task </th>
+            <td mat-cell *matCellDef="let element"><a class="action-link" (click)="openTask(element)">{{element.name}}</a></td>
+        </ng-container>
+
+        <ng-container matColumnDef="match">
+            <th mat-header-cell *matHeaderCellDef> Match </th>
+            <td mat-cell *matCellDef="let element"><span *ngIf="element.accepted || element.rejected">{{(element.match * 100) | number:'1.0' }}%</span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="score">
+            <th mat-header-cell *matHeaderCellDef> Score </th>
+            <td mat-cell *matCellDef="let element"><span *ngIf="element.accepted || element.rejected">{{element.score}}</span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element">{{element | userTaskResultStatus}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</ng-container>

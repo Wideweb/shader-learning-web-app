@@ -1,0 +1,16 @@
+<div class="container" *ngIf="userTaskLoaded$ | async">
+    <ng-container *ngIf="(finished$ | async) !== true">
+        <task-training
+            [userTask]="userTask$ | async"
+            [canEdit]="false"
+            (onNext)="nextTask()"
+        >
+        </task-training>
+    </ng-container>
+
+    <div *ngIf="(finished$ | async) === true" class="ending">
+        <h2>Congratulations!</h2>
+        <h3>You have completed all available tasks</h3>
+        <mat-icon>thumb_up</mat-icon>
+    </div>
+</div>

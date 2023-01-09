@@ -1,0 +1,28 @@
+:host {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.table {
+    flex: 1;
+    min-height: 315px;
+}
+
+.table > table {
+    box-shadow: none;
+}
+
+.table > table th {
+    width: 33%;
+}
+
+.table > table th.actions-column {
+    width: 10%;
+}
+
+.table .action-link {
+    display: inline-block;
+    color: darkcyan;
+    padding-top: 3px 5px;
+}

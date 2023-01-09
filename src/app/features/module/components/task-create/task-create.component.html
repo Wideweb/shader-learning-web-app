@@ -1,0 +1,35 @@
+<div class="page-container">
+
+    <div class="page">
+
+        <div class="page-scroll">
+
+            <div class="page-content-wrapper">
+
+                <div class="page-header">
+                    <span *ngIf="isNew$ | async">Create Task</span>
+                    <span *ngIf="isEdit$ | async">Edit Task</span>
+                </div>
+
+                <div class="page-content">
+                    <task-create-form
+                        [moduleId]="moduleId$ | async"
+                        [task]="task$ | async">
+                    </task-create-form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="page-footer">
+        <div class="actions">
+            <button class="btn btn-cancel" (click)="cancel()">Cancel</button>
+            <button class="btn btn-submit" (click)="save()">
+                <span *ngIf="isNew$ | async">Create</span>
+                <span *ngIf="isEdit$ | async">Update</span>
+            </button>
+        </div>
+    </div>   
+
+</div>

@@ -1,0 +1,84 @@
+<div class="toolbar" role="banner" *ngIf="isAuthenticated$ | async">
+    <a class="home-logo" routerLink="/module-list">H</a>
+    <div class="spacer"></div>
+    <!-- <div class="actions" *ngIf="isLoggedIn()">
+      <span>Score:&nbsp;</span><span>{{ score$ | async }}</span>
+    </div> -->
+    <div class="actions" *ngIf="isAuthenticated$ | async">
+      <a mat-icon-button [matMenuTriggerFor]="menu" class="user-avatar">
+        <mat-icon class="user-avatar-icon">face_retouching_natural</mat-icon>
+      </a>
+      <mat-menu #menu="matMenu">
+        <button button mat-menu-item routerLink="/user-profile/{{ userId$ | async }}">
+          <div class="account-details">
+            <div class="avatar-container">
+              <mat-icon class="avatar">face_retouching_natural</mat-icon>
+            </div>
+            <div class="user-name">{{ userName$ | async }}</div>
+            <div class="user-email">{{ userEmail$ | async }}</div>
+            <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>0</span></div>
+          </div>
+        </button>
+
+        <ng-container>
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/module-list">
+            <mat-icon>explore</mat-icon>
+            <span>Explore</span>
+          </button>
+        </ng-container>
+
+        <ng-container *hasPermission="['users-rating']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/users-rating">
+            <mat-icon>stars</mat-icon>
+            <span>Users Rating</span>
+          </button>
+        </ng-container>
+        
+        <ng-container *hasPermission="['task_submit']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/user-progress">
+            <mat-icon>checklist</mat-icon>
+            <span>Progress</span>
+          </button>
+        </ng-container>
+        
+        <!-- <ng-container *hasPermission="['task_view_all']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/task-list">
+            <mat-icon>list</mat-icon>
+            <span>Tasks</span>
+          </button>
+        </ng-container> -->
+
+        <!-- <ng-container *hasPermission="['task_create']">
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/create-task">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Task</span>
+          </button>
+        </ng-container> -->
+        
+        <!-- <mat-divider></mat-divider>
+        <button mat-menu-item>
+          <mat-icon>tune</mat-icon>
+          <span>Account settings</span>
+        </button> -->
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/logout">
+          <mat-icon>logout</mat-icon>
+          <span>Sign out</span>
+        </button>
+      </mat-menu>
+    </div>
+</div>
+
+<div class="content" role="main">
+  <router-outlet></router-outlet>
+</div>
+
+<div class="spinner" *ngIf="isSpinnerShown()">
+  <div class="spinner-overlay"></div>
+  <mat-spinner></mat-spinner>
+</div>
