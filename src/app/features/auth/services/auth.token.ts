@@ -38,6 +38,10 @@ export class AuthToken {
     }
 
     public setValue(value: string): void {
+        if (value == this.getValue()) {
+            return;
+        }
+
         this.storage.saveData(this.valueKey, value);
     }    
 
@@ -46,6 +50,10 @@ export class AuthToken {
     }
     
     public setLife(life: number) {
+        if (life == this.getLife() || (isNaN(life) && isNaN(this.getLife()))) {
+            return;
+        }
+
         this.storage.saveData(this.lifeKey, JSON.stringify(life));
     }
 
