@@ -57,18 +57,18 @@ export class AuthInterceptor implements HttpInterceptor {
             return this.store
                 .dispatch(new RefreshAccessToken())
                 .pipe(
+                    catchError((err) => this.store.dispatch(new AuthClear())
+                        .pipe(switchMap(() => {
+                            console.log('Unauthorized')
+                            this.router.navigate(['/home']);
+                            return throwError(() => err);
+                        }))),
                     switchMap(() => {
                         this.isRefreshing = false;
                         const accessToken = this.store.selectSnapshot(AuthState.accessToken)!;
                         this.refreshTokenSubject.next(accessToken);
                         return next.handle(this.addTokenHeader(request, accessToken));
                     }),
-                    catchError((err) => this.store.dispatch(new AuthClear())
-                        .pipe(switchMap(() => {
-                            console.log('Unauthorized')
-                            this.router.navigate(['/home']);
-                            return throwError(() => err);
-                        })))
                 );
         }
 

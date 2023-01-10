@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Select } from '@ngxs/store';
-import { distinctUntilChanged, filter, map, Observable, skip, skipWhile, Subject, takeUntil } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { distinctUntilChanged, filter, map, Observable, Subject, takeUntil } from 'rxjs';
 import { UserDto } from 'src/app/features/auth/models/user.model';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { SpinnerService } from 'src/app/features/common/services/spinner.service';
+import { UserProfileLoadMe } from 'src/app/features/user-profile/state/user-profile.actions';
+import { UserProfileState } from 'src/app/features/user-profile/state/user-profile.state';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +16,10 @@ import { SpinnerService } from 'src/app/features/common/services/spinner.service
 export class AppComponent implements OnInit, OnDestroy {
   title = 'shader-learning';
 
-  // public score$: Observable<number>;
+  @Select(UserProfileState.meRank)
+  public userRank$!: Observable<number>;
 
-  public userId$: Observable<string | null>;
+  public userId$: Observable<number | null>;
   
   public userName$: Observable<string | null>;
   
@@ -30,24 +33,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
   
-  constructor(private spinner: SpinnerService, private router: Router) {
-    // this.score$ = this.tasks.score$;
+  constructor(private spinner: SpinnerService, private router: Router, private store: Store) {
 
-    this.userId$ = this.user$.pipe(map(u => u?.id || ''));
+    this.userId$ = this.user$.pipe(map(u => u?.id || null));
     this.userName$ = this.user$.pipe(map(u => u?.name || ''));
     this.userEmail$ = this.user$.pipe(map(u => u?.email || ''));
-
-    // this.userEmail$.pipe(
-    //   distinctUntilChanged(),
-    //   skipWhile(email => !email),
-    //   takeUntil(this.destroy$),
-    // ).subscribe(() => this.tasks.updateScore());
 
     this.isAuthenticated$.pipe(
       distinctUntilChanged(),
       takeUntil(this.destroy$),
       filter(isLoggedIn => !isLoggedIn)
     ).subscribe(() => this.router.navigate(['/']))
+
+    this.userId$.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.destroy$),
+      filter(id => !!id)
+    ).subscribe(id => this.store.dispatch(new UserProfileLoadMe(id!)));
   }
   
   ngOnInit(): void { }

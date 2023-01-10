@@ -16,7 +16,7 @@
             </div>
             <div class="user-name">{{ userName$ | async }}</div>
             <div class="user-email">{{ userEmail$ | async }}</div>
-            <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>0</span></div>
+            <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>{{ userRank$ | async }}</span></div>
           </div>
         </button>
 

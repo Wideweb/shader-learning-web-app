@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { distinctUntilChanged, filter, map, Observable, Subject, takeUntil } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleProgressState } from '../../state/module-progress.state';
 import { ModuleProgressDto } from '../../models/module-progress.model';
 import { UserTaskDto } from '../../models/user-task.model';
 import { ModuleProgressLoadNextTask, ModuleProgressLoadTask } from '../../state/module-progress.actions';
+import { AuthState } from 'src/app/features/auth/state/auth.state';
 
 @Component({
   selector: 'module-training',
@@ -29,11 +30,27 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
   @Select(ModuleProgressState.finished)
   public finished$!: Observable<boolean>;
 
+  public canEditTask$: Observable<boolean>;
+
   public module: ModuleProgressDto | null = null;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private route: ActivatedRoute, private router: Router) { }
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router) {
+    const hasEditTaskPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit']));
+    const hasEditAllTasksPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit_all']));
+
+    const isOwner$ = combineLatest([this.store.select(AuthState.user), this.userTask$])
+      .pipe(
+        map(([user, userTask]) => user?.id == userTask?.task?.createdBy?.id)
+      );
+
+    this.canEditTask$ = combineLatest([isOwner$, hasEditTaskPermission$, hasEditAllTasksPermission$])
+      .pipe(
+        map(([isOwner, canEditTask, canEditAllTasks]) => (isOwner && canEditTask) || canEditAllTasks),
+        startWith(false)
+      );
+  }
 
   ngOnInit(): void {
     this.module$.pipe(takeUntil(this.destroy$)).subscribe(module => (this.module = module));
@@ -58,19 +75,6 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
       .subscribe(userTask => {
         this.router.navigate([`module-progress/${this.module!.id}/training/${userTask.task.id}`])
       });
-
-          // const canEditTask$ = this.store.select(AuthState.hasAllPermissions(['task_edit']));
-
-    // const isOwner$ = combineLatest([this.store.select(AuthState.user), this.task$])
-    //   .pipe(
-    //     map(([user, task]) => user?.id == task?.createdBy)
-    //   );
-
-    // this.canEdit$ = combineLatest([isOwner$, canEditTask$, canEditAllTasks$])
-    //   .pipe(
-    //     map(([isOwner, canEditTask, canEditAllTasks]) => (isOwner && canEditTask) || canEditAllTasks),
-    //     startWith(false)
-    //   );
   }
 
   nextTask() {

@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { forkJoin, interval, Observable, Subject, takeUntil } from 'rxjs';
+import { interval, lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { AuthToken } from '../../auth/services/auth.token';
 import { IsAccessTokenExpired, IsRefreshTokenExpired, LoadMe, UpdateAccessToken, UpdateRefreshToken } from '../../auth/state/auth.actions';
 import { AuthState } from '../../auth/state/auth.state';
 import { LocalService } from '../../common/services/local-storage.service';
+import { UserProfileLoad } from '../../user-profile/state/user-profile.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,7 @@ export class AppInitService implements OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  public init(): Observable<any> {
+  public async init(): Promise<any> {
     this.accessToken.update$
       .pipe(takeUntil(this.destroy$))
       .subscribe(e => this.store.dispatch(new UpdateAccessToken(e)));
@@ -50,8 +51,6 @@ export class AppInitService implements OnDestroy {
         this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.life);
       });
 
-    return forkJoin([
-      this.store.dispatch(new LoadMe())
-    ]);
+    await lastValueFrom(this.store.dispatch(new LoadMe()));
   }
 }

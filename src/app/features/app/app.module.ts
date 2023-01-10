@@ -20,7 +20,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AppCommonModule } from '../common/common.module';
 
 export function initializeAppFactory(appInitService: AppInitService) {
-  return (): Observable<any> => {
+  return (): Promise<any> => {
     return appInitService.init();
   }
 }
