@@ -1,24 +1,19 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Select, Store } from '@ngxs/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { Subject } from 'rxjs';
 import { TaskProgressDto } from '../../models/task-progress.model';
-import { UserProfileLoadProgress } from '../../state/user-profile.actions';
-import { UserProfileState } from '../../state/user-profile.state';
 
 @Component({
   selector: 'user-progress',
   templateUrl: './user-progress.component.html',
   styleUrls: ['./user-progress.component.css']
 })
-export class UserProgressComponent implements AfterViewInit, OnInit, OnDestroy  {
+export class UserProgressComponent implements AfterViewInit, OnInit, OnChanges  {
   
-  @Select(UserProfileState.userProgress)
-  public userProgress$!: Observable<TaskProgressDto[] | null>;
-
-  @Select(UserProfileState.loaded)
-  public loaded$!: Observable<boolean>;
+  @Input()
+  public data: TaskProgressDto[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -33,21 +28,16 @@ export class UserProgressComponent implements AfterViewInit, OnInit, OnDestroy  
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
-    this.store.dispatch(new UserProfileLoadProgress());
-    this.userProgress$
-      .pipe(
-        takeUntil(this.destroy$))
-      .subscribe(progress => {
-        this.dataSource.data = progress || [];
-      });
+      this.dataSource.data = this.data || [];
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('data' in changes) {
+      this.dataSource.data = this.data || [];
+    }
   }
 }

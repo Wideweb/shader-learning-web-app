@@ -16,7 +16,7 @@ export class UserProfileService {
       return this.http.get<UserProfileDto>(`${API}/users/${userId}/profile`).pipe(shareReplay(1));
     }
 
-    public getProgress(): Observable<TaskProgressDto[]> {
-      return this.http.get<TaskProgressDto[]>(`${API}/tasks/progress`).pipe(shareReplay(1));
+    public getProgress(userId: number): Observable<TaskProgressDto[]> {
+      return this.http.get<TaskProgressDto[]>(`${API}/users/${userId}/progress`).pipe(shareReplay(1));
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { distinctUntilChanged, filter, map, Observable, Subject, takeUntil } from 'rxjs';
+import { TaskProgressDto } from '../../models/task-progress.model';
 import { UserProfileDto } from '../../models/user-profile.model';
 import { UserProfileLoad } from '../../state/user-profile.actions';
 import { UserProfileState } from '../../state/user-profile.state';
@@ -15,6 +16,12 @@ export class UserProfileComponent implements OnInit {
   
   @Select(UserProfileState.userProfile)
   public userProfile$!: Observable<UserProfileDto | null>;
+
+  @Select(UserProfileState.userProgress)
+  public userProgress$!: Observable<TaskProgressDto[]>;
+
+  @Select(UserProfileState.userProgressSize)
+  public userProgressSize$!: Observable<number>;
 
   @Select(UserProfileState.loaded)
   public loaded$!: Observable<boolean>;
