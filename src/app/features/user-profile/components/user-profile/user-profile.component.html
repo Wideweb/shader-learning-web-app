@@ -38,7 +38,7 @@
                             <div class="card card-progress">
                                 <mat-card>
                                     <mat-card-content>
-                                        <div class="label">Submitions {{ userProgressSize$ | async }} | Solved {{ userProfile.solved }}</div>
+                                        <div class="label">Submitions {{ userProgressSize$ | async }} | Accepted {{ userProfile.solved }}</div>
                                         <div class="progress-table">
                                             <user-progress [data]="(userProgress$ | async) || []"></user-progress>
                                         </div>
