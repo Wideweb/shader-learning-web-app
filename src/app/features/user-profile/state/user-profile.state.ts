@@ -72,7 +72,7 @@ export class UserProfileState {
   constructor(private service: UserProfileService) {}
 
   @Action(UserProfileLoadMe)
-  async loadMe(ctx: StateContext<UserProfileStateModel>, action: UserProfileLoad) {
+  async loadMe(ctx: StateContext<UserProfileStateModel>) {
     ctx.patchState({
       loaded: false,
       loading: true,
@@ -80,8 +80,9 @@ export class UserProfileState {
 
     try 
     {
-      const me = await firstValueFrom(this.service.getProfile(action.id));
-      ctx.setState(patch<UserProfileStateModel>({ me, error: null }));
+      const userProfile = await firstValueFrom(this.service.getProfileMe());
+      const userProgress = await firstValueFrom(this.service.getProgressMe());
+      ctx.setState(patch<UserProfileStateModel>({ me: userProfile, userProfile, userProgress, error: null }));
     } 
     catch(error)
     {

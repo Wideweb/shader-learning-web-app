@@ -39,7 +39,7 @@
                     <a class="action-link" (click)="editTask(element)"><mat-icon>edit</mat-icon></a>
                 </ng-container>
 
-                <ng-container *hasPermission="['task_visibility']">
+                <ng-container *hasPermission="['task_edit_visibility']">
                     <a class="action-link" (click)="toggleTaskVisibility(element)"><mat-icon>{{ element.visibility ? 'visibility' : 'visibility_off' }}</mat-icon></a>
                 </ng-container>
 

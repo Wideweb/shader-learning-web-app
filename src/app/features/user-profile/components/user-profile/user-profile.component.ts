@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { distinctUntilChanged, filter, map, Observable, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, map, Observable, Subject, takeUntil } from 'rxjs';
 import { TaskProgressDto } from '../../models/task-progress.model';
 import { UserProfileDto } from '../../models/user-profile.model';
-import { UserProfileLoad } from '../../state/user-profile.actions';
+import { UserProfileLoad, UserProfileLoadMe } from '../../state/user-profile.actions';
 import { UserProfileState } from '../../state/user-profile.state';
 
 @Component({
@@ -37,10 +37,9 @@ export class UserProfileComponent implements OnInit {
       .pipe(
         map(params => params['id']),
         distinctUntilChanged(),
-        filter(id => id),
         takeUntil(this.destroy$),
       )
-      .subscribe(id => this.store.dispatch(new UserProfileLoad(id)));
+      .subscribe(id => this.store.dispatch(id ? new UserProfileLoad(id) : new UserProfileLoadMe()));
 
     this.userProfile$.pipe(takeUntil(this.destroy$)).subscribe(userProfile => (this.userProfile = userProfile));
   }

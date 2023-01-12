@@ -42,14 +42,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isAuthenticated$.pipe(
       distinctUntilChanged(),
       takeUntil(this.destroy$),
-      filter(isLoggedIn => !isLoggedIn)
-    ).subscribe(() => this.router.navigate(['/']))
+    ).subscribe((isAuthenticated) =>  {
+      if (!isAuthenticated) {
+        this.router.navigate(['/']);
+        return;
+      }
 
-    this.userId$.pipe(
-      distinctUntilChanged(),
-      takeUntil(this.destroy$),
-      filter(id => !!id)
-    ).subscribe(id => this.store.dispatch(new UserProfileLoadMe(id!)));
+      this.store.dispatch(new UserProfileLoadMe())
+    });
   }
   
   ngOnInit(): void { }

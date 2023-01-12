@@ -9,7 +9,7 @@
         <mat-icon class="user-avatar-icon">face_retouching_natural</mat-icon>
       </a>
       <mat-menu #menu="matMenu">
-        <button button mat-menu-item routerLink="/user-profile/{{ userId$ | async }}">
+        <button button mat-menu-item routerLink="/profile">
           <div class="account-details">
             <div class="avatar-container">
               <mat-icon class="avatar">face_retouching_natural</mat-icon>
@@ -28,7 +28,7 @@
           </button>
         </ng-container>
 
-        <ng-container *hasPermission="['users-rating']">
+        <ng-container *hasPermission="['users_rating']">
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/users-rating">
             <mat-icon>stars</mat-icon>

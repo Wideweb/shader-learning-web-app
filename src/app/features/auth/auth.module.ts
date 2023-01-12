@@ -7,6 +7,7 @@ import { LogoutComponent } from "./components/logout/logout.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
 import { UnauthorizedComponent } from "./components/unauthorized/unauthorized.component";
 import { HasPermissionDirective } from "./directives/has-permission.directive";
+import { NoPermissionDirective } from "./directives/no-permission.directive";
 import { AuthGuard } from "./guards/auth.guard";
 import { NotAuthGuard } from "./guards/not-auth.guard";
 import { routes } from "./routes";
@@ -20,6 +21,7 @@ import { AuthState } from "./state/auth.state";
     SignUpComponent,
     UnauthorizedComponent,
     HasPermissionDirective,
+    NoPermissionDirective,
   ],
   imports: [
     AppCommonModule.forChild(),
@@ -28,6 +30,7 @@ import { AuthState } from "./state/auth.state";
   ],
   exports: [
     HasPermissionDirective,
+    NoPermissionDirective
   ],
 })
 export class AuthModule {

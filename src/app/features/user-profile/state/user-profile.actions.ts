@@ -5,5 +5,4 @@ export class UserProfileLoad {
 
 export class UserProfileLoadMe {
     static readonly type = '[UserProfile] Load Me';
-    constructor(public id: number) {}
 }

@@ -19,4 +19,12 @@ export class UserProfileService {
     public getProgress(userId: number): Observable<TaskProgressDto[]> {
       return this.http.get<TaskProgressDto[]>(`${API}/users/${userId}/progress`).pipe(shareReplay(1));
   }
+
+  public getProfileMe(): Observable<UserProfileDto> {
+    return this.http.get<UserProfileDto>(`${API}/me/profile`).pipe(shareReplay(1));
+  }
+
+  public getProgressMe(): Observable<TaskProgressDto[]> {
+    return this.http.get<TaskProgressDto[]>(`${API}/me/progress`).pipe(shareReplay(1));
+}
 }

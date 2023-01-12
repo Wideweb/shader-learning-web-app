@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { Store } from "@ngxs/store";
 import { AuthState } from "../state/auth.state";
 import { AuthClear, RefreshAccessToken } from "../state/auth.actions";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -13,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-    constructor(private router: Router, private store: Store) {}
+    constructor(private router: Router, private store: Store, private snackBar: MatSnackBar) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return this.authorizeRequest(request, next).pipe(
@@ -42,8 +43,12 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         if (error.status === 403) {
-            console.log('Unauthorized')
-            this.router.navigate(['/home']);
+            this.snackBar.open('Unauthorized', '', {
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                duration: 5000,
+                panelClass: 'snack-bar-item-server-error'
+            });
         }
 
         return throwError(() => error);

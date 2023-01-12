@@ -10,9 +10,9 @@ import { Observable } from 'rxjs';
 import { AuthState } from '../state/auth.state';
   
 @Directive({
-    selector: '[hasPermission]'
+    selector: '[noPermission]'
 })
-export class HasPermissionDirective implements OnInit {
+export class NoPermissionDirective implements OnInit {
     
     private permissions: string[] = [];
     
@@ -34,13 +34,13 @@ export class HasPermissionDirective implements OnInit {
     }
 
     @Input()
-    set hasPermission(val: string[]) {
+    set noPermission(val: string[]) {
         this.permissions = val;
         this.updateView();
     }
 
     @Input()
-    set hasPermissionOp(permop: 'AND' | 'OR') {
+    set noPermissionOp(permop: 'AND' | 'OR') {
         this.logicalOp = permop;
         this.updateView();
     }
@@ -60,9 +60,9 @@ export class HasPermissionDirective implements OnInit {
 
     private checkPermission() {
         if (this.logicalOp === 'AND') {
-            return this.store.selectSnapshot(AuthState.hasAllPermissions(this.permissions));
+            return !this.store.selectSnapshot(AuthState.hasAllPermissions(this.permissions));
         }
 
-        return this.store.selectSnapshot(AuthState.hasAnyPermissions(this.permissions));
+        return !this.store.selectSnapshot(AuthState.hasAnyPermissions(this.permissions));
     }
 }
