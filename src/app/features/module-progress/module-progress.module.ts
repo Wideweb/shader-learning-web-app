@@ -7,6 +7,7 @@ import { ModuleTrainingComponent } from "./components/module-training/module-tra
 import { ModuleViewComponent } from "./components/module-view/module-view.component";
 import { ModuleViewTaskTableComponent } from "./components/module-view/task-table/task-table.component";
 import { ModuleComponent } from "./components/module/module.component";
+import { TaskChannelComponent } from "./components/task-channel/task-channel.component";
 import { TaskResultComponent } from "./components/task-result/task-result.component";
 import { TaskSubmitDialogComponent } from "./components/task-submit-dialog/task-submit-dialog.component";
 import { TaskSubmitResultDialogComponent } from "./components/task-submit-result-dialog/task-submit-result-dialog.component";
@@ -28,6 +29,7 @@ import { ModuleProgressState } from "./state/module-progress.state";
     TaskSubmitDialogComponent,
     TaskSubmitResultDialogComponent,
     TaskTrainingComponent,
+    TaskChannelComponent,
   ],
   imports: [
     AppCommonModule.forChild(),

@@ -55,6 +55,8 @@ export class TaskCreateFormComponent implements OnChanges {
       threshold: new FormControl('', [Validators.required, Validators.pattern(/^([1-9]\d{0,1}|100)$/)]),
       description: new FormControl('', [Validators.required]),
       visibility: false,
+      channel1: null,
+      channel2: null,
     });
   }
 
@@ -66,6 +68,12 @@ export class TaskCreateFormComponent implements OnChanges {
         this.fragmentShader = this.task.fragmentShader;
         this.fragmentShaderApplied = this.fragmentShader;
         this.compileTrigger++;
+
+        if (this.task.channel1) {
+          const reader = new FileReader();
+          reader.onload = (e) => (this.preview1 = e.target?.result);
+          reader.readAsDataURL(this.task.channel1 as File);
+        }
       }
     }
   }
@@ -123,7 +131,9 @@ export class TaskCreateFormComponent implements OnChanges {
       fragmentShader: this.fragmentShader,
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
-      moduleId: this.moduleId!
+      moduleId: this.moduleId!,
+      channel1: this.form.value.channel1,
+      channel2: this.form.value.channel2,
     }));
   }
 
@@ -139,12 +149,18 @@ export class TaskCreateFormComponent implements OnChanges {
       fragmentShader: this.fragmentShader,
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
-      moduleId: this.moduleId!
+      moduleId: this.moduleId!,
+      channel1: this.form.value.channel1,
+      channel2: this.form.value.channel2,
     }));
   }
 
   run(): void {
     this.fragmentShaderApplied = this.fragmentShader;
+    this.compileTrigger++;
+  }
+
+  hanldeChannelChange(): void {
     this.compileTrigger++;
   }
 
@@ -168,5 +184,39 @@ export class TaskCreateFormComponent implements OnChanges {
     if (event.index == 1) {
       this.compiledMarkdown = marked.Parser.parse(marked.Lexer.lex(this.form.value.description));
     }
+  }
+
+  public preview1: string | ArrayBuffer | null | undefined = null;
+  public preview2: string | ArrayBuffer | null | undefined = null;
+
+
+  selectFile1(event: Event): void {
+    const files: FileList | null = (event.target as HTMLInputElement).files;
+    if (!files  || files.length < 1) {
+      return;
+    }
+
+    const file: File = files[0];
+
+    const reader = new FileReader();
+    reader.onload = (e) => (this.preview1 = e.target?.result);
+    reader.readAsDataURL(file);
+
+    this.form.get('channel1')?.setValue(file);
+  }
+
+  selectFile2(event: Event): void {
+    const files: FileList | null = (event.target as HTMLInputElement).files;
+    if (!files  || files.length < 1) {
+      return;
+    }
+
+    const file: File = files[0];
+
+    const reader = new FileReader();
+    reader.onload = (e) => (this.preview2 = e.target?.result);
+    reader.readAsDataURL(file);
+
+    this.form.get('channel2')?.setValue(file);
   }
 }

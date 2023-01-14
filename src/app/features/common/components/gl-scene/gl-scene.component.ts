@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import * as THREE from 'three';
+import { Texture } from 'three';
+import { GlService } from '../../services/gl.service';
 
 @Component({
   selector: 'app-gl-scene',
@@ -12,6 +14,12 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   @Input()
   public fragmentShader!: string;
+
+  @Input()
+  public channel1: File | boolean | null = null;
+
+  @Input()
+  public channel2: File | boolean | null = null;
 
   @Input()
   public compileTrigger = 0;
@@ -49,7 +57,11 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private material!: THREE.ShaderMaterial;
 
-  constructor(private elementRef :ElementRef) {}
+  private texture1: Texture | null = null;
+
+  private texture2: Texture | null = null;
+
+  constructor(private elementRef: ElementRef, private glService: GlService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -78,12 +90,20 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }, 100);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges) {
+    if ('channel1' in changes) {
+      this.texture1 = await this.glService.loadTexture(this.channel1);
+    }
+
+    if ('channel2' in changes) {
+      this.texture2 =  await this.glService.loadTexture(this.channel2);
+    }
+
     if (!this.isRunning && !this.hasIssue) {
       return;
     }
 
-    if ('compileTrigger' in changes) {
+    if (['compileTrigger', 'channel1', 'channel2'].some(p => p in changes)) {
       this.restart();
     }
   }
@@ -111,7 +131,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private createRenderer(): void {
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas })
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true })
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
@@ -150,6 +170,12 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       uniforms: {
         iResolution: { 
           value: new THREE.Vector2(this.canvas.clientWidth, this.canvas.clientHeight),
+        },
+        iChannel0: {
+          value: this.texture1
+        },
+        iChannel1: {
+          value: this.texture2
         },
         iTime: { value: this.time },
       },

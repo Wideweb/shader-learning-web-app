@@ -14,4 +14,14 @@ function moveArrayItem<T>(arr: T[], oldIndex: number, newIndex: number): T[] {
     return arr;
 };
 
-export { hasAny, hasAll, moveArrayItem }
+function createGUID() {
+    function _p8(s: boolean) {  
+        var p = (Math.random().toString(16)+"000000000").substring(2,8);  
+        return s ? "-" + p.substring(0,4) + "-" + p.substring(4,4) : p ;  
+     }  
+     return _p8(false) + _p8(true) + _p8(true) + _p8(false);  
+  }
+
+  
+
+export { hasAny, hasAll, moveArrayItem, createGUID }

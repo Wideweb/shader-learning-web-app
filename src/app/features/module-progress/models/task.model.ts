@@ -12,6 +12,8 @@ export interface TaskDto {
     likes: number;
     dislikes: number;
     createdBy: { id: number; name: string };
+    channel1: File | boolean | null;
+    channel2: File | boolean | null;
 }
 
 export interface TaskHintDto {

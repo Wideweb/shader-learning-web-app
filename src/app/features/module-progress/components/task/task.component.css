@@ -185,3 +185,12 @@ mat-icon.like-icon {
 .section + .section {
     margin-top: 20px;
 }
+
+.channels {
+    display: flex;
+    flex-direction: row;
+}
+
+task-channel + task-channel {
+    margin-left: 15px;
+}

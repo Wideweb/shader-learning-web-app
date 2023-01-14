@@ -60,13 +60,31 @@
         <div class="form-row">
             <div class="scene">
                 <app-gl-scene
-                [vertexShader]="vertexShader"
-                [fragmentShader]="fragmentShaderApplied"
-                [compileTrigger]="compileTrigger"
-                (onError)="handleFragmentShaderCompilationError($event)"
-                (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                    [vertexShader]="vertexShader"
+                    [fragmentShader]="fragmentShaderApplied"
+                    [channel1]="form.get('channel1')?.value"
+                    [channel2]="form.get('channel2')?.value"
+                    [compileTrigger]="compileTrigger"
+                    (onError)="handleFragmentShaderCompilationError($event)"
+                    (onSuccess)="handleFragmentShaderCompilationSuccess()">
                 </app-gl-scene>
             </div>
+        </div>
+
+        <div class="form-row channels">
+            <task-channel
+                label="iChannel0"
+                formControlName="channel1"
+                (onSelect)="hanldeChannelChange()"
+                (onClear)="hanldeChannelChange()"
+            ></task-channel>
+
+            <task-channel
+                label="iChannel1"
+                formControlName="channel2"
+                (onSelect)="hanldeChannelChange()"
+                (onClear)="hanldeChannelChange()"
+            ></task-channel>
         </div>
 
         <div class="form-row">
@@ -91,7 +109,7 @@
                 </div>
             
                 <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
-                <pre>{{ programOutput.message }}</pre>
+                    <pre>{{ programOutput.message }}</pre>
                 </div>
             </div>
         </div>

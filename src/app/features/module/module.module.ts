@@ -8,6 +8,7 @@ import { ModuleEditFormComponent } from "./components/module-edit/module-edit-fo
 import { ModuleEditComponent } from "./components/module-edit/module-edit.component";
 import { ModuleEditTaskTableComponent } from "./components/module-edit/task-table/task-table.component";
 import { ModuleComponent } from "./components/module/module.component";
+import { TaskChannelComponent } from "./components/task-create/task-channel/task-channel.component";
 import { TaskCreateFormComponent } from "./components/task-create/task-create-form/task-create-form.component";
 import { TaskCreateComponent } from "./components/task-create/task-create.component";
 import { routes } from "./routes";
@@ -25,6 +26,7 @@ import { TaskState } from "./state/task.state";
     ModuleEditTaskTableComponent,
     TaskCreateComponent,
     TaskCreateFormComponent,
+    TaskChannelComponent,
   ],
   imports: [
     AppCommonModule.forChild(),

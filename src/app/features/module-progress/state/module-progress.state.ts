@@ -113,7 +113,7 @@ export class ModuleProgressState {
 
     try 
     {
-      const userTask = await firstValueFrom(this.userTaskService.get(action.id));
+      const userTask = await this.userTaskService.get(action.id);
       ctx.setState(patch<ModuleProgressStateModel>({ 
         userTasks: insertItem(userTask),
         userTask,
@@ -153,7 +153,7 @@ export class ModuleProgressState {
         return null;
       }      
 
-      const userTask = await firstValueFrom(this.userTaskService.get(nextTaskId));
+      const userTask = await this.userTaskService.get(nextTaskId);
       ctx.setState(patch<ModuleProgressStateModel>({ userTask, error: null }));
       return userTask;
     } 
@@ -201,7 +201,7 @@ export class ModuleProgressState {
 
     try 
     {
-      const taskSubmitResult = await firstValueFrom(this.userTaskService.submit(action.payload, userTask.task));
+      const taskSubmitResult = await this.userTaskService.submit(action.payload, userTask.task);
 
       const accepted = taskSubmitResult.accepted || task.accepted;
       const rejected = !accepted;

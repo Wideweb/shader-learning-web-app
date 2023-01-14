@@ -24,6 +24,7 @@ import { SpinnerService } from "./services/spinner.service";
 import { LocalService } from "./services/local-storage.service";
 import { CommonModule } from "@angular/common";
 import { UserTaskResultStatusPipe } from "./pipes/user-task-result-status.pipe";
+import { FileService } from "./services/file.service";
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ export class AppCommonModule {
       providers: [
         GlService,
         SpinnerService,
-        LocalService
+        LocalService,
+        FileService,
       ]
     };
   }
