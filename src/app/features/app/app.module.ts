@@ -18,6 +18,7 @@ import { SpinnerInterceptor } from '../common/interceptors/spinner.interceptor';
 import { AppComponent } from './components/app/app.component';
 import { HomeComponent } from './components/home/home.component';
 import { AppCommonModule } from '../common/common.module';
+import { DonateComponent } from './components/donate/donate.component';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -29,6 +30,7 @@ export function initializeAppFactory(appInitService: AppInitService) {
   declarations: [
     AppComponent,
     HomeComponent,
+    DonateComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

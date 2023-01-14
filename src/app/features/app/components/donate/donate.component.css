@@ -1,0 +1,36 @@
+:host {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.container {
+    margin-top: 50px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h3 {
+    margin: 20px 0;
+    font-size: 20px;
+    font-family: 'Circular Regular',sans-serif;
+    font-weight: 500;
+}
+
+p {
+    margin: 4px 0;
+}
+
+img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}
