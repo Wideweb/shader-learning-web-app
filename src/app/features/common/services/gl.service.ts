@@ -6,26 +6,32 @@ import { MATCH_THRESHOLD } from '../../app/app.constants';
 export interface GlProgramSettings {
     iChannel0: File | boolean | null;
     iChannel1: File | boolean | null;
-    vertexShader: string,
-    fragmentShader: string,
+    vertexShader: string;
+    fragmentShader: string;
+    time?: number;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlService {
+    private renderer: THREE.WebGLRenderer;
+
     private originalConsoleError: any = null;
 
     private hasIssue: boolean = false;
 
+    constructor() {
+        this.renderer = new THREE.WebGLRenderer({ antialias :false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true });
+    }
+
     public async renderToTexture(program: GlProgramSettings, width: number, height: number): Promise<Uint8Array | null> {
-        const renderer = new THREE.WebGLRenderer({ antialias :false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true });
-        renderer.setPixelRatio(1);
-        renderer.setSize(width, height);
-        renderer.autoClear = false;
+        this.renderer.setPixelRatio(1);
+        this.renderer.setSize(width, height);
+        this.renderer.autoClear = false;
 
         let service: GlService = this;
-        service.originalConsoleError = console.error.bind(renderer.getContext());
+        service.originalConsoleError = console.error.bind(this.renderer.getContext());
 
         console.error = function(
             summary, getError, programParamCode, programParam, 
@@ -48,6 +54,8 @@ export class GlService {
         const iChannel0 = await this.loadTexture(program.iChannel0);
         const iChannel1 = await this.loadTexture(program.iChannel1);
 
+        console.log(program.time);
+
         const geometry = new THREE.PlaneGeometry(1, 1);
         const material = new THREE.ShaderMaterial({
             uniforms: {
@@ -60,7 +68,9 @@ export class GlService {
                 iChannel1: {
                     value: iChannel1
                 },
-                iTime: { value: 0.0 },
+                iTime: { 
+                    value: program.time
+                },
             },
             vertexShader: program.vertexShader,
             fragmentShader: program.fragmentShader,
@@ -75,9 +85,9 @@ export class GlService {
 
         this.hasIssue = false;
 
-        renderer.setRenderTarget(frameTexture);
-        renderer.render(scene, camera);
-        renderer.readRenderTargetPixels(frameTexture, 0, 0, width, height, buffer);
+        this.renderer.setRenderTarget(frameTexture);
+        this.renderer.render(scene, camera);
+        this.renderer.readRenderTargetPixels(frameTexture, 0, 0, width, height, buffer);
 
         console.error = this.originalConsoleError;
 
@@ -99,6 +109,16 @@ export class GlService {
 
         const matchDegree = 1.0 - mismatches / (width * height);
         return matchDegree;
+    }
+
+    public async compareAnimations(program1: GlProgramSettings, program2: GlProgramSettings, steps: number, stepTime: number): Promise<number> {
+        let matchDegree = 0;
+        for (let i = 0; i < steps; i++) {
+            const m = await this.compare({...program1, time: i * stepTime}, {...program2, time: i * stepTime});
+            console.log(m);
+            matchDegree += m
+        }
+        return matchDegree / steps;
     }
 
     public async loadTexture(file: File | boolean | null): Promise<THREE.Texture | null> {

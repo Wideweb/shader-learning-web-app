@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { SpinnerService } from 'src/app/features/common/services/spinner.service
 import { Store } from '@ngxs/store';
 import { TaskDto } from '../../../models/task.model';
 import { TaskCreate, TaskUpdate } from '../../../state/task.actions';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -22,7 +23,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './task-create-form.component.html',
   styleUrls: ['./task-create-form.component.css']
 })
-export class TaskCreateFormComponent implements OnChanges {
+export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public moduleId: number | null = null;
 
@@ -48,6 +49,8 @@ export class TaskCreateFormComponent implements OnChanges {
 
   public compiledMarkdown: string = '';
 
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+
   constructor(private store: Store, private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private spinner: SpinnerService) {
     this.form = this.fb.group({
       name: new FormControl('', [Validators.required]),
@@ -57,12 +60,41 @@ export class TaskCreateFormComponent implements OnChanges {
       visibility: false,
       channel1: null,
       channel2: null,
+      animated: false,
+      animationSteps: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
+      animationStepTime: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
     });
+  }
+  
+  ngOnInit(): void {
+    this.form.get('animated')?.valueChanges.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.destroy$),
+    ).subscribe(animated => {
+      const animationStepsCtrl =  this.form.get('animationSteps');
+      const animationStepTimeCtrl =  this.form.get('animationStepTime');
+
+      if (!animationStepsCtrl || !animationStepTimeCtrl) {
+        return;
+      }
+
+      if (animated) {
+        animationStepsCtrl.addValidators(Validators.required);
+        animationStepTimeCtrl.addValidators(Validators.required);
+      } else {
+        animationStepsCtrl.removeValidators(Validators.required);
+        animationStepsCtrl.setValue('');
+        
+        animationStepTimeCtrl.removeValidators(Validators.required);
+        animationStepTimeCtrl.setValue('');
+      }
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('task' in changes) {
       if (this.task) {
+        console.log(this.task);
         this.form.patchValue({...this.task});
         this.vertexShader = this.task.vertexShader || DEFAULT_VERTEX_SHADER;
         this.fragmentShader = this.task.fragmentShader;
@@ -76,6 +108,11 @@ export class TaskCreateFormComponent implements OnChanges {
         }
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   isNew() {
@@ -134,6 +171,9 @@ export class TaskCreateFormComponent implements OnChanges {
       moduleId: this.moduleId!,
       channel1: this.form.value.channel1,
       channel2: this.form.value.channel2,
+      animated: this.form.value.animated,
+      animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
+      animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
     }));
   }
 
@@ -152,6 +192,9 @@ export class TaskCreateFormComponent implements OnChanges {
       moduleId: this.moduleId!,
       channel1: this.form.value.channel1,
       channel2: this.form.value.channel2,
+      animated: this.form.value.animated,
+      animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
+      animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
     }));
   }
 

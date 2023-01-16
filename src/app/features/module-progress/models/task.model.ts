@@ -14,6 +14,9 @@ export interface TaskDto {
     createdBy: { id: number; name: string };
     channel1: File | boolean | null;
     channel2: File | boolean | null;
+    animated: boolean;
+    animationSteps: number | null;
+    animationStepTime: number | null;
 }
 
 export interface TaskHintDto {

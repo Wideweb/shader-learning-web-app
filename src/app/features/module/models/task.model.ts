@@ -16,6 +16,9 @@ export interface TaskDto {
     order: number;
     channel1: File | boolean | null;
     channel2: File | boolean | null;
+    animated: boolean;
+    animationSteps: number | null;
+    animationStepTime: number | null;
 }
 
 export interface TaskSaveDto {
@@ -32,6 +35,9 @@ export interface TaskSaveDto {
     visibility: boolean;
     channel1: File | string | null;
     channel2: File | string | null;
+    animated: boolean;
+    animationSteps: number | null;
+    animationStepTime: number | null;
 }
 
 export interface TaskHintDto {

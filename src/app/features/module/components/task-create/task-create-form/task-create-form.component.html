@@ -32,6 +32,32 @@
         </mat-form-field>
     </div>
 
+    <div class="form-row">
+        <mat-checkbox formControlName="animated" color="primary">Animated</mat-checkbox>
+    </div>
+
+    <div class="form-row" *ngIf="form.get('animated')?.value">
+        <mat-form-field>
+            <mat-label>Animation Steps</mat-label>
+            <input type="text" matInput formControlName="animationSteps" [errorStateMatcher]="matcher" autocomplete="off">
+            
+            <mat-error *ngIf="form.get('animationSteps')?.hasError('pattern') && !form.get('animationSteps')?.hasError('required')">Please enter a valid value</mat-error>
+            
+            <mat-error *ngIf="form.get('animationSteps')?.hasError('required')">Animation steps number is <strong>required</strong></mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="form-row" *ngIf="form.get('animated')?.value">
+        <mat-form-field>
+            <mat-label>Animation Step Time (ms)</mat-label>
+            <input type="text" matInput formControlName="animationStepTime" [errorStateMatcher]="matcher" autocomplete="off">
+            
+            <mat-error *ngIf="form.get('animationStepTime')?.hasError('pattern') && !form.get('animationStepTime')?.hasError('required')">Please enter a valid value</mat-error>
+            
+            <mat-error *ngIf="form.get('animationStepTime')?.hasError('required')">Animation step time is <strong>required</strong></mat-error>
+        </mat-form-field>
+    </div>
+
     <div class="form-section">
         <div class="section-header">
             Description

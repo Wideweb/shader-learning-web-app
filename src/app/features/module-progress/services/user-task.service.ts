@@ -49,8 +49,13 @@ export class UserTaskService {
             vertexShader: taskSubmit.vertexShader,
             fragmentShader: taskSubmit.fragmentShader,
         }
-        
-        const match = await this.gl.compare(taskProgram, userProgram);
+
+        let match = 0;
+        if (task.animated) {
+            match = await this.gl.compareAnimations(taskProgram, userProgram, task.animationSteps!, task.animationStepTime! / 1000);
+        } else {
+            match = await this.gl.compare(taskProgram, userProgram);
+        }
 
         return lastValueFrom(
             this.http.post<TaskProgressDto>(`${API}/tasks/${taskSubmit.id}/submit`, {...taskSubmit, match}, {

@@ -67,6 +67,9 @@ export class TaskState {
         order: 0,
         channel1: null,
         channel2: null,
+        animated: false,
+        animationSteps: null,
+        animationStepTime: null,
       }
     });
   }
