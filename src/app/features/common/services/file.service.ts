@@ -19,8 +19,6 @@ export class FileService {
         //   responseType: 'json',
         // });
     
-        return this.http.post(`${API}/files/temp`, formData).pipe(
-          shareReplay(1)
-        );
+        return this.http.post(`${API}/files/temp`, formData).pipe(shareReplay(1));
     }
 }

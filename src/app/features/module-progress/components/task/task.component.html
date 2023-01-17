@@ -21,8 +21,7 @@
           <app-gl-scene
             [vertexShader]="model.vertexShader"
             [fragmentShader]="model.fragmentShader"
-            [channel1]="model.channel1"
-            [channel2]="model.channel2"
+            [channels]="model.channels"
             ></app-gl-scene>
         </div>
       </div>
@@ -33,8 +32,7 @@
           <app-gl-scene
             [vertexShader]="userVertexShader"
             [fragmentShader]="userFragmentShaderApplied"
-            [channel1]="model.channel1"
-            [channel2]="model.channel2"
+            [channels]="model.channels"
             [compileTrigger]="compileTrigger"
             (onError)="handleFragmentShaderCompilationError($event)"
             (onSuccess)="handleFragmentShaderCompilationSuccess()">
@@ -45,10 +43,10 @@
 
   </div>
 
-  <div class="section channels" *ngIf="model.channel1 || model.channel2">
-    <task-channel *ngIf="model.channel1" label="iChannel0" [file]="model.channel1"></task-channel>
-
-    <task-channel *ngIf="model.channel2" label="iChannel1" [file]="model.channel2"></task-channel>
+  <div class="section channels" *ngIf="model.channels.length > 0">
+    <ng-container *ngFor="let channel of model.channels; let i = index">
+      <task-channel [label]="'iChannel' + i" [file]="channel.file"></task-channel>
+    </ng-container>
   </div>
 
   <!-- <div *ngIf="hasHints()">

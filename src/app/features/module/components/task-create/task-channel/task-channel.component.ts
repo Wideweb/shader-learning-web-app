@@ -17,6 +17,9 @@ export class TaskChannelComponent implements ControlValueAccessor {
   public label: string = '';
 
   @Input()
+  public showPreview = true;
+
+  @Input()
   public set file(value: File | null) { 
     this._file = value;
     this.updatePreview();
@@ -26,10 +29,10 @@ export class TaskChannelComponent implements ControlValueAccessor {
   public get file(): File | null { return this._file; }
 
   @Output()
-  public onSelect = new EventEmitter<File | null>();
+  public select = new EventEmitter<File | null>();
 
   @Output()
-  public onClear = new EventEmitter<void>();
+  public clear = new EventEmitter<void>();
 
   private _file: File | null = null;
 
@@ -42,6 +45,10 @@ export class TaskChannelComponent implements ControlValueAccessor {
   }
 
   updatePreview() {
+    if (!this.showPreview) {
+      return;
+    }
+
     if (!(this.file instanceof Blob)) {
       this.preview = null;
       return;
@@ -52,15 +59,15 @@ export class TaskChannelComponent implements ControlValueAccessor {
     reader.readAsDataURL(this.file as File);
   }
 
-  selectFile(event: Event): void {
+  onSelectFile(event: Event): void {
     const files: FileList | null = (event.target as HTMLInputElement).files;
     this.file = !files  || files.length < 1 ? null : files[0];
-    this.onSelect.emit(this.file);
+    this.select.emit(this.file);
   }
 
-  clear() {
+  onClear() {
     this.file = null;
-    this.onClear.emit();
+    this.clear.emit();
   }
 
   writeValue(file: File | null): void {

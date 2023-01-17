@@ -14,8 +14,7 @@ export interface TaskDto {
     dislikes: number;
     createdBy: { id: number; name: string };
     order: number;
-    channel1: File | boolean | null;
-    channel2: File | boolean | null;
+    channels: TaskChannelDto[];
     animated: boolean;
     animationSteps: number | null;
     animationStepTime: number | null;
@@ -33,11 +32,14 @@ export interface TaskSaveDto {
     threshold: number;
     description: string;
     visibility: boolean;
-    channel1: File | string | null;
-    channel2: File | string | null;
+    channels: TaskChannelDto[];
     animated: boolean;
     animationSteps: number | null;
     animationStepTime: number | null;
+}
+
+export interface TaskChannelDto {
+    file: File;
 }
 
 export interface TaskHintDto {

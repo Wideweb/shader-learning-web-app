@@ -3,12 +3,15 @@ import * as Pixelmatch from 'pixelmatch';
 import * as THREE from 'three';
 import { MATCH_THRESHOLD } from '../../app/app.constants';
 
+export interface GlProgramChannel {
+    file: File
+}
+
 export interface GlProgramSettings {
-    iChannel0: File | boolean | null;
-    iChannel1: File | boolean | null;
     vertexShader: string;
     fragmentShader: string;
     time?: number;
+    channels?: GlProgramChannel[];
 }
 
 @Injectable({
@@ -51,10 +54,11 @@ export class GlService {
         const camera = new THREE.OrthographicCamera(0, 1, 1, 0, 0.1, 1000);
         camera.position.set(0, 0, 1);
 
-        const iChannel0 = await this.loadTexture(program.iChannel0);
-        const iChannel1 = await this.loadTexture(program.iChannel1);
-
-        console.log(program.time);
+        const channels = (program.channels || []);
+        const channelsUniforms = {} as any;
+        for (let i = 0; i < channels.length; i++) {
+            channelsUniforms[`iChannel${i}`] = { value: await this.loadTexture(channels[i].file) };
+        }
 
         const geometry = new THREE.PlaneGeometry(1, 1);
         const material = new THREE.ShaderMaterial({
@@ -62,12 +66,7 @@ export class GlService {
                 iResolution: { 
                     value: new THREE.Vector2(width, height),
                 },
-                iChannel0: {
-                    value: iChannel0
-                },
-                iChannel1: {
-                    value: iChannel1
-                },
+                ...channelsUniforms,
                 iTime: { 
                     value: program.time
                 },
@@ -114,14 +113,12 @@ export class GlService {
     public async compareAnimations(program1: GlProgramSettings, program2: GlProgramSettings, steps: number, stepTime: number): Promise<number> {
         let matchDegree = 0;
         for (let i = 0; i < steps; i++) {
-            const m = await this.compare({...program1, time: i * stepTime}, {...program2, time: i * stepTime});
-            console.log(m);
-            matchDegree += m
+            matchDegree += await this.compare({...program1, time: i * stepTime}, {...program2, time: i * stepTime});
         }
         return matchDegree / steps;
     }
 
-    public async loadTexture(file: File | boolean | null): Promise<THREE.Texture | null> {
+    public async loadTexture(file?: File): Promise<THREE.Texture | null> {
         if (!file || !(file instanceof File)) {
           return Promise.resolve(null);
         }

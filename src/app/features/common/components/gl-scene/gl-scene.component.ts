@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import * as THREE from 'three';
 import { Texture } from 'three';
-import { GlService } from '../../services/gl.service';
+import { GlProgramChannel, GlService } from '../../services/gl.service';
 
 @Component({
   selector: 'app-gl-scene',
@@ -16,10 +16,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   public fragmentShader!: string;
 
   @Input()
-  public channel1: File | boolean | null = null;
-
-  @Input()
-  public channel2: File | boolean | null = null;
+  public channels: GlProgramChannel[] = [];
 
   @Input()
   public compileTrigger = 0;
@@ -57,9 +54,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private material!: THREE.ShaderMaterial;
 
-  private texture1: Texture | null = null;
-
-  private texture2: Texture | null = null;
+  private textures: (Texture | null)[] = [];
 
   constructor(private elementRef: ElementRef, private glService: GlService) {}
 
@@ -91,19 +86,16 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    if ('channel1' in changes) {
-      this.texture1 = await this.glService.loadTexture(this.channel1);
-    }
-
-    if ('channel2' in changes) {
-      this.texture2 =  await this.glService.loadTexture(this.channel2);
+    if ('channels' in changes) {
+      const texturesFeatures = (this.channels || []).map(async channel => await this.glService.loadTexture(channel.file));
+      this.textures = await Promise.all(texturesFeatures);
     }
 
     if (!this.isRunning && !this.hasIssue) {
       return;
     }
 
-    if (['compileTrigger', 'channel1', 'channel2'].some(p => p in changes)) {
+    if (['compileTrigger', 'channels'].some(p => p in changes)) {
       this.restart();
     }
   }
@@ -166,17 +158,15 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private addPlaneToScene(): void {
     const geometry = new THREE.PlaneGeometry(1, 1);
+
+    const channelsUniforms = (this.textures || []).reduce((acc, value, i) => ({...acc, [`iChannel${i}`]: { value }}), {});
+
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         iResolution: { 
           value: new THREE.Vector2(this.canvas.clientWidth, this.canvas.clientHeight),
         },
-        iChannel0: {
-          value: this.texture1
-        },
-        iChannel1: {
-          value: this.texture2
-        },
+        ...channelsUniforms,
         iTime: { value: this.time },
       },
       vertexShader: this.vertexShader,

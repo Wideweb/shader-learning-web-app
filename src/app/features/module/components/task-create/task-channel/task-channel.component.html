@@ -3,18 +3,19 @@
     [id]="id"
     name="fileInput"
     accept="image/*" 
-    (change)="selectFile($event)"
+    (change)="onSelectFile($event)"
+    onclick="this.value=null;"
 />
 
 <div class="container">
     <div class="clear">
-        <mat-icon (click)="clear()" class="circle-ico" *ngIf="file">add_circle</mat-icon>
-        <mat-icon (click)="clear()" class="cross-ico" *ngIf="file">add</mat-icon>
+        <mat-icon (click)="onClear()" class="circle-ico" *ngIf="preview">add_circle</mat-icon>
+        <mat-icon (click)="onClear()" class="cross-ico" *ngIf="preview">add</mat-icon>
     </div>
 
     <label [for]="id" class="preview">
-        <img class="preview-img" *ngIf="file" [src]="preview">
-        <mat-icon *ngIf="!file">add_circle</mat-icon>
+        <img class="preview-img" *ngIf="preview" [src]="preview">
+        <mat-icon *ngIf="!preview">add_circle</mat-icon>
     </label>
     <span class="name">{{label}}</span>
 </div>

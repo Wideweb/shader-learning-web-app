@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features/app/app.constants';
@@ -10,6 +10,7 @@ import { Store } from '@ngxs/store';
 import { TaskDto } from '../../../models/task.model';
 import { TaskCreate, TaskUpdate } from '../../../state/task.actions';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { GlProgramChannel } from 'src/app/features/common/services/gl.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -36,6 +37,8 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public fragmentShaderApplied: string = this.fragmentShader;
 
+  public glProgramChannels: GlProgramChannel[] = [];
+
   public compileTrigger = 0;
 
   public programOutput = {
@@ -58,11 +61,10 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       threshold: new FormControl('', [Validators.required, Validators.pattern(/^([1-9]\d{0,1}|100)$/)]),
       description: new FormControl('', [Validators.required]),
       visibility: false,
-      channel1: null,
-      channel2: null,
       animated: false,
-      animationSteps: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
-      animationStepTime: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
+      animationSteps: new FormControl('', []),
+      animationStepTime: new FormControl('', []),
+      channels: this.fb.array([])
     });
   }
   
@@ -79,33 +81,35 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       if (animated) {
-        animationStepsCtrl.addValidators(Validators.required);
-        animationStepTimeCtrl.addValidators(Validators.required);
+        animationStepsCtrl.addValidators([Validators.required, Validators.pattern(/^[1-9]\d*$/)]);
+        animationStepTimeCtrl.addValidators([Validators.required, Validators.pattern(/^[1-9]\d*$/)]);
       } else {
-        animationStepsCtrl.removeValidators(Validators.required);
+        animationStepsCtrl.clearValidators();
         animationStepsCtrl.setValue('');
+        animationStepsCtrl.updateValueAndValidity();
         
-        animationStepTimeCtrl.removeValidators(Validators.required);
+        animationStepTimeCtrl.clearValidators();
         animationStepTimeCtrl.setValue('');
+        animationStepsCtrl.updateValueAndValidity();
       }
-    })
+    });
+
+    this.form.get('channels')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+    ).subscribe((channels) => (this.glProgramChannels = [...channels]));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('task' in changes) {
       if (this.task) {
-        console.log(this.task);
+        this.channels.clear();
+        this.task.channels.forEach(c => this.addChannel(c.file as File));
+
         this.form.patchValue({...this.task});
         this.vertexShader = this.task.vertexShader || DEFAULT_VERTEX_SHADER;
         this.fragmentShader = this.task.fragmentShader;
         this.fragmentShaderApplied = this.fragmentShader;
         this.compileTrigger++;
-
-        if (this.task.channel1) {
-          const reader = new FileReader();
-          reader.onload = (e) => (this.preview1 = e.target?.result);
-          reader.readAsDataURL(this.task.channel1 as File);
-        }
       }
     }
   }
@@ -169,8 +173,7 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
       moduleId: this.moduleId!,
-      channel1: this.form.value.channel1,
-      channel2: this.form.value.channel2,
+      channels: this.channels.controls.map((c) => ({ file: c.value.file })),
       animated: this.form.value.animated,
       animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
       animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
@@ -190,8 +193,7 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
       moduleId: this.moduleId!,
-      channel1: this.form.value.channel1,
-      channel2: this.form.value.channel2,
+      channels: this.channels.controls.map((c) => ({ file: c.value.file })),
       animated: this.form.value.animated,
       animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
       animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
@@ -229,37 +231,25 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public preview1: string | ArrayBuffer | null | undefined = null;
-  public preview2: string | ArrayBuffer | null | undefined = null;
-
-
-  selectFile1(event: Event): void {
-    const files: FileList | null = (event.target as HTMLInputElement).files;
-    if (!files  || files.length < 1) {
-      return;
-    }
-
-    const file: File = files[0];
-
-    const reader = new FileReader();
-    reader.onload = (e) => (this.preview1 = e.target?.result);
-    reader.readAsDataURL(file);
-
-    this.form.get('channel1')?.setValue(file);
+  get channels() {
+    return this.form.controls["channels"] as FormArray<FormGroup>;
   }
 
-  selectFile2(event: Event): void {
-    const files: FileList | null = (event.target as HTMLInputElement).files;
-    if (!files  || files.length < 1) {
+  addChannel(file: File | null) {
+    if (!file) {
       return;
     }
 
-    const file: File = files[0];
+    const channelForm = this.fb.group({
+      file: [file, Validators.required],
+    });
+  
+    this.channels.push(channelForm);
+    this.hanldeChannelChange();
+  }
 
-    const reader = new FileReader();
-    reader.onload = (e) => (this.preview2 = e.target?.result);
-    reader.readAsDataURL(file);
-
-    this.form.get('channel2')?.setValue(file);
+  removeChannel(index: number) {
+    this.channels.removeAt(index);
+    this.hanldeChannelChange();
   }
 }

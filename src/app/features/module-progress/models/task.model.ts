@@ -1,3 +1,5 @@
+import { GlProgramChannel } from "../../common/services/gl.service";
+
 export interface TaskDto {
     id: number;
     moduleId: number;
@@ -12,8 +14,7 @@ export interface TaskDto {
     likes: number;
     dislikes: number;
     createdBy: { id: number; name: string };
-    channel1: File | boolean | null;
-    channel2: File | boolean | null;
+    channels: GlProgramChannel[];
     animated: boolean;
     animationSteps: number | null;
     animationStepTime: number | null;

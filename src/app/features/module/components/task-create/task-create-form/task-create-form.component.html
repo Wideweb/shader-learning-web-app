@@ -88,8 +88,7 @@
                 <app-gl-scene
                     [vertexShader]="vertexShader"
                     [fragmentShader]="fragmentShaderApplied"
-                    [channel1]="form.get('channel1')?.value"
-                    [channel2]="form.get('channel2')?.value"
+                    [channels]="glProgramChannels"
                     [compileTrigger]="compileTrigger"
                     (onError)="handleFragmentShaderCompilationError($event)"
                     (onSuccess)="handleFragmentShaderCompilationSuccess()">
@@ -99,18 +98,20 @@
 
         <div class="form-row channels">
             <task-channel
-                label="iChannel0"
-                formControlName="channel1"
-                (onSelect)="hanldeChannelChange()"
-                (onClear)="hanldeChannelChange()"
+                label="&nbsp;"
+                [showPreview]="false"
+                (select)="addChannel($event)"
             ></task-channel>
-
-            <task-channel
-                label="iChannel1"
-                formControlName="channel2"
-                (onSelect)="hanldeChannelChange()"
-                (onClear)="hanldeChannelChange()"
-            ></task-channel>
+            <ng-container *ngFor="let channelForm of channels.controls; let i = index">
+                <ng-container [formGroup]="channelForm">
+                    <task-channel
+                        [label]="'iChannel' + i"
+                        formControlName="file"
+                        (select)="hanldeChannelChange()"
+                        (clear)="removeChannel(i)"
+                    ></task-channel>
+                </ng-container>
+            </ng-container>
         </div>
 
         <div class="form-row">
@@ -120,10 +121,10 @@
                     [(ngModel)]="fragmentShader"
                     [ngModelOptions]="{standalone: true}"
                     [options]="{
-                    tabSize: 2,
-                    autofocus: false,
-                    lineNumbers: true,
-                    mode: 'x-shader/x-fragment'
+                        tabSize: 2,
+                        autofocus: false,
+                        lineNumbers: true,
+                        mode: 'x-shader/x-fragment'
                     }"
                 ></ngx-codemirror>
                 </div>

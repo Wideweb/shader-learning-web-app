@@ -14,47 +14,37 @@ export class TaskService {
 
     public async get(id: number): Promise<TaskDto> {
       const task = await firstValueFrom(this.http.get<TaskDto>(`${API}/tasks/${id}/get`).pipe(shareReplay(1)));
-      
-      if (task.channel1) {
-        const channel = await firstValueFrom(this.http.get(`${API}/tasks/${id}/channel/1`, { responseType: 'blob' }).pipe(shareReplay(1)));
-        task.channel1 = new File([channel], 'channel1');
-      }
 
-      if (task.channel2) {
-        const channel = await firstValueFrom(this.http.get(`${API}/tasks/${id}/channel/2`, { responseType: 'blob' }).pipe(shareReplay(1)));
-        task.channel2 = new File([channel], 'channel2');
-      }
+      const channelsFeatures = task.channels.map(async (_, index) => {
+        const fileBlob = await firstValueFrom(this.http.get(`${API}/tasks/${id}/channel/${index}`, { responseType: 'blob' }).pipe(shareReplay(1)));
+        const file = new File([fileBlob], `channel${index}`);
+        return { file };
+      });
 
-      return task;
+      const channels = await Promise.all(channelsFeatures);
+
+      return {...task, channels};
     }
 
     public async create(task: TaskSaveDto): Promise<number> {
-      let channel1 = null;
-      let channel2 = null;
+      const channelsFeatures = task.channels.map(async channel => {
+        const file = await firstValueFrom(this.file.uploadTemp(channel.file as File));
+        return { file };
+      });
 
-      if (task.channel1) {
-        channel1 = await firstValueFrom(this.file.uploadTemp(task.channel1 as File));
-      }
+      const channels = await Promise.all(channelsFeatures);
 
-      if (task.channel2) {
-        channel2 = await firstValueFrom(this.file.uploadTemp(task.channel2 as File));
-      }
-
-      return await firstValueFrom(this.http.post<number>(`${API}/tasks/create`, {...task, channel1, channel2}).pipe(shareReplay(1)));
+      return await firstValueFrom(this.http.post<number>(`${API}/tasks/create`, {...task, channels}).pipe(shareReplay(1)));
     }
 
     public async update(task: TaskSaveDto): Promise<number> {
-      let channel1 = null;
-      let channel2 = null;
+      const channelsFeatures = task.channels.map(async channel => {
+        const file = await firstValueFrom(this.file.uploadTemp(channel.file as File));
+        return { file };
+      });
 
-      if (task.channel1) {
-        channel1 = await firstValueFrom(this.file.uploadTemp(task.channel1 as File));
-      }
+      const channels = await Promise.all(channelsFeatures);
 
-      if (task.channel2) {
-        channel2 = await firstValueFrom(this.file.uploadTemp(task.channel2 as File));
-      }
-
-      return await firstValueFrom(this.http.put<number>(`${API}/tasks/${task.id}/update`, {...task, channel1, channel2}).pipe(shareReplay(1)));
+      return await firstValueFrom(this.http.put<number>(`${API}/tasks/${task.id}/update`, {...task, channels}).pipe(shareReplay(1)));
     }
 }

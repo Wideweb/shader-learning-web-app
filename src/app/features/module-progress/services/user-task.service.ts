@@ -17,16 +17,14 @@ export class UserTaskService {
 
     public async get(id: number): Promise<UserTaskDto> {
         const userTask = await firstValueFrom(this.http.get<UserTaskDto>(`${API}/tasks/${id}/userTask`).pipe(shareReplay(1)));
-      
-        if (userTask.task.channel1) {
-            const channel = await firstValueFrom(this.http.get(`${API}/tasks/${id}/channel/1`, { responseType: 'blob' }).pipe(shareReplay(1)));
-            userTask.task.channel1 = new File([channel], 'channel1');
-        }
 
-        if (userTask.task.channel2) {
-            const channel = await firstValueFrom(this.http.get(`${API}/tasks/${id}/channel/2`, { responseType: 'blob' }).pipe(shareReplay(1)));
-            userTask.task.channel2 = new File([channel], 'channel2');
-        }
+        const channelsFeatures = userTask.task.channels.map(async (_, index) => {
+            const fileBlob: Blob = await firstValueFrom(this.http.get(`${API}/tasks/${id}/channel/${index}`, { responseType: 'blob' }).pipe(shareReplay(1)));
+            const file = new File([fileBlob], `channel${index}`);
+            return { file };
+        });
+    
+        userTask.task.channels = await Promise.all(channelsFeatures);
 
         return userTask;
     }
@@ -37,17 +35,15 @@ export class UserTaskService {
 
     public async submit(taskSubmit: TaskSubmitDto, task: TaskDto): Promise<TaskProgressDto> {
         const taskProgram: GlProgramSettings = {
-            iChannel0: task.channel1,
-            iChannel1: task.channel2,
             vertexShader: task.vertexShader,
             fragmentShader: task.fragmentShader,
+            channels: task.channels.map(c => ({ file: c.file })),
         }
 
         const userProgram: GlProgramSettings = {
-            iChannel0: task.channel1,
-            iChannel1: task.channel2,
             vertexShader: taskSubmit.vertexShader,
             fragmentShader: taskSubmit.fragmentShader,
+            channels: task.channels.map(c => ({ file: c.file })),
         }
 
         let match = 0;
