@@ -40,7 +40,7 @@
     border-right: 1px solid #e3e3e3;
     display: flex;
     flex-direction: column;
-    max-width: 250px;
+    width: 250px;
 }
 
 @media screen and (max-width: 900px) {
@@ -93,7 +93,6 @@
     cursor: pointer;
     color: black;
 }
-
 
 .navigation .module-tasks .task:hover {
     background-color: rgb(230, 230, 230);
