@@ -8,20 +8,27 @@
             </div>
         </a>
 
-
         <div class="module-tasks">
             <div class="module-tasks-scroll">
-                <ng-container *ngFor="let task of tasks$ | async" >
-                    <a class="task" [ngClass]="{current: isCurrentTask(task)}" routerLink="/module-progress/{{ (module$ | async)?.id }}/training/{{ task.id }}">
+                <ng-container *ngFor="let task of tasks$ | async; last as isLast" >
+                    <a class="task" routerLink="/module-progress/{{ (module$ | async)?.id }}/training/{{ task.id }}">
                         <div class="status">
-                            <mat-icon *ngIf="!task.accepted">radio_button_unchecked</mat-icon>
-                            <mat-icon *ngIf="task.accepted">check_circle</mat-icon>
+                            <div *ngIf="isCurrentTask(task) then current else status"></div>
+                            <ng-template #current>
+                                <mat-icon >radio_button_checked</mat-icon>
+                            </ng-template>
+                            <ng-template #status>
+                                <mat-icon *ngIf="!task.accepted">radio_button_unchecked</mat-icon>
+                                <mat-icon *ngIf="task.accepted">check_circle</mat-icon>
+                            </ng-template>
                         </div>
                         <div class="name">{{ task.name }}</div>
                     </a>
+                    <div *ngIf="!isLast" class="vertical-line"></div>
                 </ng-container>
             </div>
         </div>
+
     </div>
 
     <div class="current-task" *ngIf="userTaskLoaded$ | async">

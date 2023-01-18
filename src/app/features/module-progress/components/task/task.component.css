@@ -26,10 +26,6 @@
         height: 200px;
         width: 400px;
     }
-    
-    .demo-item + .demo-item {
-        padding-left: 20px;
-    }
 }
 
 @media screen and (max-width: 900px) {

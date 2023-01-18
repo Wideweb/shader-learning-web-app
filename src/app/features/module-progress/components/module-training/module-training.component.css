@@ -40,6 +40,7 @@
     border-right: 1px solid #e3e3e3;
     display: flex;
     flex-direction: column;
+    max-width: 250px;
 }
 
 @media screen and (max-width: 900px) {
@@ -49,6 +50,7 @@
 }
 
 .navigation .module-header {
+    text-align: center;
     border-bottom: 1px solid #e3e3e3;
     color: black;
 }
@@ -87,15 +89,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid #e3e3e3;
-    padding: 10px;
+    padding: 15px;
     cursor: pointer;
     color: black;
 }
 
-.navigation .module-tasks .task.current {
-    background-color: rgb(180, 220, 220);
-}
 
 .navigation .module-tasks .task:hover {
     background-color: rgb(230, 230, 230);
@@ -108,6 +106,23 @@
 
 .navigation .module-tasks .task .status mat-icon {
     color: darkcyan;
+}
+
+.vertical-line {
+    margin-left: 26px;
+    border: 0;
+    position: relative;
+}
+
+.vertical-line::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-left-color: rgb(230, 230, 230);
+    top: -13px;
+    bottom: -13px;
 }
 
 .current-task {
