@@ -1,18 +1,16 @@
 :host {
-    display: flex;
     width: 100%;
     height: 100%;
-    justify-content: center;
+    overflow: hidden;
+    max-width: 900px;
 }
 
 .container {
-    display: flex;
     width: 100%;
     height: 100%;
-    justify-self: center;
-    align-items: center;
+    overflow: hidden;
+    display: flex;
     flex-direction: column;
-    max-width: 860px;
 }
 
 @media screen and (min-width: 900px) {
@@ -38,7 +36,6 @@
     .demo-container {
         display: flex;
         flex-direction: column;
-        align-items: center;
         width: 100%;
     }
 
@@ -107,7 +104,7 @@ a.btn-run:hover .btn-run-ico {
 }
 
 .actions-container {
-    padding: 20px;
+    margin-top: 15px;
 }
 
 a.btn-submit {
@@ -124,10 +121,18 @@ a.btn-submit {
     cursor: pointer;
 }
 
+.heading {
+    width: 100%;
+    border-bottom: 1px solid #e3e3e3;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+
 .header {
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 0;
 }
 
 .header .action-link {
@@ -140,7 +145,7 @@ a.btn-submit {
     text-align: start;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 11.5px;
 }
 
 .like-btn {
@@ -174,8 +179,25 @@ mat-icon.like-icon {
 }
 
 .created-by {
-    margin-top: 10px;
     color: #888;
+    margin-bottom: 5px;
+}
+
+.body {
+    flex: 1;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.body-scroll {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.body-content {
+    box-sizing: border-box;
+    padding: 15px;
+    max-width: 900px;
 }
 
 .section {
@@ -193,4 +215,9 @@ mat-icon.like-icon {
 
 task-channel + task-channel {
     margin-left: 15px;
+}
+
+.description-markdown-compiled {
+    overflow-y: auto;
+    width: 100%;
 }

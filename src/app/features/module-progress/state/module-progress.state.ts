@@ -3,6 +3,7 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { append, insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { ModuleProgressDto } from "../models/module-progress.model";
+import { TaskProgressDto } from "../models/task-progress.model";
 import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
 import { UserTaskDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
@@ -47,6 +48,28 @@ export class ModuleProgressState {
   @Selector()
   static module(state: ModuleProgressStateModel): ModuleProgressDto | null {
     return state.module;
+  }
+
+  @Selector()
+  static moduleName(state: ModuleProgressStateModel): string {
+    return state.module?.name || '';
+  }
+
+  @Selector()
+  static acceptetTasksRate(state: ModuleProgressStateModel): number {
+    const tasks = state.module?.tasks || [];
+    const tasksNumber = tasks.length;
+    if (tasksNumber <= 0) {
+      return 0;
+    }
+
+    const acceptedTasksNumber = tasks.filter(t => t.accepted).length;
+    return acceptedTasksNumber / tasksNumber;
+  }
+
+  @Selector()
+  static tasks(state: ModuleProgressStateModel): TaskProgressDto[] | [] {
+    return state.module?.tasks || [];
   }
 
   @Selector()

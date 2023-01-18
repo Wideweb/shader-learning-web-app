@@ -1,16 +1,44 @@
-<div class="container" *ngIf="userTaskLoaded$ | async">
-    <ng-container *ngIf="(finished$ | async) !== true">
-        <task-training
-            [userTask]="userTask$ | async"
-            [canEdit]="(canEditTask$ | async) == true"
-            (onNext)="nextTask()"
-        >
-        </task-training>
-    </ng-container>
+<div class="container">
 
-    <div *ngIf="(finished$ | async) === true" class="ending">
-        <h2>Congratulations!</h2>
-        <h3>You have completed all available tasks</h3>
-        <mat-icon>thumb_up</mat-icon>
+    <div class="navigation">
+        <a class="module-header" routerLink="/module-progress/{{ (module$ | async)?.id }}/view">
+            <h2>{{ moduleName$ | async }}</h2>
+            <div class="module-progress-percentage">
+                <b>{{ ((acceptetTasksRate$ | async)! * 100) | number:'1.0-0' }}%</b> COMPLETE
+            </div>
+        </a>
+
+
+        <div class="module-tasks">
+            <div class="module-tasks-scroll">
+                <ng-container *ngFor="let task of tasks$ | async" >
+                    <a class="task" [ngClass]="{current: isCurrentTask(task)}" routerLink="/module-progress/{{ (module$ | async)?.id }}/training/{{ task.id }}">
+                        <div class="status">
+                            <mat-icon *ngIf="!task.accepted">radio_button_unchecked</mat-icon>
+                            <mat-icon *ngIf="task.accepted">check_circle</mat-icon>
+                        </div>
+                        <div class="name">{{ task.name }}</div>
+                    </a>
+                </ng-container>
+            </div>
+        </div>
     </div>
+
+    <div class="current-task" *ngIf="userTaskLoaded$ | async">
+        <ng-container *ngIf="(finished$ | async) !== true">
+            <task-training
+                [userTask]="userTask$ | async"
+                [canEdit]="(canEditTask$ | async) == true"
+                (onNext)="nextTask()"
+            >
+            </task-training>
+        </ng-container>
+
+        <div *ngIf="(finished$ | async) === true" class="ending">
+            <h2>Congratulations!</h2>
+            <h3>You have completed all available tasks</h3>
+            <mat-icon>thumb_up</mat-icon>
+        </div>
+    </div>
+
 </div>

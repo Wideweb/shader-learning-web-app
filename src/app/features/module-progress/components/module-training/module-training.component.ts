@@ -7,6 +7,7 @@ import { ModuleProgressDto } from '../../models/module-progress.model';
 import { UserTaskDto } from '../../models/user-task.model';
 import { ModuleProgressLoadNextTask, ModuleProgressLoadTask } from '../../state/module-progress.actions';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
+import { TaskProgressDto } from '../../models/task-progress.model';
 
 @Component({
   selector: 'module-training',
@@ -17,6 +18,15 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   @Select(ModuleProgressState.module)
   public module$!: Observable<ModuleProgressDto>;
+
+  @Select(ModuleProgressState.moduleName)
+  public moduleName$!: Observable<string>;
+
+  @Select(ModuleProgressState.acceptetTasksRate)
+  public acceptetTasksRate$!: Observable<number>;
+
+  @Select(ModuleProgressState.tasks)
+  public tasks$!: Observable<TaskProgressDto[]>;
 
   @Select(ModuleProgressState.loaded)
   public loaded$!: Observable<boolean>;
@@ -79,6 +89,10 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   nextTask() {
     this.store.dispatch(new ModuleProgressLoadNextTask());
+  }
+
+  isCurrentTask(task: TaskProgressDto) {
+    return this.store.selectSnapshot(ModuleProgressState.userTask)?.task.id == task.id;
   }
 
   ngOnDestroy() {

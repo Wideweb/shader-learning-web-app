@@ -1,16 +1,14 @@
-<div class="container">
-    <div *ngIf="userTask">
-      <task
-        [model]="userTask.task"
-        [userVertexShader]="userTask.vertexShader"
-        [userFragmentShader]="userTask.fragmentShader"
-        [liked]="userTask.liked"
-        [disliked]="userTask.disliked"
-        [canEdit]="canEdit"
-        (onEdit)="edit()"
-        (onLike)="like()"
-        (onDislike)="dislike()"
-        (onSubmit)="submit($event)">
-      </task>
-    </div>
-</div>
+<ng-container *ngIf="userTask">
+  <task
+    [model]="userTask.task"
+    [userVertexShader]="userTask.vertexShader"
+    [userFragmentShader]="userTask.fragmentShader"
+    [liked]="userTask.liked"
+    [disliked]="userTask.disliked"
+    [canEdit]="canEdit"
+    (onEdit)="edit()"
+    (onLike)="like()"
+    (onDislike)="dislike()"
+    (onSubmit)="submit($event)">
+  </task>
+</ng-container>
