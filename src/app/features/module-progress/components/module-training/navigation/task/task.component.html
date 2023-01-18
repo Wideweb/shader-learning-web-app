@@ -1,0 +1,23 @@
+<ng-container *ngIf="task.locked then locked else available"></ng-container>
+
+<ng-template #available>
+    <a class="task available" routerLink="/module-progress/{{ moduleId }}/training/{{ task.id }}">
+        <module-training-navigation-task-status
+            [selected]="selected"
+            [accepted]="task.accepted"
+            [locked]="task.locked"
+        ></module-training-navigation-task-status>
+        <div class="name">{{ task.name }}</div>
+    </a>
+</ng-template>
+
+<ng-template #locked>
+    <div class="task locked">
+        <module-training-navigation-task-status
+            [selected]="selected"
+            [accepted]="task.accepted"
+            [locked]="task.locked"
+        ></module-training-navigation-task-status>
+        <div class="name">{{ task.name }}</div>
+    </div>
+</ng-template>

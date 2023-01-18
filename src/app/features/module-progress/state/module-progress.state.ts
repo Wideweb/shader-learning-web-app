@@ -122,7 +122,7 @@ export class ModuleProgressState {
 
   @Action(ModuleProgressLoadTask)
   async loadTask(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressLoadTask) {
-    if (ctx.getState().userTaskLoading) {
+    if (ctx.getState().userTaskLoading || ctx.getState().userTask?.task.id == action.id) {
       return;
     }
 
@@ -170,14 +170,27 @@ export class ModuleProgressState {
 
     try 
     {
-      const nextTaskId = this.findNextTaskId(module, ctx.getState().userTask);
+      const nextTaskId = this.findNextTaskId(module);
       if (!nextTaskId) {
         ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
         return null;
-      }      
+      }
+
+      if (ctx.getState().userTask?.task.id == nextTaskId) {
+        return ctx.getState().userTask;
+      }
 
       const userTask = await this.userTaskService.get(nextTaskId);
-      ctx.setState(patch<ModuleProgressStateModel>({ userTask, error: null }));
+      ctx.setState(patch<ModuleProgressStateModel>({
+        module: patch<ModuleProgressDto>({
+          tasks: updateItem(task => task?.id == userTask.task.id, patch({ 
+            locked: false
+           }))
+        }),
+        userTask,
+        error: null
+      }));
+
       return userTask;
     } 
     catch (error)
@@ -191,14 +204,7 @@ export class ModuleProgressState {
     }
   }
   
-  private findNextTaskId(module: ModuleProgressDto, currentUserTask: UserTaskDto | null) {
-    if (currentUserTask) {
-      const nextTask = module.tasks.find(task => !task.accepted && task.order > currentUserTask.task.order);
-      if (nextTask) {
-        return nextTask.id;
-      }
-    }
-
+  private findNextTaskId(module: ModuleProgressDto) {
     const nextTask = module.tasks.find(task => !task.accepted);
     return nextTask ? nextTask.id : null;
   }
@@ -243,6 +249,19 @@ export class ModuleProgressState {
         taskSubmitResult,
         error: null
       }));
+
+      if (accepted) {
+        const nextTaskId = this.findNextTaskId(ctx.getState().module!);
+        if (nextTaskId) {
+          ctx.setState(patch<ModuleProgressStateModel>({
+            module: patch<ModuleProgressDto>({
+              tasks: updateItem(task => task?.id == nextTaskId, patch({ 
+                locked: false
+              }))
+            }),
+          }));
+        }
+    }
 
       return taskSubmitResult;
     } 

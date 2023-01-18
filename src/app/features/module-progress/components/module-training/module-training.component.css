@@ -85,28 +85,6 @@
     overflow-y: auto;
 }
 
-.navigation .module-tasks .task {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 15px;
-    cursor: pointer;
-    color: black;
-}
-
-.navigation .module-tasks .task:hover {
-    background-color: rgb(230, 230, 230);
-}
-
-.navigation .module-tasks .task .status {
-    margin-top: 3px;
-    margin-right: 10px;
-}
-
-.navigation .module-tasks .task .status mat-icon {
-    color: darkcyan;
-}
-
 .vertical-line {
     margin-left: 26px;
     border: 0;

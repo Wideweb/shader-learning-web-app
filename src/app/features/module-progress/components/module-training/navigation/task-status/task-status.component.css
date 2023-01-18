@@ -1,0 +1,12 @@
+:host {
+    margin-top: 3px;
+    margin-right: 10px;
+}
+
+mat-icon {
+    color: darkcyan;
+}
+
+ mat-icon.locked {
+    color: rgb(230, 230, 230);;
+}

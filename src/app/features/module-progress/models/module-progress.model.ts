@@ -8,4 +8,4 @@ export interface ModuleProgressDto {
     createdBy: { id: number; name: string };
     tasks: TaskProgressDto[];
     locked: boolean;
-  }
+}
