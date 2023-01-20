@@ -20,8 +20,13 @@ function createGUID() {
         return s ? "-" + p.substring(0,4) + "-" + p.substring(4,4) : p ;  
      }  
      return _p8(false) + _p8(true) + _p8(true) + _p8(false);  
-  }
+}
 
-  
+function groupBy<T, K extends keyof any>(arr: T[], key: (i: T) => K) {
+  return arr.reduce((groups, item) => {
+    (groups[key(item)] ||= []).push(item);
+    return groups;
+  }, {} as Record<K, T[]>);
+}
 
-export { hasAny, hasAll, moveArrayItem, createGUID }
+export { hasAny, hasAll, moveArrayItem, createGUID, groupBy }

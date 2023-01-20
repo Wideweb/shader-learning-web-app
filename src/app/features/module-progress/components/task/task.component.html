@@ -67,29 +67,12 @@
         </div> -->
 
         <div class="section">
-          <div class="code-editor-container">
-            <div class="code">
-              <ngx-codemirror
-                [(ngModel)]="userFragmentShader"
-                [options]="{
-                  tabSize: 2,
-                  autofocus: false,
-                  lineNumbers: true,
-                  mode: 'x-shader/x-fragment'
-                }"
-              ></ngx-codemirror>
-            </div>
-
-            <div class="toolbar">
-              <a class="btn-run" (click)="run()">
-                <span class="btn-run-ico"></span>
-              </a>
-            </div>
-
-            <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
-              <pre>{{ programOutput.message }}</pre>
-            </div>
-          </div>
+          <code-editor
+            [code]="userFragmentShader"
+            [prompts]="programPrompts"
+            (onChange)="handleCodeChange($event)"
+            (onRun)="run()"
+          ></code-editor>
         </div>
 
         <div class="actions-container">

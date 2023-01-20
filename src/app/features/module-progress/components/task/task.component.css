@@ -65,15 +65,24 @@
 .code-editor-container .output {
     height: 100px;
     overflow: auto;
-    padding: 0 10px 0 20px;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
-.code-editor-container .output.success {
+.code-editor-container .output .item {
+    margin: 5px 0;
+}
+
+.code-editor-container .output .item.success {
     color: green;
 }
 
-.code-editor-container .output.error {
+.code-editor-container .output .item.error {
     color: brown;
+}
+
+.code-editor-container .output .item .line-number {
+    color: #888888;
 }
 
 a.btn-run {

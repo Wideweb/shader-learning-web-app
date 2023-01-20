@@ -25,11 +25,20 @@ import { LocalService } from "./services/local-storage.service";
 import { CommonModule } from "@angular/common";
 import { UserTaskResultStatusPipe } from "./pipes/user-task-result-status.pipe";
 import { FileService } from "./services/file.service";
+import { CodeEditorComponent } from "./components/code-editor/code-editor.component";
+import { CodeEditorLinePromptComponent } from "./components/code-editor/line-prompt/line-prompt.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { AppTooltipComponent } from "./components/tooltip/tooltip.component";
+import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-renderer.directive";
 
 @NgModule({
   declarations: [
     GlSceneComponent,
+    CodeEditorComponent,
+    CodeEditorLinePromptComponent,
+    AppTooltipComponent,
     UserTaskResultStatusPipe,
+    AppTooltipRendererDirective,
   ],
   imports: [
     CommonModule,
@@ -53,6 +62,7 @@ import { FileService } from "./services/file.service";
     MatCheckboxModule,
     DragDropModule,
     MatSnackBarModule,
+    MatTooltipModule,
   ],
   exports: [
     CommonModule,
@@ -78,6 +88,8 @@ import { FileService } from "./services/file.service";
     MatSnackBarModule,
 
     GlSceneComponent,
+    CodeEditorComponent,
+    AppTooltipRendererDirective,
     UserTaskResultStatusPipe,
   ],
 })

@@ -22,7 +22,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   public compileTrigger = 0;
 
   @Output()
-  public onError = new EventEmitter<string>();
+  public onError = new EventEmitter<{line: number; message: string}[]>();
 
   @Output()
   public onSuccess = new EventEmitter<string>();
@@ -124,20 +124,31 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private createRenderer(): void {
     this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true })
+    this.renderer.debug.checkShaderErrors = true;
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
     let component: GlSceneComponent = this;
     component.originalConsoleError = console.error.bind(this.renderer.getContext());
 
+    const canvas = this.canvas;
+
     console.error = function(
-        summary, getError, programParamCode, programParam, 
+        summary: string, getError, programParamCode, programParam, 
         programLogExample, programLog, vertexErrors, fragmentErrors
     ) {
-
         component.hasIssue = true;
-        component.onError.emit(summary);
         component.stopRenderingLoop();
+
+        const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
+        const matches = [...summary.matchAll(errorPattern)];
+        const errors = matches.map(match => {
+          const line = match ? Number.parseInt(match[1]) - 31 : -1;
+          const message = match ? match[2] : '';
+          return {line, message};
+        });
+        
+        component.onError.emit(errors);
 
         return component.originalConsoleError(
             summary, getError, programParamCode, programParam, 

@@ -11,6 +11,7 @@ import { TaskDto } from '../../../models/task.model';
 import { TaskCreate, TaskUpdate } from '../../../state/task.actions';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { GlProgramChannel } from 'src/app/features/common/services/gl.service';
+import { CodeEditorPrompt } from 'src/app/features/common/components/code-editor/declarations';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -41,10 +42,7 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public compileTrigger = 0;
 
-  public programOutput = {
-    error: false,
-    message: ''
-  };
+  public programPrompts: CodeEditorPrompt[] = [];
 
   public form: FormGroup;
 
@@ -138,7 +136,7 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     this.run();
     setTimeout(() => {
       this.spinner.hide();
-      if (this.programOutput.error) {
+      if (this.programPrompts.some(p => p.type == 'error')) {
         return;
       }
 
@@ -209,22 +207,6 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     this.compileTrigger++;
   }
 
-  handleFragmentShaderCompilationError(message: string): void {
-    console.log("handleFragmentShaderCompilationError");
-    this.programOutput = {
-      error: true,
-      message,
-    };
-  }
-
-  handleFragmentShaderCompilationSuccess(): void {
-    console.log("handleFragmentShaderCompilationSuccess");
-    this.programOutput = {
-      error: false,
-      message: 'Program successfully compiled.'
-    };
-  }
-
   public markdownTapChanged(event: MatTabChangeEvent) {
     if (event.index == 1) {
       this.compiledMarkdown = marked.Parser.parse(marked.Lexer.lex(this.form.value.description));
@@ -251,5 +233,17 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   removeChannel(index: number) {
     this.channels.removeAt(index);
     this.hanldeChannelChange();
+  }
+
+  handleCodeChange(code: string) {
+    this.fragmentShader = code;
+  }
+
+  handleFragmentShaderCompilationError(errors: {line: number; message: string}[]): void {
+    this.programPrompts = errors.map(error => ({ line: error.line, message: error.message, type: 'error' }));
+  }
+
+  handleFragmentShaderCompilationSuccess(): void {
+    this.programPrompts = [];
   }
 }
