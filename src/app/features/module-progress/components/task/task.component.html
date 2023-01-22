@@ -1,6 +1,6 @@
 <div class="container">
   <div class="heading">
-    <h1 class="header">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h1>
+    <h2 class="header">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h2>
     
     <div class="header-tools">
       <a class="like-btn" [ngClass]="{ selected: liked }" (click)="like()"><mat-icon class="like-icon">thumb_up</mat-icon><span class="counter">{{ model.likes }}</span></a>
@@ -23,7 +23,7 @@
 
           <div class="demo-container">
             <div class="demo-item target-result">
-              <h2>Target</h2>
+              <h3>Target</h3>
               <div class="scene">
                 <app-gl-scene
                   [vertexShader]="model.vertexShader"
@@ -34,7 +34,7 @@
             </div>
 
             <div class="demo-item user-result">
-              <h2>Your Result</h2>
+              <h3>Your Result</h3>
               <div class="scene">
                 <app-gl-scene
                   [vertexShader]="userVertexShader"

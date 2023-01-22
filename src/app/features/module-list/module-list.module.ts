@@ -21,5 +21,6 @@ import { ModuleListState } from "./state/module-list.state";
   providers: [
     ModuleListService,
   ],
+  exports: [RouterModule],
 })
 export class ModuleListModule { }

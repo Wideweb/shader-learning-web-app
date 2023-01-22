@@ -94,8 +94,8 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ModuleProgressLoadNextTask());
   }
 
-  isCurrentTask(task: TaskProgressDto) {
-    return this.route.snapshot.params['taskId'] == task.id;
+  selectedTaskId() {
+    return this.route.snapshot.params['taskId'];
   }
 
   ngOnDestroy() {

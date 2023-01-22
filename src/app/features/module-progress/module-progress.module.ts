@@ -4,8 +4,7 @@ import { NgxsModule } from "@ngxs/store";
 import { AuthModule } from "../auth/auth.module";
 import { AppCommonModule } from "../common/common.module";
 import { ModuleTrainingComponent } from "./components/module-training/module-training.component";
-import { ModuleTrainingNavigationTaskStatusComponent } from "./components/module-training/navigation/task-status/task-status.component";
-import { ModuleTrainingNavigationTaskComponent } from "./components/module-training/navigation/task/task.component";
+import { ModuleNavigationTaskComponent } from "./components/module-navigation/task/task.component";
 import { ModuleViewComponent } from "./components/module-view/module-view.component";
 import { ModuleViewTaskTableComponent } from "./components/module-view/task-table/task-table.component";
 import { ModuleComponent } from "./components/module/module.component";
@@ -19,15 +18,18 @@ import { routes } from "./routes";
 import { ModuleProgressService } from "./services/module-progress.service";
 import { UserTaskService } from "./services/user-task.service";
 import { ModuleProgressState } from "./state/module-progress.state";
+import { ModuleNavigationComponent } from "./components/module-navigation/module-navigation.component";
+import { ModuleNavigationTaskStatusComponent } from "./components/module-navigation/task-status/task-status.component";
 
 @NgModule({
   declarations: [
     ModuleComponent,
-    
-    ModuleTrainingComponent,
-    ModuleTrainingNavigationTaskComponent,
-    ModuleTrainingNavigationTaskStatusComponent,
 
+    ModuleNavigationComponent,
+    ModuleNavigationTaskComponent,
+    ModuleNavigationTaskStatusComponent,
+
+    ModuleTrainingComponent,
     ModuleViewComponent,
     ModuleViewTaskTableComponent,
     TaskComponent,

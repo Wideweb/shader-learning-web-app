@@ -4,79 +4,6 @@
     flex-direction: column;
 }
 
-.spacer {
-  flex: 1;
-}
-
-.toolbar {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  background-color: darkcyan;
-  color: white;
-  font-weight: 600;
-}
-
-.toolbar a.home-logo {
-  color: white;
-  font-weight: bold;
-  padding: 0 30px;
-  font-size: 35px;
-  cursor: pointer;
-}
-
-.toolbar img {
-  margin: 0 16px;
-}
-
-.toolbar #twitter-logo {
-  height: 40px;
-  margin: 0 8px;
-}
-
-.toolbar #youtube-logo {
-  height: 40px;
-  margin: 0 16px;
-}
-
-.toolbar #twitter-logo:hover,
-.toolbar #youtube-logo:hover {
-  opacity: 0.8;
-}
-
-.toolbar .actions {
-  padding-right: 30px;
-}
-
-.toolbar .actions .link {
-  color: white;
-  cursor: pointer;
-}
-
-.toolbar .actions .link:hover {
-  color: #BBB;
-}
-
-a.user-avatar {
-  display: inline-block;
-  cursor: pointer;
-}
-
-a.user-avatar .user-avatar-icon {
-  font-size: 30px;
-  width: 30px;
-  height: 30px;
-  color: white;
-}
-
-.content {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-}
-
 .spinner {
   position: absolute;
   display: flex;
@@ -103,38 +30,4 @@ a.user-avatar .user-avatar-icon {
   color: #3f3f44;
   padding: 20px 10px 15px;
   width: 240px;
-}
-
-.account-details .avatar-container {
-  margin: 0 auto 20px auto;
-  box-shadow: none;
-}
-
-.account-details .avatar {
-  font-size: 40px;
-  width: 40px;
-  height: 40px;
-  margin: 0;
-}
-
-.account-details .user-name {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.account-details .user-email {
-  font-size: 13px;
-  display: block;
-  color: #96a3b6;
-  width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.account-details .user-rank {
-  margin-top: 15px;
-  font-size: 15px;
-  color: black;
-  font-weight: 500;
 }

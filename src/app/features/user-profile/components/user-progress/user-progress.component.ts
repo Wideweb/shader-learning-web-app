@@ -11,13 +11,15 @@ import { TaskProgressDto } from '../../models/task-progress.model';
   styleUrls: ['./user-progress.component.css']
 })
 export class UserProgressComponent implements AfterViewInit, OnInit, OnChanges  {
-  
   @Input()
   public data: TaskProgressDto[] = [];
 
+  @Input()
+  public showTaskLink: boolean = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  readonly displayedColumns: string[] = ['name', 'score', 'status'];
+  public displayedColumns: string[] = ['task', 'score', 'status'];
 
   readonly dataSource: MatTableDataSource<TaskProgressDto>;
 
@@ -38,6 +40,10 @@ export class UserProgressComponent implements AfterViewInit, OnInit, OnChanges  
   ngOnChanges(changes: SimpleChanges): void {
     if ('data' in changes) {
       this.dataSource.data = this.data || [];
+    }
+
+    if ('showTaskLink' in changes) {
+      this.displayedColumns = [this.showTaskLink ? 'task-link' : 'task', 'score', 'status']
     }
   }
 }

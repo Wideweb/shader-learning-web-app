@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'module-training-navigation-task-status',
+  selector: 'module-navigation-task-status',
   templateUrl: './task-status.component.html',
   styleUrls: ['./task-status.component.css'],
 })
-export class ModuleTrainingNavigationTaskStatusComponent {
+export class ModuleNavigationTaskStatusComponent {
   @Input()
   public selected: boolean = false;
 

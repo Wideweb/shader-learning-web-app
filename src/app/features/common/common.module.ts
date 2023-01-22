@@ -1,5 +1,4 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +16,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GlSceneComponent } from "./components/gl-scene/gl-scene.component";
 import { GlService } from "./services/gl.service";
 import { SpinnerService } from "./services/spinner.service";
@@ -42,12 +40,10 @@ import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-render
   ],
   imports: [
     CommonModule,
-    BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     CodemirrorModule,
-    BrowserAnimationsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -66,12 +62,10 @@ import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-render
   ],
   exports: [
     CommonModule,
-    BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     CodemirrorModule,
-    BrowserAnimationsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,

@@ -2,7 +2,7 @@
 
     <div class="navigation">
         <a class="module-header" routerLink="/module-progress/{{ (module$ | async)?.id }}/view">
-            <h2>{{ moduleName$ | async }}</h2>
+            <h3>{{ moduleName$ | async }}</h3>
             <div class="module-progress-percentage">
                 <b>{{ ((acceptetTasksRate$ | async)! * 100) | number:'1.0-0' }}%</b> COMPLETE
             </div>
@@ -10,10 +10,11 @@
 
         <div class="module-tasks">
             <div class="module-tasks-scroll">
-                <ng-container *ngFor="let task of tasks$ | async; last as isLast" >
-                    <module-training-navigation-task [moduleId]="(module$ | async)?.id!" [task]="task" [selected]="isCurrentTask(task)"></module-training-navigation-task>
-                    <div *ngIf="!isLast" class="vertical-line"></div>
-                </ng-container>
+                <module-navigation
+                    [moduleId]="(module$ | async)?.id!"
+                    [tasks]="(tasks$ | async)!"
+                    [selectedId]="selectedTaskId()"
+                ></module-navigation>
             </div>
         </div>
 

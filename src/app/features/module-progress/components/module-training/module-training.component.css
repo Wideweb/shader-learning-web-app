@@ -60,12 +60,11 @@
     background-color: rgb(230, 230, 230);
 }
 
-.navigation .module-header h2 {
+.navigation .module-header h3 {
     padding-left: 25px;
     padding-right: 25px;
     padding-top: 25px;
     margin-top: 0;
-    font-weight: 500;
     box-sizing: border-box;
 }
 
@@ -84,23 +83,6 @@
 .navigation .module-tasks-scroll {
     height: 100%;
     overflow-y: auto;
-}
-
-.vertical-line {
-    margin-left: 26px;
-    border: 0;
-    position: relative;
-}
-
-.vertical-line::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    border-left-width: 2px;
-    border-left-style: solid;
-    border-left-color: rgb(230, 230, 230);
-    top: -13px;
-    bottom: -13px;
 }
 
 .current-task {

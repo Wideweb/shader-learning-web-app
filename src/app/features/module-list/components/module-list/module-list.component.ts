@@ -26,6 +26,6 @@ export class ModuleListComponent implements OnInit {
   }
 
   createNew(): void {
-    this.router.navigate(['/module-create']);
+    this.router.navigate(['/module']);
   }
 }

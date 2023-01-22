@@ -40,7 +40,10 @@
                                     <mat-card-content>
                                         <div class="label">Submitions {{ userProgressSize$ | async }} | Accepted {{ userProfile.solved }}</div>
                                         <div class="progress-table">
-                                            <user-progress [data]="(userProgress$ | async) || []"></user-progress>
+                                            <user-progress
+                                                [data]="(userProgress$ | async) || []"
+                                                [showTaskLink]="(showTaskLink$ | async) == true"
+                                            ></user-progress>
                                         </div>
                                     </mat-card-content>
                                 </mat-card>

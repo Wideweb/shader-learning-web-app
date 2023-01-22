@@ -2,7 +2,7 @@ import { TaskSubmitDto } from "../models/task.model";
 
 export class ModuleProgressLoad {
     static readonly type = '[ModuleProgress] Load Module';
-    constructor(public id: number) {}
+    constructor(public id: number, public userProgress: boolean) {}
 }
 
 export class ModuleProgressLoadTask {

@@ -10,7 +10,6 @@ import { HasPermissionDirective } from "./directives/has-permission.directive";
 import { NoPermissionDirective } from "./directives/no-permission.directive";
 import { AuthGuard } from "./guards/auth.guard";
 import { NotAuthGuard } from "./guards/not-auth.guard";
-import { routes } from "./routes";
 import { AuthService } from "./services/auth.service";
 import { AuthState } from "./state/auth.state";
 
@@ -25,7 +24,7 @@ import { AuthState } from "./state/auth.state";
   ],
   imports: [
     AppCommonModule.forChild(),
-    RouterModule.forChild(routes),
+    RouterModule,
     NgxsModule.forFeature([AuthState]),
   ],
   exports: [

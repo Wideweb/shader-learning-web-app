@@ -29,4 +29,10 @@ function groupBy<T, K extends keyof any>(arr: T[], key: (i: T) => K) {
   }, {} as Record<K, T[]>);
 }
 
-export { hasAny, hasAll, moveArrayItem, createGUID, groupBy }
+function isNumber(value: string | number): boolean {
+   return ((value != null) &&
+           (value !== '') &&
+           !isNaN(Number(value.toString())));
+}
+
+export { hasAny, hasAll, moveArrayItem, createGUID, groupBy, isNumber }

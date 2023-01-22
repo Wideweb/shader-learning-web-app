@@ -1,25 +1,82 @@
 :host {
-    display: flex;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+}
+
+.module {
+    width: 100%;
+}
+
+.module-heading-container {
+    display: flex;
     justify-content: center;
+    padding: 40px;
+    background: #005e5e;
+}
+
+.module-heading {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    align-items: flex-start;
+    max-width: 860px;
+}
+
+.module-heading .title {
+    display: flex;
+}
+
+.module-heading .description {
+    font-size: 15px;
+    margin-bottom: 15px;
 }
 
 .created-by {
-    margin-top: 10px;
-    color: #888;
+    font-size: 13px;
 }
 
-.section + .section {
-    margin-top: 20px;
+.created-by .name {
+    font-size: 13px;
+    text-decoration: underline;
+    color: rgb(100, 200, 200);
 }
 
-.tasks-section .table {
-    margin-bottom: 10px;
-    overflow-x: auto;
+.curriculum-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 40px 20px;
 }
 
-.table {
+.curriculum {
+    width: 100%;
+    max-width: 860px;
+    margin-left: -30px;
+}
+
+.curriculum .title {
+    width: 100%;
+    font-size: 30px;
+    font-weight: 300;
+    max-width: 860px;
+    padding-left: 15px;
     box-sizing: border-box;
-    padding-bottom: 50px;
+    margin-bottom: 10px;
+}
+
+.page-footer {
+    justify-content: center;
+    height: 80px;
+    background-color: darkcyan;
+}
+
+.page-footer a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 17px;
+    font-weight: 500;
 }

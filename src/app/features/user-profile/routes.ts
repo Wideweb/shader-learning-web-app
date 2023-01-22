@@ -5,5 +5,5 @@ import { UserProfileComponent } from "./components/user-profile/user-profile.com
 export const routes: Routes = [
   { path: 'profile', component: UserProfileComponent, canActivate:[AuthGuard], data: { permissions: ['profile_view'] } },
 
-  { path: 'user-profile/:id', component: UserProfileComponent, canActivate:[AuthGuard], data: { permissions: ['profile_view_all'] } },
+  { path: 'user-profile/:id', component: UserProfileComponent },
 ];
