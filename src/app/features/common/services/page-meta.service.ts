@@ -8,7 +8,7 @@ export class PageMetaService {
 
   private defaultTitle = 'Shader Learning';
 
-  private defaultDescription = 'Shader Learning is a platform that helps you learn and enhance your rendering skills by solving interactive problems.';
+  private defaultDescription = 'Shader Learning is a platform that helps you learn and enhance your shading skills by solving interactive problems.';
 
   public title$: Observable<string>;
 
@@ -25,6 +25,10 @@ export class PageMetaService {
 
   public setTitle(title: string | null) {
     this.title.next(title ? `${title} - ${this.defaultTitle}` : this.defaultTitle);
+  }
+
+  public setDefaultTitle() {
+    this.title.next(this.defaultTitle);
   }
 
   public setDescription(description: string | null) {

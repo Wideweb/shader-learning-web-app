@@ -53,7 +53,7 @@ export class HomeComponent {
   constructor(private pageMeta: PageMetaService) { }
 
   ngOnInit(): void {
-    this.pageMeta.setTitle(null);
+    this.pageMeta.setDefaultTitle();
     this.pageMeta.setDefaultDescription();
   }
 }
