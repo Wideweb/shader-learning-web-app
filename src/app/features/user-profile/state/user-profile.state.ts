@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
+import { Logout } from "../../auth/state/auth.actions";
 import { TaskProgressDto } from "../models/task-progress.model";
 import { UserProfileDto } from "../models/user-profile.model";
 import { UserProfileService } from "../services/user-profile.service";
@@ -121,5 +122,10 @@ export class UserProfileState {
         loading: false,
       });
     }
+  }
+
+  @Action(Logout)
+  clear(ctx: StateContext<UserProfileStateModel>) {
+    ctx.patchState(defaults());
   }
 }

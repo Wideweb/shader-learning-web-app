@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
+import { Logout } from "../../auth/state/auth.actions";
 import { ModuleListDto } from "../models/module-list.model";
 import { ModuleListService } from "../services/module-list.service";
 import { ModuleListLoad } from "./module-list.actions";
@@ -64,5 +65,10 @@ export class ModuleListState {
         loading: false,
       });
     }
+  }
+
+  @Action(Logout)
+  clear(ctx: StateContext<ModuleListStateModel>) {
+    ctx.patchState(defaults());
   }
 }

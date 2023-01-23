@@ -241,9 +241,4 @@ export class AuthState {
       })
     );
   }
-
-  @Action(AuthClear)
-  clear(ctx: StateContext<AuthStateModel>) {
-    return ctx.setState(defaults());
-  }
 }

@@ -16,8 +16,8 @@ export class ModuleProgressService {
         return this.http.get<ModuleProgressDto>(`${API}/modules/${moduleId}/user/progress`).pipe(shareReplay(1));
     }
 
-    public get(moduleId: number): Observable<ModuleDto> {
-      return this.http.get<ModuleDto>(`${API}/modules/${moduleId}/get`).pipe(shareReplay(1));
+    public getView(moduleId: number): Observable<ModuleDto | null> {
+      return this.http.get<ModuleDto>(`${API}/modules/${moduleId}/view`).pipe(shareReplay(1));
   }
 
 }

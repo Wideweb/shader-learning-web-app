@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
+import { Logout } from "../../auth/state/auth.actions";
 import { ModuleProgressDto } from "../models/module-progress.model";
 import { TaskProgressDto } from "../models/task-progress.model";
 import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
@@ -110,31 +111,34 @@ export class ModuleProgressState {
         ctx.setState(patch<ModuleProgressStateModel>({ module, error: null }));
         return module;
       } else {
-        const module = await firstValueFrom(this.moduleProgressService.get(action.id));
-        const moduleProgress: ModuleProgressDto = {
-          id: module.id,
-          name: module.name,
-          description: module.description,
-          order: module.order,
-          createdBy: module.createdBy,
-          tasks: module.tasks.map((task, index) => ({
-            id: task.id,
-            moduleId: task.moduleId,
-            name: task.name,
-            order: task.order,
-            accepted: false,
-            rejected: false,
-            score: 0,
-            match: 0,
-            locked: index > 0,
-          })),
-          locked: module.locked,
-        };
+        const module = await firstValueFrom(this.moduleProgressService.getView(action.id));
+        let moduleProgress: ModuleProgressDto | null = null;
+
+        if (module) {
+          moduleProgress = {
+            id: module.id,
+            name: module.name,
+            description: module.description,
+            order: module.order,
+            createdBy: module.createdBy,
+            tasks: module.tasks.map((task, index) => ({
+              id: task.id,
+              moduleId: task.moduleId,
+              name: task.name,
+              order: task.order,
+              accepted: false,
+              rejected: false,
+              score: 0,
+              match: 0,
+              locked: index > 0,
+            })),
+            locked: module.locked,
+          };
+        }
 
         ctx.setState(patch<ModuleProgressStateModel>({ module: moduleProgress, error: null }));
         return module;
       }
-
       
     } 
     catch (error)
@@ -361,5 +365,10 @@ export class ModuleProgressState {
     {
       ctx.setState(patch<ModuleProgressStateModel>({ error }));
     }
+  }
+
+  @Action(Logout)
+  clear(ctx: StateContext<ModuleProgressStateModel>) {
+    ctx.patchState(defaults());
   }
 }
