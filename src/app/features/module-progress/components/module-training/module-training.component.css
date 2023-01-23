@@ -1,8 +1,7 @@
 :host {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .ending {
@@ -28,4 +27,65 @@
     width: 100px;
     height: 100px;
     color: darkcyan;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    height: 100%;
+}
+
+.navigation {
+    border-right: 1px solid #e3e3e3;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    min-width: 250px;
+}
+
+@media screen and (max-width: 900px) {
+    .navigation {
+        display: none;
+    }
+}
+
+.navigation .module-header {
+    text-align: center;
+    border-bottom: 1px solid #e3e3e3;
+    color: black;
+}
+
+.navigation .module-header:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.navigation .module-header h3 {
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 25px;
+    margin-top: 0;
+    box-sizing: border-box;
+}
+
+.navigation .module-header .module-progress-percentage {
+    margin-top: 10px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.navigation .module-tasks {
+    flex: 1;
+    overflow: hidden;
+}
+
+.navigation .module-tasks-scroll {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.current-task {
+    flex: 1;
+    overflow: hidden;
 }

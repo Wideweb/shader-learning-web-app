@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
 
-    constructor(private _snackBar: MatSnackBar) {}
+    constructor(private snackBar: MatSnackBar) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
@@ -16,7 +16,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
 
     handleError(request: HttpRequest<any>, next: HttpHandler, error: any): Observable<HttpEvent<any>> {
         if (error instanceof HttpErrorResponse && error.status >= 500) {
-            this._snackBar.open('Server Error', '', {
+            this.snackBar.open('Server Error', '', {
                 horizontalPosition: 'right',
                 verticalPosition: 'top',
                 duration: 5000,

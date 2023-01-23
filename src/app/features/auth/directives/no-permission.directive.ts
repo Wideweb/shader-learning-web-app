@@ -1,0 +1,68 @@
+import {
+    Directive,
+    Input,
+    TemplateRef,
+    ViewContainerRef,
+    OnInit,
+  } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { AuthState } from '../state/auth.state';
+  
+@Directive({
+    selector: '[noPermission]'
+})
+export class NoPermissionDirective implements OnInit {
+    
+    private permissions: string[] = [];
+    
+    private logicalOp: 'AND' | 'OR' = 'AND';
+    
+    private isHidden = true;
+
+    @Select(AuthState.permissions)
+    private userPermissions$!: Observable<string[]>;
+
+    constructor(
+        private templateRef: TemplateRef<any>,
+        private viewContainer: ViewContainerRef,
+        private store: Store,
+    ) { }
+
+    ngOnInit() {
+        this.userPermissions$.subscribe(() => this.updateView());
+    }
+
+    @Input()
+    set noPermission(val: string[]) {
+        this.permissions = val;
+        this.updateView();
+    }
+
+    @Input()
+    set noPermissionOp(permop: 'AND' | 'OR') {
+        this.logicalOp = permop;
+        this.updateView();
+    }
+
+    private updateView() {
+        if (!this.checkPermission()) {
+            this.isHidden = true;
+            this.viewContainer.clear();
+            return;
+        }
+
+        if (this.isHidden) {
+            this.viewContainer.createEmbeddedView(this.templateRef);
+            this.isHidden = false;
+        }
+    }
+
+    private checkPermission() {
+        if (this.logicalOp === 'AND') {
+            return !this.store.selectSnapshot(AuthState.hasAllPermissions(this.permissions));
+        }
+
+        return !this.store.selectSnapshot(AuthState.hasAnyPermissions(this.permissions));
+    }
+}

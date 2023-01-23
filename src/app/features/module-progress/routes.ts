@@ -7,11 +7,10 @@ import { ModuleComponent } from "./components/module/module.component";
 export const routes: Routes = [
 
   { 
-    path: 'module-progress/:moduleId',
+    path: ':moduleId',
     component: ModuleComponent,
-    canActivate:[AuthGuard],
     children: [
-      { path: 'view', component: ModuleViewComponent, canActivate:[AuthGuard] },
+      { path: 'view', component: ModuleViewComponent },
 
       { path: 'training', component: ModuleTrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
       

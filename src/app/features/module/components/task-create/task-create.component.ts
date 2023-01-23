@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { TaskState } from '../../state/task.state';
@@ -6,7 +6,6 @@ import { distinctUntilChanged, map, Observable, Subject, takeUntil } from 'rxjs'
 import { TaskLoad, TaskNew } from '../../state/task.actions';
 import { TaskDto } from '../../models/task.model';
 import { ModuleState } from '../../state/module.state';
-import { FormGroup } from '@angular/forms';
 import { TaskCreateFormComponent } from './task-create-form/task-create-form.component';
 
 @Component({

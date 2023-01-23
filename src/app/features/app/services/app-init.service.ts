@@ -51,6 +51,10 @@ export class AppInitService implements OnDestroy {
         this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.life);
       });
 
-    await lastValueFrom(this.store.dispatch(new LoadMe()));
+    const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
+    if (isAuthenticated) {
+      await lastValueFrom(this.store.dispatch(new LoadMe()));
+
+    }
   }
 }

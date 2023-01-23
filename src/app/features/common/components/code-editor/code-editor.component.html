@@ -1,0 +1,26 @@
+<div class="code-editor-container">
+  <div class="code">
+    <ngx-codemirror
+      [ngModel]="code"
+      (ngModelChange)="hanldeCodeChange($event)"
+      [options]="{
+        tabSize: 2,
+        autofocus: false,
+        lineNumbers: true,
+        mode: 'x-shader/x-fragment'
+      }"
+    ></ngx-codemirror>
+  </div>
+
+  <div class="toolbar">
+    <a class="btn-run" (click)="run()">
+      <span class="btn-run-ico"></span>
+    </a>
+  </div>
+
+  <div class="output">
+    <div class="item" [ngClass]="output.type">
+      <div>{{ output.message }}</div>
+    </div>
+  </div>
+</div>

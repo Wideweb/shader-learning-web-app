@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, distinctUntilChanged, filter, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, map, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleProgressState } from '../../state/module-progress.state';
@@ -7,16 +7,26 @@ import { ModuleProgressDto } from '../../models/module-progress.model';
 import { UserTaskDto } from '../../models/user-task.model';
 import { ModuleProgressLoadNextTask, ModuleProgressLoadTask } from '../../state/module-progress.actions';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
+import { TaskProgressDto } from '../../models/task-progress.model';
 
 @Component({
   selector: 'module-training',
   templateUrl: './module-training.component.html',
-  styleUrls: ['./module-training.component.css']
+  styleUrls: ['./module-training.component.css'],
 })
 export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   @Select(ModuleProgressState.module)
   public module$!: Observable<ModuleProgressDto>;
+
+  @Select(ModuleProgressState.moduleName)
+  public moduleName$!: Observable<string>;
+
+  @Select(ModuleProgressState.acceptetTasksRate)
+  public acceptetTasksRate$!: Observable<number>;
+
+  @Select(ModuleProgressState.tasks)
+  public tasks$!: Observable<TaskProgressDto[]>;
 
   @Select(ModuleProgressState.loaded)
   public loaded$!: Observable<boolean>;
@@ -55,15 +65,18 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.module$.pipe(takeUntil(this.destroy$)).subscribe(module => (this.module = module));
 
-    this.route.params
-      .pipe(
-        map(params => params['taskId']),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$),
-      )
-      .subscribe(taskId => {
-        const action = taskId ? new ModuleProgressLoadTask(taskId) : new ModuleProgressLoadNextTask();
-        this.store.dispatch(action);
+    this.module$.pipe(
+      switchMap(() => this.route.params),
+      map(params => params['taskId']),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$),
+    ).subscribe(taskId => {
+        const task = this.store.selectSnapshot(ModuleProgressState.module)?.tasks.find(t => t.id == taskId);
+        if (!task || task.locked) {
+          this.store.dispatch(new ModuleProgressLoadNextTask());
+          return;
+        }
+        this.store.dispatch(new ModuleProgressLoadTask(taskId));
       });
 
     this.userTask$
@@ -79,6 +92,10 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   nextTask() {
     this.store.dispatch(new ModuleProgressLoadNextTask());
+  }
+
+  selectedTaskId() {
+    return this.route.snapshot.params['taskId'];
   }
 
   ngOnDestroy() {

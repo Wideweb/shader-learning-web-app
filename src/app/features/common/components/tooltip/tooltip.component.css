@@ -1,0 +1,20 @@
+.tooltip-container {
+    position: relative;
+    background-color: #606060;
+    color: rgb(230, 230, 230);
+    text-align: left;
+    box-sizing: border-box;
+    max-width: 400px;
+    white-space: normal;
+}
+
+.tooltip-container::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #606060 transparent transparent transparent;
+}

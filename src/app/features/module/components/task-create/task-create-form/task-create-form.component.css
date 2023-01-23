@@ -4,52 +4,6 @@
     overflow: hidden;
 }
 
-.code-editor-container {
-    width: 100%;
-    border: 1px solid #ddd;
-    margin-top: 20px;
-}
-
-.code-editor-container .toolbar {
-    height: 30px;
-    border-top: 1px solid #ddd;
-    background-color: #f7f7f7;
-    border-top: 1px solid #ddd;
-}
-
-.code-editor-container .output {
-    height: 100px;
-    overflow: auto;
-    padding: 0 10px 0 20px;
-}
-
-.code-editor-container .output.success {
-    color: green;
-}
-
-.code-editor-container .output.error {
-    color: brown;
-}
-
-a.btn-run {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-}
-
-.btn-run-ico {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid darkcyan;
-    margin-right: -10px;
-}
-
 .form-row {
     margin-bottom: 20px;
 }
@@ -88,4 +42,13 @@ mat-form-field {
 .action {
     display: flex;
     flex-direction: row;
+}
+
+.channels {
+    display: flex;
+    flex-direction: row;
+}
+
+task-channel + task-channel {
+    margin-left: 15px;
 }

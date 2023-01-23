@@ -7,16 +7,25 @@ import { TaskCreateComponent } from "./components/task-create/task-create.compon
 
 export const routes: Routes = [
 
-  { path: 'module-create', component: ModuleCreateComponent, canActivate:[AuthGuard] },
+  {
+    path: '', redirectTo: 'create', pathMatch: 'full'
+  },
 
-  { 
-    path: 'module/:moduleId', component: ModuleComponent, canActivate:[AuthGuard],
+  {
+    path: '',
     children: [
-      { path: 'edit', component: ModuleEditComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
+      { path: 'create', component: ModuleCreateComponent, canActivate:[AuthGuard] },
 
-      { path: 'task-create', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
-      
-      { path: 'task/:taskId/edit', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_edit'] } },
+      { 
+        path: ':moduleId', component: ModuleComponent, canActivate:[AuthGuard],
+        children: [
+          { path: 'edit', component: ModuleEditComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
+    
+          { path: 'task-create', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_create'] } },
+          
+          { path: 'task/:taskId/edit', component: TaskCreateComponent, canActivate:[AuthGuard], data: { permissions: ['task_edit'] } },
+        ]
+      },
     ]
   },
 

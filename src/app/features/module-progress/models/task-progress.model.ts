@@ -7,4 +7,5 @@ export interface TaskProgressDto {
     rejected: boolean;
     score: number;
     match: number;
+    locked: boolean;
 }

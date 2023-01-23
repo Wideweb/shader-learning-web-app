@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features/app/app.constants';
@@ -9,6 +9,9 @@ import { SpinnerService } from 'src/app/features/common/services/spinner.service
 import { Store } from '@ngxs/store';
 import { TaskDto } from '../../../models/task.model';
 import { TaskCreate, TaskUpdate } from '../../../state/task.actions';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { GlProgramChannel } from 'src/app/features/common/services/gl.service';
+import { CodeEditorPrompt } from 'src/app/features/common/components/code-editor/declarations';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -22,7 +25,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './task-create-form.component.html',
   styleUrls: ['./task-create-form.component.css']
 })
-export class TaskCreateFormComponent implements OnChanges {
+export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public moduleId: number | null = null;
 
@@ -35,18 +38,19 @@ export class TaskCreateFormComponent implements OnChanges {
 
   public fragmentShaderApplied: string = this.fragmentShader;
 
+  public glProgramChannels: GlProgramChannel[] = [];
+
   public compileTrigger = 0;
 
-  public programOutput = {
-    error: false,
-    message: ''
-  };
+  public programPrompts: CodeEditorPrompt[] = [];
 
   public form: FormGroup;
 
   public matcher = new MyErrorStateMatcher();
 
   public compiledMarkdown: string = '';
+
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store, private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private spinner: SpinnerService) {
     this.form = this.fb.group({
@@ -55,12 +59,50 @@ export class TaskCreateFormComponent implements OnChanges {
       threshold: new FormControl('', [Validators.required, Validators.pattern(/^([1-9]\d{0,1}|100)$/)]),
       description: new FormControl('', [Validators.required]),
       visibility: false,
+      animated: false,
+      animationSteps: new FormControl('', []),
+      animationStepTime: new FormControl('', []),
+      channels: this.fb.array([])
     });
+  }
+  
+  ngOnInit(): void {
+    this.form.get('animated')?.valueChanges.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.destroy$),
+    ).subscribe(animated => {
+      const animationStepsCtrl =  this.form.get('animationSteps');
+      const animationStepTimeCtrl =  this.form.get('animationStepTime');
+
+      if (!animationStepsCtrl || !animationStepTimeCtrl) {
+        return;
+      }
+
+      if (animated) {
+        animationStepsCtrl.addValidators([Validators.required, Validators.pattern(/^[1-9]\d*$/)]);
+        animationStepTimeCtrl.addValidators([Validators.required, Validators.pattern(/^[1-9]\d*$/)]);
+      } else {
+        animationStepsCtrl.clearValidators();
+        animationStepsCtrl.setValue('');
+        animationStepsCtrl.updateValueAndValidity();
+        
+        animationStepTimeCtrl.clearValidators();
+        animationStepTimeCtrl.setValue('');
+        animationStepsCtrl.updateValueAndValidity();
+      }
+    });
+
+    this.form.get('channels')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+    ).subscribe((channels) => (this.glProgramChannels = [...channels]));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('task' in changes) {
       if (this.task) {
+        this.channels.clear();
+        this.task.channels.forEach(c => this.addChannel(c.file as File));
+
         this.form.patchValue({...this.task});
         this.vertexShader = this.task.vertexShader || DEFAULT_VERTEX_SHADER;
         this.fragmentShader = this.task.fragmentShader;
@@ -68,6 +110,11 @@ export class TaskCreateFormComponent implements OnChanges {
         this.compileTrigger++;
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   isNew() {
@@ -89,7 +136,7 @@ export class TaskCreateFormComponent implements OnChanges {
     this.run();
     setTimeout(() => {
       this.spinner.hide();
-      if (this.programOutput.error) {
+      if (this.programPrompts.some(p => p.type == 'error')) {
         return;
       }
 
@@ -123,7 +170,11 @@ export class TaskCreateFormComponent implements OnChanges {
       fragmentShader: this.fragmentShader,
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
-      moduleId: this.moduleId!
+      moduleId: this.moduleId!,
+      channels: this.channels.controls.map((c) => ({ file: c.value.file })),
+      animated: this.form.value.animated,
+      animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
+      animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
     }));
   }
 
@@ -139,7 +190,11 @@ export class TaskCreateFormComponent implements OnChanges {
       fragmentShader: this.fragmentShader,
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
-      moduleId: this.moduleId!
+      moduleId: this.moduleId!,
+      channels: this.channels.controls.map((c) => ({ file: c.value.file })),
+      animated: this.form.value.animated,
+      animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
+      animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
     }));
   }
 
@@ -148,25 +203,47 @@ export class TaskCreateFormComponent implements OnChanges {
     this.compileTrigger++;
   }
 
-  handleFragmentShaderCompilationError(message: string): void {
-    console.log("handleFragmentShaderCompilationError");
-    this.programOutput = {
-      error: true,
-      message,
-    };
-  }
-
-  handleFragmentShaderCompilationSuccess(): void {
-    console.log("handleFragmentShaderCompilationSuccess");
-    this.programOutput = {
-      error: false,
-      message: 'Program successfully compiled.'
-    };
+  hanldeChannelChange(): void {
+    this.compileTrigger++;
   }
 
   public markdownTapChanged(event: MatTabChangeEvent) {
     if (event.index == 1) {
       this.compiledMarkdown = marked.Parser.parse(marked.Lexer.lex(this.form.value.description));
     }
+  }
+
+  get channels() {
+    return this.form.controls["channels"] as FormArray<FormGroup>;
+  }
+
+  addChannel(file: File | null) {
+    if (!file) {
+      return;
+    }
+
+    const channelForm = this.fb.group({
+      file: [file, Validators.required],
+    });
+  
+    this.channels.push(channelForm);
+    this.hanldeChannelChange();
+  }
+
+  removeChannel(index: number) {
+    this.channels.removeAt(index);
+    this.hanldeChannelChange();
+  }
+
+  handleCodeChange(code: string) {
+    this.fragmentShader = code;
+  }
+
+  handleFragmentShaderCompilationError(errors: {line: number; message: string}[]): void {
+    this.programPrompts = errors.map(error => ({ line: error.line, message: error.message, type: 'error' }));
+  }
+
+  handleFragmentShaderCompilationSuccess(): void {
+    this.programPrompts = [];
   }
 }

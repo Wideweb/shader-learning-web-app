@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import * as THREE from 'three';
+import { Texture } from 'three';
+import { GlProgramChannel, GlService } from '../../services/gl.service';
 
 @Component({
   selector: 'app-gl-scene',
@@ -14,10 +16,13 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   public fragmentShader!: string;
 
   @Input()
+  public channels: GlProgramChannel[] = [];
+
+  @Input()
   public compileTrigger = 0;
 
   @Output()
-  public onError = new EventEmitter<string>();
+  public onError = new EventEmitter<{line: number; message: string}[]>();
 
   @Output()
   public onSuccess = new EventEmitter<string>();
@@ -49,7 +54,9 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private material!: THREE.ShaderMaterial;
 
-  constructor(private elementRef :ElementRef) {}
+  private textures: (Texture | null)[] = [];
+
+  constructor(private elementRef: ElementRef, private glService: GlService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -78,12 +85,17 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }, 100);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges) {
+    if ('channels' in changes) {
+      const texturesFeatures = (this.channels || []).map(async channel => await this.glService.loadTexture(channel.file));
+      this.textures = await Promise.all(texturesFeatures);
+    }
+
     if (!this.isRunning && !this.hasIssue) {
       return;
     }
 
-    if ('compileTrigger' in changes) {
+    if (['compileTrigger', 'channels'].some(p => p in changes)) {
       this.restart();
     }
   }
@@ -111,21 +123,32 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private createRenderer(): void {
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas })
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true })
+    this.renderer.debug.checkShaderErrors = true;
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
     let component: GlSceneComponent = this;
     component.originalConsoleError = console.error.bind(this.renderer.getContext());
 
+    const canvas = this.canvas;
+
     console.error = function(
-        summary, getError, programParamCode, programParam, 
+        summary: string, getError, programParamCode, programParam, 
         programLogExample, programLog, vertexErrors, fragmentErrors
     ) {
-
         component.hasIssue = true;
-        component.onError.emit(summary);
         component.stopRenderingLoop();
+
+        const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
+        const matches = [...summary.matchAll(errorPattern)];
+        const errors = matches.map(match => {
+          const line = match ? Number.parseInt(match[1]) - 31 : -1;
+          const message = match ? match[2] : '';
+          return {line, message};
+        });
+        
+        component.onError.emit(errors);
 
         return component.originalConsoleError(
             summary, getError, programParamCode, programParam, 
@@ -146,11 +169,15 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private addPlaneToScene(): void {
     const geometry = new THREE.PlaneGeometry(1, 1);
+
+    const channelsUniforms = (this.textures || []).reduce((acc, value, i) => ({...acc, [`iChannel${i}`]: { value }}), {});
+
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         iResolution: { 
           value: new THREE.Vector2(this.canvas.clientWidth, this.canvas.clientHeight),
         },
+        ...channelsUniforms,
         iTime: { value: this.time },
       },
       vertexShader: this.vertexShader,

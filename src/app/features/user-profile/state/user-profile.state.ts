@@ -5,7 +5,7 @@ import { firstValueFrom } from "rxjs";
 import { TaskProgressDto } from "../models/task-progress.model";
 import { UserProfileDto } from "../models/user-profile.model";
 import { UserProfileService } from "../services/user-profile.service";
-import { UserProfileLoad, UserProfileLoadMe, UserProfileLoadProgress } from "./user-profile.actions";
+import { UserProfileLoad, UserProfileLoadMe } from "./user-profile.actions";
 
 export interface UserProfileStateModel {
   me: UserProfileDto | null;
@@ -55,8 +55,13 @@ export class UserProfileState {
   }
 
   @Selector()
-  static userProgress(state: UserProfileStateModel): TaskProgressDto[] | null {
-    return state.userProgress;
+  static userProgress(state: UserProfileStateModel): TaskProgressDto[] {
+    return state.userProgress || [];
+  }
+
+  @Selector()
+  static userProgressSize(state: UserProfileStateModel): number {
+    return state.userProgress?.length || 0;
   }
 
   @Selector()
@@ -67,7 +72,7 @@ export class UserProfileState {
   constructor(private service: UserProfileService) {}
 
   @Action(UserProfileLoadMe)
-  async loadMe(ctx: StateContext<UserProfileStateModel>, action: UserProfileLoad) {
+  async loadMe(ctx: StateContext<UserProfileStateModel>) {
     ctx.patchState({
       loaded: false,
       loading: true,
@@ -75,8 +80,9 @@ export class UserProfileState {
 
     try 
     {
-      const me = await firstValueFrom(this.service.getProfile(action.id));
-      ctx.setState(patch<UserProfileStateModel>({ me, error: null }));
+      const userProfile = await firstValueFrom(this.service.getProfileMe());
+      const userProgress = await firstValueFrom(this.service.getProgressMe());
+      ctx.setState(patch<UserProfileStateModel>({ me: userProfile, userProfile, userProgress, error: null }));
     } 
     catch(error)
     {
@@ -101,32 +107,8 @@ export class UserProfileState {
     try 
     {
       const userProfile = await firstValueFrom(this.service.getProfile(action.id));
-      ctx.setState(patch<UserProfileStateModel>({ userProfile, error: null }));
-    } 
-    catch(error)
-    {
-      ctx.setState(patch<UserProfileStateModel>({ error }));
-    }
-    finally
-    {
-      ctx.patchState({ 
-        loaded: true,
-        loading: false,
-      });
-    }
-  }
-
-  @Action(UserProfileLoadProgress)
-  async loadProgress(ctx: StateContext<UserProfileStateModel>) {
-    ctx.patchState({
-      loaded: false,
-      loading: true,
-    });
-
-    try 
-    {
-      const userProgress = await firstValueFrom(this.service.getProgress());
-      ctx.setState(patch<UserProfileStateModel>({ userProgress, error: null }));
+      const userProgress = await firstValueFrom(this.service.getProgress(action.id));
+      ctx.setState(patch<UserProfileStateModel>({ userProfile, userProgress, error: null }));
     } 
     catch(error)
     {

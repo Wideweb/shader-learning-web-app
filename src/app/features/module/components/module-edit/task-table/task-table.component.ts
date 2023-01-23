@@ -46,7 +46,7 @@ export class ModuleEditTaskTableComponent implements AfterViewInit, OnChanges {
   constructor(private store: Store) {
     this.dataSource = new MatTableDataSource([] as any);
 
-    this.store.select(AuthState.hasAnyPermissions(['task_edit', 'task_visibility', 'task_delete']))
+    this.store.select(AuthState.hasAnyPermissions(['task_edit', 'task_edit_visibility', 'task_delete']))
       .pipe(takeUntil(this.destroy$))
       .subscribe(has => {
       if (has && !this.displayedColumns.includes('actions')) {

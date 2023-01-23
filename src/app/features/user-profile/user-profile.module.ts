@@ -5,7 +5,6 @@ import { AuthModule } from "../auth/auth.module";
 import { AppCommonModule } from "../common/common.module";
 import { UserProfileComponent } from "./components/user-profile/user-profile.component";
 import { UserProgressComponent } from "./components/user-progress/user-progress.component";
-import { routes } from "./routes";
 import { UserProfileService } from "./services/user-profile.service";
 import { UserProfileState } from "./state/user-profile.state";
 
@@ -17,7 +16,7 @@ import { UserProfileState } from "./state/user-profile.state";
   imports: [
     AppCommonModule.forChild(),
     AuthModule.forChild(),
-    RouterModule.forChild(routes),
+    RouterModule,
     NgxsModule.forFeature([UserProfileState]),
   ],
   providers: [

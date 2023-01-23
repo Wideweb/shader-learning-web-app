@@ -59,8 +59,6 @@ export class HasPermissionDirective implements OnInit {
     }
 
     private checkPermission() {
-        const userPermissions = this.store.selectSnapshot(AuthState.permissions);
-
         if (this.logicalOp === 'AND') {
             return this.store.selectSnapshot(AuthState.hasAllPermissions(this.permissions));
         }

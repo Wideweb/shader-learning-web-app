@@ -1,4 +1,4 @@
-const API = 'https://shader-learning-api.herokuapp.com';
+const API = 'https://whale-app-toyuq.ondigitalocean.app/shader-learning-api';
 
 const PRODUCTION = true;
 

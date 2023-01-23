@@ -4,13 +4,13 @@ import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_TASK_DESCRIPTION, DEFAULT_VERTEX_SHADER } from "../../app/app.constants";
 import { SpinnerService } from "../../common/services/spinner.service";
-import { TaskSaveDto } from "../models/task.model";
+import { TaskDto } from "../models/task.model";
 import { TaskService } from "../services/task.service";
 import { ModuleTaskUpdate } from "./module.actions";
 import { TaskCreate, TaskLoad, TaskNew, TaskUpdate } from "./task.actions";
 
 export interface TaskStateModel {
-  current: TaskSaveDto | null;
+  current: TaskDto | null;
   loading: boolean;
   loaded: boolean;
   error: any;
@@ -33,7 +33,7 @@ const defaults = (): TaskStateModel => {
 export class TaskState {
 
   @Selector()
-  static current(state: TaskStateModel): TaskSaveDto | null {
+  static current(state: TaskStateModel): TaskDto | null {
     return state.current;
   }
 
@@ -50,7 +50,7 @@ export class TaskState {
       loaded: true,
       loading: false,
       current: {
-        id: undefined,
+        id: 0,
         moduleId: 0,
         name: '',
         vertexShader: DEFAULT_VERTEX_SHADER,
@@ -61,6 +61,14 @@ export class TaskState {
         threshold: null as any,
         description: DEFAULT_TASK_DESCRIPTION,
         visibility: false,
+        likes: 0,
+        dislikes: 0,
+        createdBy: { id: 0, name: '' },
+        order: 0,
+        channels: [],
+        animated: false,
+        animationSteps: null,
+        animationStepTime: null,
       }
     });
   }
@@ -74,7 +82,7 @@ export class TaskState {
 
     try 
     {
-      const current = await firstValueFrom(this.service.get(action.id));
+      const current = await this.service.get(action.id);
       ctx.setState(patch<TaskStateModel>({ current, error: null }));
       await firstValueFrom(this.store.dispatch(new ModuleTaskUpdate(current)));
       return current;
@@ -103,7 +111,7 @@ export class TaskState {
 
     try 
     {
-      const id = await firstValueFrom(this.service.create(action.payload));
+      const id = await this.service.create(action.payload);
       await firstValueFrom(ctx.dispatch(new TaskLoad(id)));
       return id;
     } 
@@ -132,7 +140,7 @@ export class TaskState {
 
     try 
     {
-      const id = await firstValueFrom(this.service.update(action.payload));
+      const id = await this.service.update(action.payload);
       await firstValueFrom(ctx.dispatch(new TaskLoad(id)));
       return id;
     } 

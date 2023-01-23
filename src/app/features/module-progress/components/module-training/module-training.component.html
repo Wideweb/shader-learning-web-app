@@ -1,16 +1,40 @@
-<div class="container" *ngIf="userTaskLoaded$ | async">
-    <ng-container *ngIf="(finished$ | async) !== true">
-        <task-training
-            [userTask]="userTask$ | async"
-            [canEdit]="(canEditTask$ | async) == true"
-            (onNext)="nextTask()"
-        >
-        </task-training>
-    </ng-container>
+<div class="container">
 
-    <div *ngIf="(finished$ | async) === true" class="ending">
-        <h2>Congratulations!</h2>
-        <h3>You have completed all available tasks</h3>
-        <mat-icon>thumb_up</mat-icon>
+    <div class="navigation">
+        <a class="module-header" routerLink="/module-progress/{{ (module$ | async)?.id }}/view">
+            <h3>{{ moduleName$ | async }}</h3>
+            <div class="module-progress-percentage">
+                <b>{{ ((acceptetTasksRate$ | async)! * 100) | number:'1.0-0' }}%</b> COMPLETE
+            </div>
+        </a>
+
+        <div class="module-tasks">
+            <div class="module-tasks-scroll">
+                <module-navigation
+                    [moduleId]="(module$ | async)?.id!"
+                    [tasks]="(tasks$ | async)!"
+                    [selectedId]="selectedTaskId()"
+                ></module-navigation>
+            </div>
+        </div>
+
     </div>
+
+    <div class="current-task" *ngIf="userTaskLoaded$ | async">
+        <ng-container *ngIf="(finished$ | async) !== true">
+            <task-training
+                [userTask]="userTask$ | async"
+                [canEdit]="(canEditTask$ | async) == true"
+                (onNext)="nextTask()"
+            >
+            </task-training>
+        </ng-container>
+
+        <div *ngIf="(finished$ | async) === true" class="ending">
+            <h2>Congratulations!</h2>
+            <h3>You have completed all available tasks</h3>
+            <mat-icon>thumb_up</mat-icon>
+        </div>
+    </div>
+
 </div>

@@ -1,0 +1,46 @@
+<div class="toolbar" role="banner">
+    <a class="home-logo" routerLink="/">H</a>
+    <a class="toolbar-link" routerLink="/module-list">Explore</a>
+    <a class="toolbar-link" routerLink="/users-rating">Rating</a>
+    <a class="toolbar-link" routerLink="/donate">Donate</a>
+
+    <div class="spacer"></div>
+
+    <a  *ngIf="(isAuthenticated$ | async) === false" class="toolbar-link" routerLink="/login">Log In</a>
+    
+    <div *ngIf="isAuthenticated$ | async" class="profile">
+      <a mat-icon-button [matMenuTriggerFor]="menu" class="user-avatar">
+        <mat-icon class="user-avatar-icon">face_retouching_natural</mat-icon>
+      </a>
+      <mat-menu #menu="matMenu">
+        <div class="menu">
+          <ng-container>
+            <button button mat-menu-item routerLink="/profile">
+              <div class="user-details">
+                <div class="avatar-container">
+                  <mat-icon class="avatar">face_retouching_natural</mat-icon>
+                </div>
+                <div class="user-name">{{ userName$ | async }}</div>
+                <div class="user-email">{{ userEmail$ | async }}</div>
+                <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>{{ userRank$ | async }}</span></div>
+              </div>
+            </button>
+            <mat-divider></mat-divider>
+          </ng-container>
+
+          <ng-container>
+            <mat-divider></mat-divider>
+            <button mat-menu-item routerLink="/logout">
+              <mat-icon>logout</mat-icon>
+              <span>Sign out</span>
+            </button>
+          </ng-container>
+
+        </div>
+      </mat-menu>
+    </div>
+</div>
+
+<div class="content" role="main">
+  <router-outlet></router-outlet>
+</div>

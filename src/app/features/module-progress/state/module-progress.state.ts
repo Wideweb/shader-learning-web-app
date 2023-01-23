@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { append, insertItem, patch, updateItem } from '@ngxs/store/operators';
+import { insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { ModuleProgressDto } from "../models/module-progress.model";
+import { TaskProgressDto } from "../models/task-progress.model";
 import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
 import { UserTaskDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
@@ -50,6 +51,28 @@ export class ModuleProgressState {
   }
 
   @Selector()
+  static moduleName(state: ModuleProgressStateModel): string {
+    return state.module?.name || '';
+  }
+
+  @Selector()
+  static acceptetTasksRate(state: ModuleProgressStateModel): number {
+    const tasks = state.module?.tasks || [];
+    const tasksNumber = tasks.length;
+    if (tasksNumber <= 0) {
+      return 0;
+    }
+
+    const acceptedTasksNumber = tasks.filter(t => t.accepted).length;
+    return acceptedTasksNumber / tasksNumber;
+  }
+
+  @Selector()
+  static tasks(state: ModuleProgressStateModel): TaskProgressDto[] | [] {
+    return state.module?.tasks || [];
+  }
+
+  @Selector()
   static finished(state: ModuleProgressStateModel): boolean {
     return state.finished;
   }
@@ -82,9 +105,37 @@ export class ModuleProgressState {
 
     try 
     {
-      const module = await firstValueFrom(this.moduleProgressService.get(action.id));
-      ctx.setState(patch<ModuleProgressStateModel>({ module, error: null }));
-      return module;
+      if (action.userProgress) {
+        const module = await firstValueFrom(this.moduleProgressService.getUserProgress(action.id));
+        ctx.setState(patch<ModuleProgressStateModel>({ module, error: null }));
+        return module;
+      } else {
+        const module = await firstValueFrom(this.moduleProgressService.get(action.id));
+        const moduleProgress: ModuleProgressDto = {
+          id: module.id,
+          name: module.name,
+          description: module.description,
+          order: module.order,
+          createdBy: module.createdBy,
+          tasks: module.tasks.map((task, index) => ({
+            id: task.id,
+            moduleId: task.moduleId,
+            name: task.name,
+            order: task.order,
+            accepted: false,
+            rejected: false,
+            score: 0,
+            match: 0,
+            locked: index > 0,
+          })),
+          locked: module.locked,
+        };
+
+        ctx.setState(patch<ModuleProgressStateModel>({ module: moduleProgress, error: null }));
+        return module;
+      }
+
+      
     } 
     catch (error)
     {
@@ -99,7 +150,7 @@ export class ModuleProgressState {
 
   @Action(ModuleProgressLoadTask)
   async loadTask(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressLoadTask) {
-    if (ctx.getState().userTaskLoading) {
+    if (ctx.getState().userTaskLoading || ctx.getState().userTask?.task.id == action.id) {
       return;
     }
 
@@ -113,7 +164,7 @@ export class ModuleProgressState {
 
     try 
     {
-      const userTask = await firstValueFrom(this.userTaskService.get(action.id));
+      const userTask = await this.userTaskService.get(action.id);
       ctx.setState(patch<ModuleProgressStateModel>({ 
         userTasks: insertItem(userTask),
         userTask,
@@ -147,14 +198,27 @@ export class ModuleProgressState {
 
     try 
     {
-      const nextTaskId = this.findNextTaskId(module, ctx.getState().userTask);
+      const nextTaskId = this.findNextTaskId(module);
       if (!nextTaskId) {
         ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
         return null;
-      }      
+      }
 
-      const userTask = await firstValueFrom(this.userTaskService.get(nextTaskId));
-      ctx.setState(patch<ModuleProgressStateModel>({ userTask, error: null }));
+      if (ctx.getState().userTask?.task.id == nextTaskId) {
+        return ctx.getState().userTask;
+      }
+
+      const userTask = await this.userTaskService.get(nextTaskId);
+      ctx.setState(patch<ModuleProgressStateModel>({
+        module: patch<ModuleProgressDto>({
+          tasks: updateItem(task => task?.id == userTask.task.id, patch({ 
+            locked: false
+           }))
+        }),
+        userTask,
+        error: null
+      }));
+
       return userTask;
     } 
     catch (error)
@@ -168,14 +232,7 @@ export class ModuleProgressState {
     }
   }
   
-  private findNextTaskId(module: ModuleProgressDto, currentUserTask: UserTaskDto | null) {
-    if (currentUserTask) {
-      const nextTask = module.tasks.find(task => !task.accepted && task.order > currentUserTask.task.order);
-      if (nextTask) {
-        return nextTask.id;
-      }
-    }
-
+  private findNextTaskId(module: ModuleProgressDto) {
     const nextTask = module.tasks.find(task => !task.accepted);
     return nextTask ? nextTask.id : null;
   }
@@ -201,7 +258,7 @@ export class ModuleProgressState {
 
     try 
     {
-      const taskSubmitResult = await firstValueFrom(this.userTaskService.submit(action.payload, userTask.task));
+      const taskSubmitResult = await this.userTaskService.submit(action.payload, userTask.task);
 
       const accepted = taskSubmitResult.accepted || task.accepted;
       const rejected = !accepted;
@@ -220,6 +277,19 @@ export class ModuleProgressState {
         taskSubmitResult,
         error: null
       }));
+
+      if (accepted) {
+        const nextTaskId = this.findNextTaskId(ctx.getState().module!);
+        if (nextTaskId) {
+          ctx.setState(patch<ModuleProgressStateModel>({
+            module: patch<ModuleProgressDto>({
+              tasks: updateItem(task => task?.id == nextTaskId, patch({ 
+                locked: false
+              }))
+            }),
+          }));
+        }
+    }
 
       return taskSubmitResult;
     } 

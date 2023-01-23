@@ -1,82 +1,86 @@
 <div class="container">
-  <h1 class="header">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h1>
-  <div class="header-tools">
-    <a class="like-btn" [ngClass]="{ selected: liked }" (click)="like()"><mat-icon class="like-icon">thumb_up</mat-icon><span class="counter">{{ model.likes }}</span></a>
-    <a class="like-btn" [ngClass]="{ selected: disliked }" (click)="dislike()"><mat-icon class="like-icon">thumb_down</mat-icon><span class="counter">{{ model.dislikes }}</span></a>
-  </div>
+  <div class="heading">
+    <h2 class="header">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h2>
+    
+    <div class="header-tools">
+      <a class="like-btn" [ngClass]="{ selected: liked }" (click)="like()"><mat-icon class="like-icon">thumb_up</mat-icon><span class="counter">{{ model.likes }}</span></a>
+      <a class="like-btn" [ngClass]="{ selected: disliked }" (click)="dislike()"><mat-icon class="like-icon">thumb_down</mat-icon><span class="counter">{{ model.dislikes }}</span></a>
+    </div>
 
-  <div class="section" *ngIf="model?.description">
-    <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
     <div class="created-by">
       <span>Created By:</span>&nbsp;<a class="name" routerLink="/user-profile/{{model.createdBy.id}}">{{ model.createdBy.name }}</a>
     </div>
   </div>
 
-  <div class="section">
-
-    <div class="demo-container">
-      <div class="demo-item target-result">
-        <h2>Target</h2>
-        <div class="scene">
-          <app-gl-scene [vertexShader]="model.vertexShader" [fragmentShader]="model.fragmentShader"></app-gl-scene>
+  <div class="body">
+    <div class="body-scroll">
+      <div class="body-content">
+        <div class="section" *ngIf="model?.description">
+          <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
         </div>
-      </div>
 
-      <div class="demo-item user-result">
-        <h2>Your Result</h2>
-        <div class="scene">
-          <app-gl-scene
-            [vertexShader]="userVertexShader"
-            [fragmentShader]="userFragmentShaderApplied"
-            [compileTrigger]="compileTrigger"
-            (onError)="handleFragmentShaderCompilationError($event)"
-            (onSuccess)="handleFragmentShaderCompilationSuccess()">
-          </app-gl-scene>
+        <div class="section">
+
+          <div class="demo-container">
+            <div class="demo-item target-result">
+              <h3>Target</h3>
+              <div class="scene">
+                <app-gl-scene
+                  [vertexShader]="model.vertexShader"
+                  [fragmentShader]="model.fragmentShader"
+                  [channels]="model.channels"
+                  ></app-gl-scene>
+              </div>
+            </div>
+
+            <div class="demo-item user-result">
+              <h3>Your Result</h3>
+              <div class="scene">
+                <app-gl-scene
+                  [vertexShader]="userVertexShader"
+                  [fragmentShader]="userFragmentShaderApplied"
+                  [channels]="model.channels"
+                  [compileTrigger]="compileTrigger"
+                  (onError)="handleFragmentShaderCompilationError($event)"
+                  (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                </app-gl-scene>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="section channels" *ngIf="model.channels.length > 0">
+          <ng-container *ngFor="let channel of model.channels; let i = index">
+            <task-channel [label]="'iChannel' + i" [file]="channel.file"></task-channel>
+          </ng-container>
+        </div>
+
+        <!-- <div *ngIf="hasHints()">
+          <h3>Hints</h3>
+          <ul>
+            <li *ngFor="let hint of model.hints;">
+              <button (click)="revealHint(hint)" *ngIf="!isHintRevealed(hint)">show</button>
+              <span *ngIf="isHintRevealed(hint)">{{ hint.message }}</span>
+            </li>
+          </ul>
+        </div> -->
+
+        <div class="section">
+          <code-editor
+            [code]="userFragmentShader"
+            [prompts]="programPrompts"
+            (onChange)="handleCodeChange($event)"
+            (onRun)="run()"
+          ></code-editor>
+        </div>
+
+        <div class="actions-container">
+          <a *hasPermission="['task_submit']" class="btn-submit" (click)="submit()">
+            <span>Submit</span>
+          </a>
         </div>
       </div>
     </div>
-
-  </div>
-
-  <!-- <div *ngIf="hasHints()">
-    <h3>Hints</h3>
-    <ul>
-      <li *ngFor="let hint of model.hints;">
-        <button (click)="revealHint(hint)" *ngIf="!isHintRevealed(hint)">show</button>
-        <span *ngIf="isHintRevealed(hint)">{{ hint.message }}</span>
-      </li>
-    </ul>
-  </div> -->
-
-  <div class="section">
-    <div class="code-editor-container">
-      <div class="code">
-        <ngx-codemirror
-          [(ngModel)]="userFragmentShader"
-          [options]="{
-            tabSize: 2,
-            autofocus: false,
-            lineNumbers: true,
-            mode: 'x-shader/x-fragment'
-          }"
-        ></ngx-codemirror>
-      </div>
-
-      <div class="toolbar">
-        <a class="btn-run" (click)="run()">
-          <span class="btn-run-ico"></span>
-        </a>
-      </div>
-
-      <div class="output" [ngClass]="programOutput.error ? 'error' : 'success'">
-        <pre>{{ programOutput.message }}</pre>
-      </div>
-    </div>
-  </div>
-
-  <div class="actions-container">
-    <a *hasPermission="['task_submit']" class="btn-submit" (click)="submit()">
-      <span>Submit</span>
-    </a>
   </div>
 </div>
