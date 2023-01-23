@@ -6,15 +6,33 @@ import { ModuleComponent } from "./components/module/module.component";
 
 export const routes: Routes = [
 
+  {
+    path: ':moduleId',
+    redirectTo: ':moduleId/view',
+    pathMatch: 'full',
+  },
+
   { 
     path: ':moduleId',
     component: ModuleComponent,
     children: [
-      { path: 'view', component: ModuleViewComponent },
+      { 
+        path: 'view',
+        component: ModuleViewComponent
+      },
 
-      { path: 'training', component: ModuleTrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+      { 
+        path: 'training', component: ModuleTrainingComponent,
+        canActivate:[AuthGuard],
+        data: { permissions: ['task_submit'] }
+      },
       
-      { path: 'training/:taskId', component: ModuleTrainingComponent, canActivate:[AuthGuard], data: { permissions: ['task_submit'] } },
+      { 
+        path: 'training/:taskId',
+        component: ModuleTrainingComponent,
+        canActivate:[AuthGuard],
+        data: { permissions: ['task_submit'] }
+      },
     ]
   },
 

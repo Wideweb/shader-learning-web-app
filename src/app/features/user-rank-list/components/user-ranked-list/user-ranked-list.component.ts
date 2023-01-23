@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { UserRankListDto } from '../../models/user-rank-list.model';
 import { UserRankListLoad } from '../../state/user-rank-list.actions';
 import { UserRankListState } from '../../state/user-rank-list.state';
@@ -28,7 +29,7 @@ export class UserRankedListComponent implements OnInit, AfterViewInit {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private pageMeta: PageMetaService) {
     this.dataSource = new MatTableDataSource([] as any);
   }
 
@@ -41,6 +42,9 @@ export class UserRankedListComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => (this.dataSource.data = data));
 
-    this.store.dispatch(new UserRankListLoad())
+    this.store.dispatch(new UserRankListLoad());
+
+    this.pageMeta.setTitle('User Rating');
+    this.pageMeta.setDescription(`View user rating on Shader Learning, the best platform to improve your shading skill.`);
   }
 }

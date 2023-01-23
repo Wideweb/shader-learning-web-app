@@ -155,3 +155,7 @@ ul {
     width: 30px;
     height: 30px;
 }
+
+.mat-mdc-menu-panel .mat-mdc-menu-content {
+    padding: 0;
+}

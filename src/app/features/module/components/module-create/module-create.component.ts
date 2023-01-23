@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ModuleCreate } from '../../state/module.actions';
 import { ModuleDto } from '../../models/module.model';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -29,7 +30,7 @@ export class ModuleCreateComponent implements OnInit {
 
   public compiledMarkdown: string = '';
 
-  constructor(private store: Store, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(private store: Store, private router: Router, private fb: FormBuilder, private pageMeta: PageMetaService) {
     this.form = this.fb.group({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -37,7 +38,10 @@ export class ModuleCreateComponent implements OnInit {
     });
   }
 
-  async ngOnInit(): Promise<void> { }
+  async ngOnInit(): Promise<void> {
+    this.pageMeta.setTitle('Create Module');
+    this.pageMeta.setDefaultDescription();
+  }
 
   cancel() {
     this.router.navigate([`module-list`]);

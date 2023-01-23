@@ -37,7 +37,7 @@ export class ModuleComponent implements OnInit, OnDestroy {
 
     combineLatest([moduleId$, isAuthenticated$])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([moduleId, isAuth]) => this.store.dispatch(new ModuleProgressLoad(moduleId, isAuth)))
+      .subscribe(([moduleId, isAuth]) => this.store.dispatch(new ModuleProgressLoad(moduleId, isAuth)));
   }
 
   ngOnDestroy(): void {
