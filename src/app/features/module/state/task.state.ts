@@ -3,6 +3,7 @@ import { Action, Selector, State, StateContext, Store } from "@ngxs/store";
 import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_TASK_DESCRIPTION, DEFAULT_VERTEX_SHADER } from "../../app/app.constants";
+import { Logout } from "../../auth/state/auth.actions";
 import { SpinnerService } from "../../common/services/spinner.service";
 import { TaskDto } from "../models/task.model";
 import { TaskService } from "../services/task.service";
@@ -157,5 +158,10 @@ export class TaskState {
       });
       this.spinner.hide();
     }
+  }
+
+  @Action(Logout)
+  clear(ctx: StateContext<TaskStateModel>) {
+    ctx.patchState(defaults());
   }
 }
