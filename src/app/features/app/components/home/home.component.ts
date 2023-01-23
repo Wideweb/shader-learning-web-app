@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 @Component({
   selector: 'home',
@@ -12,7 +13,7 @@ export class HomeComponent {
     }
     `;
 
-    public fragmentShader = `
+  public fragmentShader = `
     uniform vec2 iResolution;
     uniform float iTime;
 
@@ -47,5 +48,12 @@ export class HomeComponent {
 
         gl_FragColor = vec4(c, 1.0);
     }
-    `;
+  `;
+
+  constructor(private pageMeta: PageMetaService) { }
+
+  ngOnInit(): void {
+    this.pageMeta.setDefaultTitle();
+    this.pageMeta.setDefaultDescription();
+  }
 }

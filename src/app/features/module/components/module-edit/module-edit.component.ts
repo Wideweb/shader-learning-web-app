@@ -5,6 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { ModuleState } from '../../state/module.state';
 import { ModuleDto } from '../../models/module.model';
 import { ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleToggleLock, ModuleUpdateDescription, ModuleUpdateName } from '../../state/module.actions';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 @Component({
   selector: 'module-edit',
@@ -30,9 +31,12 @@ export class ModuleEditComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private route: ActivatedRoute, private router: Router) { }
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router, private pageMeta: PageMetaService) { }
 
   ngOnInit(): void {
+    this.pageMeta.setTitle('Edit Module');
+    this.pageMeta.setDefaultDescription();
+
     this.route.params
       .pipe(
         map(params => params['moduleId']),

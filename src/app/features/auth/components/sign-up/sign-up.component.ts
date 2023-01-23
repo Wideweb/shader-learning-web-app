@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { SignUp } from 'src/app/features/auth/state/auth.actions';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -17,16 +18,27 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
   public form: FormGroup;
   public matcher = new MyErrorStateMatcher();
 
-  constructor(private store: Store, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(
+    private store: Store,
+    private router: Router,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private pageMeta: PageMetaService,
+  ) {
     this.form = this.fb.group({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
     });
+  }
+
+  ngOnInit(): void {
+    this.pageMeta.setTitle('Sign Up');
+    this.pageMeta.setDescription(`Create an account and start improving your shading skills by solving interactive problems on Shader Learning.`);
   }
 
   signUp() {

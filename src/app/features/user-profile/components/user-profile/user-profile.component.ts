@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { combineLatest, distinctUntilChanged, map, Observable, Subject, takeUntil } from 'rxjs';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { TaskProgressDto } from '../../models/task-progress.model';
 import { UserProfileDto } from '../../models/user-profile.model';
 import { UserProfileLoad, UserProfileLoadMe } from '../../state/user-profile.actions';
@@ -34,7 +35,7 @@ export class UserProfileComponent implements OnInit {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private route: ActivatedRoute) { }
+  constructor(private store: Store, private route: ActivatedRoute, private pageMeta: PageMetaService) { }
 
   ngOnInit(): void {
     this.route.params
@@ -45,7 +46,11 @@ export class UserProfileComponent implements OnInit {
       )
       .subscribe(id => this.store.dispatch(id ? new UserProfileLoad(id) : new UserProfileLoadMe()));
 
-    this.userProfile$.pipe(takeUntil(this.destroy$)).subscribe(userProfile => (this.userProfile = userProfile));
+    this.userProfile$.pipe(takeUntil(this.destroy$)).subscribe(userProfile => {
+      this.userProfile = userProfile;
+      this.pageMeta.setTitle(userProfile?.name || null);
+      this.pageMeta.setDescription(`View ${userProfile?.name}'s profile on Shader Learning, the best platform to improve your shading skill.`);
+    });
 
     this.showTaskLink$ = combineLatest([this.me$, this.userProfile$])
       .pipe(map(([me, profile]) => !!me && !!profile && me.id == profile.id));

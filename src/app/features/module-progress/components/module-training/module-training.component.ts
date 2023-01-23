@@ -8,6 +8,7 @@ import { UserTaskDto } from '../../models/user-task.model';
 import { ModuleProgressLoadNextTask, ModuleProgressLoadTask } from '../../state/module-progress.actions';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { TaskProgressDto } from '../../models/task-progress.model';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 @Component({
   selector: 'module-training',
@@ -46,7 +47,7 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private route: ActivatedRoute, private router: Router) {
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router, private pageMeta: PageMetaService) {
     const hasEditTaskPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit']));
     const hasEditAllTasksPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit_all']));
 
@@ -60,6 +61,13 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
         map(([isOwner, canEditTask, canEditAllTasks]) => (isOwner && canEditTask) || canEditAllTasks),
         startWith(false)
       );
+
+    combineLatest([this.moduleName$, this.userTask$])
+      .pipe(
+        filter(([moduleName, userTask]) => !!moduleName && !!userTask),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(([moduleName, userTask]) => this.pageMeta.setTitle(`${moduleName} | ${userTask.task.name}`));
   }
 
   ngOnInit(): void {

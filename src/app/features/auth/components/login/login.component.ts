@@ -1,10 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { filter, Observable, Subject, takeUntil } from 'rxjs';
 import { Login } from 'src/app/features/auth/state/auth.actions';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { AuthState } from '../../state/auth.state';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -19,7 +20,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
   public form: FormGroup;
 
   public matcher = new MyErrorStateMatcher();
@@ -29,7 +30,13 @@ export class LoginComponent implements OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(
+    private store: Store,
+    private router: Router,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private pageMeta: PageMetaService,
+  ) {
     this.form = this.fb.group({
       name: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -41,6 +48,11 @@ export class LoginComponent implements OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(() => this.navigate())
+  }
+
+  ngOnInit(): void {
+    this.pageMeta.setTitle('Log In');
+    this.pageMeta.setDescription('Sign in to your account and continue to improve your shading skills by solving interactive problems on Shader Learning.');
   }
 
   ngOnDestroy(): void {

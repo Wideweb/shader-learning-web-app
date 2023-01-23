@@ -29,7 +29,13 @@ export const routes: Routes = [
 
       {
         path: 'module-progress',
-        loadChildren: () => import('../module-progress/module-progress.module').then(m => m.ModuleProgressModule)
+        redirectTo: 'module-list',
+        pathMatch: 'full',
+      },
+
+      {
+        path: 'module-progress',
+        loadChildren: () => import('../module-progress/module-progress.module').then(m => m.ModuleProgressModule),
       },
 
       {
