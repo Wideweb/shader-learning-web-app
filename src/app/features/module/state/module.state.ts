@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { iif, insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
+import { Logout } from "../../auth/state/auth.actions";
 import { ModuleTaskListDto } from "../models/module-task-list.model";
 import { ModuleDto } from "../models/module.model";
 import { ModuleService } from "../services/module.service";
@@ -301,5 +302,10 @@ export class ModuleState {
     return ctx.setState(patch<ModuleStateModel>({
       descriptionEdit: false
     }));
+  }
+
+  @Action(Logout)
+  clear(ctx: StateContext<ModuleStateModel>) {
+    ctx.patchState(defaults());
   }
 }

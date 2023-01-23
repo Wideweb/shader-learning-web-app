@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
+import { Logout } from "../../auth/state/auth.actions";
 import { UserRankListDto } from "../models/user-rank-list.model";
 import { UserRankListService } from "../services/user-rank-list.service";
 import { UserRankListLoad } from "./user-rank-list.actions";
@@ -66,5 +67,10 @@ export class UserRankListState {
         loading: false,
       });
     }
+  }
+
+  @Action(Logout)
+  clear(ctx: StateContext<UserRankListStateModel>) {
+    ctx.patchState(defaults());
   }
 }
