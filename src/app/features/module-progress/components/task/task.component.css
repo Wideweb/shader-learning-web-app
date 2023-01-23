@@ -112,20 +112,6 @@ a.btn-run:hover .btn-run-ico {
     margin-top: 15px;
 }
 
-a.btn-submit {
-    background-color: darkcyan;
-    width: 100px;
-    height: 50px;
-    border-radius: 5px;
-    display: inline-block;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
 .heading {
     width: 100%;
     border-bottom: 1px solid #e3e3e3;
