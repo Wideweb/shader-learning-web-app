@@ -16,7 +16,6 @@
   background-color: darkcyan;
   color: white;
   font-weight: 600;
-  padding-right: 20px;
   box-sizing: border-box;
 }
 
@@ -30,6 +29,10 @@
 
 .toolbar img {
   margin: 0 16px;
+}
+
+.toolbar .profile {
+  margin-right: 20px;
 }
 
 .toolbar .profile .link {
@@ -104,7 +107,15 @@
 a.toolbar-link {
   color: white;
   font-weight: 500;
-  margin: 0 10px;
+  margin-right: 15px;
+}
+
+@media screen and (min-width: 500px) {
+  a.toolbar-link {
+    color: white;
+    font-weight: 500;
+    margin-right: 20px;
+  }
 }
 
 .content {
