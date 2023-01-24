@@ -18,7 +18,7 @@ export const routes: Routes = [
       ...userProfileRoutes,
 
       {
-        path: 'module-list',
+        path: 'explore',
         loadChildren: () => import('../module-list/module-list.module').then(m => m.ModuleListModule)
       },
 
@@ -29,7 +29,7 @@ export const routes: Routes = [
 
       {
         path: 'module-progress',
-        redirectTo: 'module-list',
+        redirectTo: 'explore',
         pathMatch: 'full',
       },
 

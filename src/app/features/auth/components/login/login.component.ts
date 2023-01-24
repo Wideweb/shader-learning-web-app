@@ -92,6 +92,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   navigate() {
     const returnUrl = this.route.snapshot.params['returnUrl'];
-    this.router.navigate([returnUrl || '/module-list']);
+    this.router.navigate([returnUrl || '/explore']);
   }
 }
