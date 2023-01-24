@@ -20,8 +20,7 @@
                                 <ng-container matColumnDef="name">
                                     <th mat-header-cell *matHeaderCellDef> Name </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <a *hasPermission="['profile_view_all']" class="action-link" routerLink="/user-profile/{{element.id}}">{{element.name}}</a>
-                                        <span *noPermission="['profile_view_all']">{{element.name}}</span>
+                                        <a class="action-link" routerLink="/user-profile/{{element.id}}">{{element.name}}</a>
                                     </td>
                                 </ng-container>
                     

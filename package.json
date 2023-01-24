@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
-    "build": "ng build",
+    "sitemap": "node sitemap-update.js",
+    "build": "npm run sitemap && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "postinstall": "ng build --aot"
+    "postinstall": "npm run sitemap && ng build --aot"
   },
   "private": true,
   "dependencies": {
@@ -42,7 +43,9 @@
     "@types/marked": "^4.0.8",
     "@types/pixelmatch": "^5.2.4",
     "@types/three": "^0.146.0",
-    "typescript": "~4.8.2"
+    "node-fetch": "^2.6.6",
+    "typescript": "~4.8.2",
+    "xml-js": "^1.6.11"
   },
   "engines": {
     "npm": "~8.19.2",

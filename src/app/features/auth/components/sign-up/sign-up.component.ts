@@ -66,7 +66,7 @@ export class SignUpComponent implements OnInit {
         }
       },
       complete: () => {
-        this.router.navigateByUrl('/module-list');
+        this.router.navigateByUrl('/explore');
       }
     });
   }

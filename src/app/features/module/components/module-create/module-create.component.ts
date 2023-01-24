@@ -44,7 +44,7 @@ export class ModuleCreateComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate([`module-list`]);
+    this.router.navigate([`explore`]);
   }
 
   save() {
