@@ -19,6 +19,55 @@ html, body, #index {
     font-family: -apple-system, Roboto, sans-serif;
 }
 
+.description-markdown-compiled code {
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+    padding: 2px 4px;
+    color: #1f1e24;
+    background-color: #ececef;
+    border-radius: 4px;
+    display: inline-block;
+    font-family: var(--default-mono-font, "Menlo"),"DejaVu Sans Mono","Liberation Mono","Consolas","Ubuntu Mono","Courier New","andale mono","lucida console",monospace;
+}
+
+.description-markdown-compiled *:first-child {
+    margin-top: 0;
+}
+
+.description-markdown-compiled pre > code {
+    display: block;
+    padding: 12px;
+    background-color: #fff;
+    color: #333238;
+    margin-bottom: 16px;
+    line-height: 1.6em;
+    overflow-x: auto;
+    border-radius: 4px;
+    border: 1px solid #e3e3e3
+}
+
+.description-markdown-compiled pre {
+    font-family: monospace;
+    white-space: pre;
+}
+
+.description-markdown-compiled h1 {
+    margin: 24px 0 16px;
+    border-bottom: 1px solid #e6e6ea;
+}
+
+.description-markdown-compiled h2 {
+    margin: 24px 0 16px;
+    border-bottom: 1px solid #e6e6ea;
+}
+
+.description-markdown-compiled h3 {
+    margin: 24px 0 16px;
+}
+
 h1,
 h2,
 h3,

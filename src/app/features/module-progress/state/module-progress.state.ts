@@ -358,7 +358,15 @@ export class ModuleProgressState {
             likes: response.likes,
             dislikes: response.dislikes
           })
-        })
+        }),
+        userTasks: updateItem(it => it?.task.id == userTask.task.id, patch({ 
+          liked,
+          disliked,
+          task: patch<TaskDto>({
+            likes: response.likes,
+            dislikes: response.dislikes
+          })
+        }))
       }));
     } 
     catch (error)
