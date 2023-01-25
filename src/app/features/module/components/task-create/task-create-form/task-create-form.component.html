@@ -1,64 +1,66 @@
 <form class="form" [formGroup]="form">
-    <div class="form-row">
-        <mat-form-field>
-            <mat-label>Name</mat-label>
-            <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher" autocomplete="off">
-            
-            <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
-
-            <mat-error *ngIf="form.get('name')?.hasError('TASK_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
-        </mat-form-field>
-    </div>
-
-    <div class="form-row">
-        <mat-form-field>
-            <mat-label>Cost</mat-label>
-            <input type="text" matInput formControlName="cost" [errorStateMatcher]="matcher" autocomplete="off">
-            
-            <mat-error *ngIf="form.get('cost')?.hasError('pattern') && !form.get('cost')?.hasError('required')">Please enter a valid cost value</mat-error>
-            
-            <mat-error *ngIf="form.get('cost')?.hasError('required')">Cost is <strong>required</strong></mat-error>
-        </mat-form-field>
-    </div>
-
-    <div class="form-row">
-        <mat-form-field>
-            <mat-label>Threshold (1 - 100)</mat-label>
-            <input type="text" matInput formControlName="threshold" [errorStateMatcher]="matcher" autocomplete="off">
-            
-            <mat-error *ngIf="form.get('threshold')?.hasError('pattern') && !form.get('threshold')?.hasError('required')">Please enter a valid threshold value</mat-error>
-            
-            <mat-error *ngIf="form.get('threshold')?.hasError('required')">Threshold is <strong>required</strong></mat-error>
-        </mat-form-field>
-    </div>
-
-    <div class="form-row">
-        <mat-checkbox formControlName="animated" color="primary">Animated</mat-checkbox>
-    </div>
-
-    <div class="form-row" *ngIf="form.get('animated')?.value">
-        <mat-form-field>
-            <mat-label>Animation Steps</mat-label>
-            <input type="text" matInput formControlName="animationSteps" [errorStateMatcher]="matcher" autocomplete="off">
-            
-            <mat-error *ngIf="form.get('animationSteps')?.hasError('pattern') && !form.get('animationSteps')?.hasError('required')">Please enter a valid value</mat-error>
-            
-            <mat-error *ngIf="form.get('animationSteps')?.hasError('required')">Animation steps number is <strong>required</strong></mat-error>
-        </mat-form-field>
-    </div>
-
-    <div class="form-row" *ngIf="form.get('animated')?.value">
-        <mat-form-field>
-            <mat-label>Animation Step Time (ms)</mat-label>
-            <input type="text" matInput formControlName="animationStepTime" [errorStateMatcher]="matcher" autocomplete="off">
-            
-            <mat-error *ngIf="form.get('animationStepTime')?.hasError('pattern') && !form.get('animationStepTime')?.hasError('required')">Please enter a valid value</mat-error>
-            
-            <mat-error *ngIf="form.get('animationStepTime')?.hasError('required')">Animation step time is <strong>required</strong></mat-error>
-        </mat-form-field>
-    </div>
-
     <div class="form-section">
+        <div class="form-row">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher" autocomplete="off">
+                
+                <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+
+                <mat-error *ngIf="form.get('name')?.hasError('TASK_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-row">
+            <mat-form-field>
+                <mat-label>Cost</mat-label>
+                <input type="text" matInput formControlName="cost" [errorStateMatcher]="matcher" autocomplete="off">
+                
+                <mat-error *ngIf="form.get('cost')?.hasError('pattern') && !form.get('cost')?.hasError('required')">Please enter a valid cost value</mat-error>
+                
+                <mat-error *ngIf="form.get('cost')?.hasError('required')">Cost is <strong>required</strong></mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-row">
+            <mat-form-field>
+                <mat-label>Threshold (1 - 100)</mat-label>
+                <input type="text" matInput formControlName="threshold" [errorStateMatcher]="matcher" autocomplete="off">
+                
+                <mat-error *ngIf="form.get('threshold')?.hasError('pattern') && !form.get('threshold')?.hasError('required')">Please enter a valid threshold value</mat-error>
+                
+                <mat-error *ngIf="form.get('threshold')?.hasError('required')">Threshold is <strong>required</strong></mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-row">
+            <mat-checkbox formControlName="animated" color="primary">Animated</mat-checkbox>
+        </div>
+
+        <div class="form-row" *ngIf="form.get('animated')?.value">
+            <mat-form-field>
+                <mat-label>Animation Steps</mat-label>
+                <input type="text" matInput formControlName="animationSteps" [errorStateMatcher]="matcher" autocomplete="off">
+                
+                <mat-error *ngIf="form.get('animationSteps')?.hasError('pattern') && !form.get('animationSteps')?.hasError('required')">Please enter a valid value</mat-error>
+                
+                <mat-error *ngIf="form.get('animationSteps')?.hasError('required')">Animation steps number is <strong>required</strong></mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-row" *ngIf="form.get('animated')?.value">
+            <mat-form-field>
+                <mat-label>Animation Step Time (ms)</mat-label>
+                <input type="text" matInput formControlName="animationStepTime" [errorStateMatcher]="matcher" autocomplete="off">
+                
+                <mat-error *ngIf="form.get('animationStepTime')?.hasError('pattern') && !form.get('animationStepTime')?.hasError('required')">Please enter a valid value</mat-error>
+                
+                <mat-error *ngIf="form.get('animationStepTime')?.hasError('required')">Animation step time is <strong>required</strong></mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="form-section description-section">
         <div class="section-header">
             Description
         </div>
@@ -77,51 +79,100 @@
         </div>
     </div>
 
-    <div class="form-section">
+    <div class="programs-section">
+        <div class="task-program">
 
-        <div class="section-header">
-            Program
-        </div>
-
-        <div class="form-row">
-            <div class="scene">
-                <app-gl-scene
-                    [vertexShader]="vertexShader"
-                    [fragmentShader]="fragmentShaderApplied"
-                    [channels]="glProgramChannels"
-                    [compileTrigger]="compileTrigger"
-                    (onError)="handleFragmentShaderCompilationError($event)"
-                    (onSuccess)="handleFragmentShaderCompilationSuccess()">
-                </app-gl-scene>
+            <div class="section-header">
+                Program
             </div>
-        </div>
-
-        <div class="form-row channels">
-            <task-channel
-                label="&nbsp;"
-                [showPreview]="false"
-                (select)="addChannel($event)"
-            ></task-channel>
-            <ng-container *ngFor="let channelForm of channels.controls; let i = index">
-                <ng-container [formGroup]="channelForm">
-                    <task-channel
-                        [label]="'iChannel' + i"
-                        formControlName="file"
-                        (select)="hanldeChannelChange()"
-                        (clear)="removeChannel(i)"
-                    ></task-channel>
+    
+            <div class="form-row">
+                <div class="scene">
+                    <app-gl-scene
+                        [vertexShader]="vertexShader"
+                        [fragmentShader]="fragmentShaderApplied"
+                        [channels]="glProgramChannels"
+                        [compileTrigger]="compileTrigger"
+                        (onError)="handleFragmentShaderCompilationError($event)"
+                        (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                    </app-gl-scene>
+                </div>
+            </div>
+    
+            <div class="form-row channels">
+                <task-channel
+                    label="&nbsp;"
+                    [showPreview]="false"
+                    (select)="addChannel($event)"
+                ></task-channel>
+                <ng-container *ngFor="let channelForm of channels.controls; let i = index">
+                    <ng-container [formGroup]="channelForm">
+                        <task-channel
+                            [label]="'iChannel' + i"
+                            formControlName="file"
+                            (select)="hanldeChannelChange()"
+                            (clear)="removeChannel(i)"
+                        ></task-channel>
+                    </ng-container>
                 </ng-container>
-            </ng-container>
+            </div>
+    
+            <div class="section">
+                <code-editor
+                  [code]="fragmentShader"
+                  [prompts]="programPrompts"
+                  (onChange)="handleCodeChange($event)"
+                  (onRun)="run()"
+                ></code-editor>
+              </div>
         </div>
+    
+        <div class="default-program">
+    
+            <div class="section-header">
+                Default Program <mat-checkbox formControlName="useDefaultFragmentShader" color="primary"></mat-checkbox>
+            </div>
+    
+            <div class="form-row">
+                <div class="scene">
+                    <app-gl-scene
+                        [vertexShader]="vertexShader"
+                        [fragmentShader]="defaultFragmentShaderApplied"
+                        [channels]="glProgramChannels"
+                        [compileTrigger]="defaultCompileTrigger"
+                        (onError)="handleDefaultFragmentShaderCompilationError($event)"
+                        (onSuccess)="handleDefaultFragmentShaderCompilationSuccess()">
+                    </app-gl-scene>
+                </div>
+            </div>
 
-        <div class="section">
-            <code-editor
-              [code]="fragmentShader"
-              [prompts]="programPrompts"
-              (onChange)="handleCodeChange($event)"
-              (onRun)="run()"
-            ></code-editor>
-          </div>
+            <div class="form-row channels">
+                <task-channel
+                    label="&nbsp;"
+                    [showPreview]="false"
+                    (select)="addChannel($event)"
+                ></task-channel>
+                <ng-container *ngFor="let channelForm of channels.controls; let i = index">
+                    <ng-container [formGroup]="channelForm">
+                        <task-channel
+                            [label]="'iChannel' + i"
+                            formControlName="file"
+                            (select)="hanldeChannelChange()"
+                            (clear)="removeChannel(i)"
+                        ></task-channel>
+                    </ng-container>
+                </ng-container>
+            </div>
+    
+            <div class="section">
+                <code-editor
+                  [code]="defaultFragmentShader"
+                  [prompts]="defaultProgramPrompts"
+                  (onChange)="handleDefaultCodeChange($event)"
+                  (onRun)="runDefault()"
+                ></code-editor>
+              </div>
+        </div>
     </div>
 
     <div *hasPermission="['task_edit_visibility']" class="form-section">

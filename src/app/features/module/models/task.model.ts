@@ -4,6 +4,8 @@ export interface TaskDto {
     name: string;
     vertexShader: string;
     fragmentShader: string;
+    useDefaultFragmentShader: boolean;
+    defaultFragmentShader: string | null;
     hints: TaskHintDto[];
     restrictions: TaskRestrictionDto[];
     cost: number;
@@ -26,6 +28,8 @@ export interface TaskSaveDto {
     name: string;
     vertexShader: string;
     fragmentShader: string;
+    useDefaultFragmentShader: boolean;
+    defaultFragmentShader: string | null;
     hints: TaskHintDto[];
     restrictions: TaskRestrictionDto[];
     cost: number;
