@@ -32,17 +32,28 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public task: TaskDto | null = null;
 
+  public glProgramChannels: GlProgramChannel[] = [];
+
+
   public vertexShader: string = DEFAULT_VERTEX_SHADER;
 
   public fragmentShader: string = DEFAULT_FRAGMENT_SHADER;
 
   public fragmentShaderApplied: string = this.fragmentShader;
 
-  public glProgramChannels: GlProgramChannel[] = [];
-
   public compileTrigger = 0;
 
   public programPrompts: CodeEditorPrompt[] = [];
+
+
+  public defaultFragmentShader: string = DEFAULT_FRAGMENT_SHADER;
+
+  public defaultFragmentShaderApplied: string = this.defaultFragmentShader;
+
+  public defaultCompileTrigger = 0;
+
+  public defaultProgramPrompts: CodeEditorPrompt[] = [];
+
 
   public form: FormGroup;
 
@@ -58,6 +69,7 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       cost: new FormControl('', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]),
       threshold: new FormControl('', [Validators.required, Validators.pattern(/^([1-9]\d{0,1}|100)$/)]),
       description: new FormControl('', [Validators.required]),
+      useDefaultFragmentShader: false,
       visibility: false,
       animated: false,
       animationSteps: new FormControl('', []),
@@ -108,6 +120,10 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
         this.fragmentShader = this.task.fragmentShader;
         this.fragmentShaderApplied = this.fragmentShader;
         this.compileTrigger++;
+
+        this.defaultFragmentShader = this.task.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER;
+        this.defaultFragmentShaderApplied = this.defaultFragmentShader;
+        this.defaultCompileTrigger++;
       }
     }
   }
@@ -168,6 +184,8 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       threshold: Number.parseInt(this.form.value.threshold),
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
+      useDefaultFragmentShader: this.form.value.useDefaultFragmentShader,
+      defaultFragmentShader: this.defaultFragmentShader,
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
       moduleId: this.moduleId!,
@@ -188,6 +206,8 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       threshold: Number.parseInt(this.form.value.threshold),
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
+      useDefaultFragmentShader: this.form.value.useDefaultFragmentShader,
+      defaultFragmentShader: this.defaultFragmentShader,
       description: this.form.value.description as string,
       visibility: this.form.value.visibility,
       moduleId: this.moduleId!,
@@ -198,13 +218,9 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     }));
   }
 
-  run(): void {
-    this.fragmentShaderApplied = this.fragmentShader;
-    this.compileTrigger++;
-  }
-
   hanldeChannelChange(): void {
     this.compileTrigger++;
+    this.defaultCompileTrigger++;
   }
 
   public markdownTapChanged(event: MatTabChangeEvent) {
@@ -235,6 +251,11 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     this.hanldeChannelChange();
   }
 
+  run(): void {
+    this.fragmentShaderApplied = this.fragmentShader;
+    this.compileTrigger++;
+  }
+
   handleCodeChange(code: string) {
     this.fragmentShader = code;
   }
@@ -245,5 +266,22 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
 
   handleFragmentShaderCompilationSuccess(): void {
     this.programPrompts = [];
+  }
+
+  runDefault(): void {
+    this.defaultFragmentShaderApplied = this.defaultFragmentShader;
+    this.defaultCompileTrigger++;
+  }
+
+  handleDefaultCodeChange(code: string) {
+    this.defaultFragmentShader = code;
+  }
+
+  handleDefaultFragmentShaderCompilationError(errors: {line: number; message: string}[]): void {
+    this.defaultProgramPrompts = errors.map(error => ({ line: error.line, message: error.message, type: 'error' }));
+  }
+
+  handleDefaultFragmentShaderCompilationSuccess(): void {
+    this.defaultProgramPrompts = [];
   }
 }

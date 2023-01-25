@@ -15,3 +15,10 @@
 .actions .btn {
     margin: 0 15px;
 }
+
+.page-content-wrapper {
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-left: 30px;
+    padding-right: 30px;
+}

@@ -4,6 +4,10 @@
     overflow: hidden;
 }
 
+.form-section {
+    max-width: 800px;
+}
+
 .form-row {
     margin-bottom: 20px;
 }
@@ -47,8 +51,33 @@ mat-form-field {
 .channels {
     display: flex;
     flex-direction: row;
+    gap: 15px; 
+    flex-wrap: wrap;
 }
 
-task-channel + task-channel {
-    margin-left: 15px;
+.description-section {
+    min-height: 300px;
+}
+
+.programs-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; 
+}
+
+.programs-section .task-program {
+    flex: 1;
+}
+
+.programs-section .default-program {
+    flex: 1;
+}
+
+.default-program .section-header {
+    position: relative;
+}
+
+.default-program .section-header mat-checkbox {
+    position: absolute;
+    top: -7px;
 }

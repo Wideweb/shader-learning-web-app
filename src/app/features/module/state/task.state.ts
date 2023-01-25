@@ -56,6 +56,8 @@ export class TaskState {
         name: '',
         vertexShader: DEFAULT_VERTEX_SHADER,
         fragmentShader: DEFAULT_FRAGMENT_SHADER,
+        useDefaultFragmentShader: false,
+        defaultFragmentShader: DEFAULT_FRAGMENT_SHADER,
         hints: [],
         restrictions: [],
         cost: null as any,
