@@ -276,8 +276,14 @@ export class ModuleProgressState {
             rejected,
             score,
             match
-           }))
+          })),
         }),
+        userTask: patch<UserTaskDto>({
+          fragmentShader: action.payload.fragmentShader,
+        }),
+        userTasks: updateItem(it => it?.task.id == userTask.task.id, patch({ 
+          fragmentShader: action.payload.fragmentShader,
+        })),
         taskSubmitResult,
         error: null
       }));
