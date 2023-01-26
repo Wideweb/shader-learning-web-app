@@ -72,12 +72,3 @@ mat-form-field {
 .programs-section .default-program {
     flex: 1;
 }
-
-.default-program .section-header {
-    position: relative;
-}
-
-.default-program .section-header mat-checkbox {
-    position: absolute;
-    top: -7px;
-}

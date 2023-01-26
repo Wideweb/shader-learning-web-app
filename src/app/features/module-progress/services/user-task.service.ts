@@ -7,6 +7,7 @@ import { UserTaskDto } from '../models/user-task.model';
 import { TaskProgressDto } from '../models/task-progress.model';
 import { TaskDto, TaskSubmitDto } from '../models/task.model';
 import { CANCEL_SPINNER_TOKEN } from '../../common/interceptors/spinner.interceptor';
+import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,11 @@ export class UserTaskService {
             return { file };
         });
     
+        userTask.vertexShader = userTask.vertexShader || DEFAULT_VERTEX_SHADER;
+        userTask.fragmentShader = userTask.fragmentShader || DEFAULT_FRAGMENT_SHADER;
+
         userTask.task.channels = await Promise.all(channelsFeatures);
+        userTask.task.vertexShader = userTask.task.vertexShader || DEFAULT_VERTEX_SHADER;
 
         return userTask;
     }
