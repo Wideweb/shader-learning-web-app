@@ -4,6 +4,7 @@ import { firstValueFrom, shareReplay } from 'rxjs';
 import { API } from 'src/environments/environment';
 import { TaskDto, TaskSaveDto } from '../models/task.model';
 import { FileService } from '../../common/services/file.service';
+import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,9 @@ export class TaskService {
       });
 
       const channels = await Promise.all(channelsFeatures);
+
+      task.vertexShader = task.vertexShader || DEFAULT_VERTEX_SHADER;
+      task.fragmentShader = task.fragmentShader || DEFAULT_FRAGMENT_SHADER;
 
       return {...task, channels};
     }
