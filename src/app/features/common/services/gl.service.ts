@@ -25,7 +25,7 @@ export class GlService {
     private hasIssue: boolean = false;
 
     constructor() {
-        this.renderer = new THREE.WebGLRenderer({ antialias :false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true });
+        this.renderer = new THREE.WebGLRenderer({ antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true });
     }
 
     public async renderToTexture(program: GlProgramSettings, width: number, height: number): Promise<Uint8Array | null> {
@@ -127,6 +127,14 @@ export class GlService {
         loader.setCrossOrigin("");
     
         const fileURL = URL.createObjectURL(file);
-        return await loader.loadAsync(fileURL);
+        const textue = await loader.loadAsync(fileURL);
+
+        if (textue) {
+            textue.minFilter = THREE.NearestFilter;
+            textue.magFilter = THREE.NearestFilter;
+            textue.generateMipmaps = false;
+        }
+
+        return textue;
     }
 }
