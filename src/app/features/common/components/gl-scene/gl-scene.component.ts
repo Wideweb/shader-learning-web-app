@@ -42,6 +42,8 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private isRunning = false;
 
+  private isRendering = false;
+
   private rafHandle: number = -1;
 
   private originalConsoleError: any = null;
@@ -137,6 +139,10 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         summary: string, getError, programParamCode, programParam, 
         programLogExample, programLog, vertexErrors, fragmentErrors
     ) {
+        if (!component.isRendering) {
+          return;
+        }
+
         component.hasIssue = true;
         component.stopRenderingLoop();
 
@@ -192,15 +198,27 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private startRenderingLoop(): void {
     this.isRunning = true;
 
+    let t0 = performance.now();
+    let t1 = t0;
+
+    this.time = 0;
+
     let component: GlSceneComponent = this;
     (function render() {
       if (component.isRunning) {
         component.rafHandle = requestAnimationFrame(render);
       }
 
-      component.renderer.render(component.scene, component.camera);
-      component.time += 0.005;
+      t1 = performance.now();
+      const deltaTime = t1 - t0;
+      t0 = t1;
+
+      component.time += deltaTime / 1000;
       component.material.uniforms['iTime'].value = component.time;
+
+      component.isRendering = true;
+      component.renderer.render(component.scene, component.camera);
+      component.isRendering = false;
 
       if (component.notifyStatusChange && !component.hasIssue) {
         component.notifyStatusChange = false;
@@ -210,6 +228,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private stopRenderingLoop(): void {
+    this.isRendering = false;
     this.isRunning = false;
     cancelAnimationFrame(this.rafHandle);
   }
