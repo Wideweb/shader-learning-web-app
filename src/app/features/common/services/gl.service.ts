@@ -18,28 +18,70 @@ export interface GlProgramSettings {
   providedIn: 'root',
 })
 export class GlService {
-    private renderer: THREE.WebGLRenderer;
-
     private originalConsoleError: any = null;
 
     private hasIssue: boolean = false;
 
-    constructor() {
-        this.renderer = new THREE.WebGLRenderer({ antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true });
+    private isRendering: boolean = false;
+
+    public async compare(program1: GlProgramSettings, program2: GlProgramSettings): Promise<number> {
+        const renderer = this.createRenderer();
+        try {
+            return await await this.doCompare(renderer, program1, program2);
+        } finally {
+            this.disposeRenderer(renderer);
+        }
     }
 
-    public async renderToTexture(program: GlProgramSettings, width: number, height: number): Promise<Uint8Array | null> {
-        this.renderer.setPixelRatio(1);
-        this.renderer.setSize(width, height);
-        this.renderer.autoClear = false;
+    public async compareAnimations(program1: GlProgramSettings, program2: GlProgramSettings, steps: number, stepTime: number): Promise<number> {
+        const renderer = this.createRenderer();
+
+        try {
+            let matchDegree = 0;
+            for (let i = 0; i < steps; i++) {
+                matchDegree += await this.doCompare(renderer, {...program1, time: i * stepTime}, {...program2, time: i * stepTime});
+            }
+            return matchDegree / steps;
+        } finally {
+            this.disposeRenderer(renderer);
+        }
+    }
+
+    public async loadTexture(file?: File): Promise<THREE.Texture | null> {
+        if (!file || !(file instanceof File)) {
+          return Promise.resolve(null);
+        }
+    
+        var loader = new THREE.TextureLoader();
+        loader.setCrossOrigin("");
+    
+        const fileURL = URL.createObjectURL(file);
+        const textue = await loader.loadAsync(fileURL);
+
+        if (textue) {
+            textue.minFilter = THREE.NearestFilter;
+            textue.magFilter = THREE.NearestFilter;
+            textue.generateMipmaps = false;
+        }
+
+        return textue;
+    }
+
+    private createRenderer(): THREE.WebGLRenderer {
+        const renderer = new THREE.WebGLRenderer({ antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true });
+        renderer.setPixelRatio(1);
+        renderer.autoClear = false;
 
         let service: GlService = this;
-        service.originalConsoleError = console.error.bind(this.renderer.getContext());
+        service.originalConsoleError = console.error.bind(renderer.getContext());
 
         console.error = function(
             summary, getError, programParamCode, programParam, 
             programLogExample, programLog, vertexErrors, fragmentErrors
         ) {
+            if (!service.isRendering) {
+                return;
+            }
 
             service.hasIssue = true;
             return service.originalConsoleError(
@@ -47,6 +89,35 @@ export class GlService {
                 programLogExample, programLog, vertexErrors, fragmentErrors
             );
         };
+
+        return renderer;
+    }
+
+    private disposeRenderer(renderer: THREE.WebGLRenderer) {
+        console.error = this.originalConsoleError;
+        renderer.dispose();
+    }
+
+    private async doCompare(renderer: THREE.WebGLRenderer, program1: GlProgramSettings, program2: GlProgramSettings) {
+        const width = 1024;
+        const height = 512;
+
+        const texture1 = await this.renderToTexture(renderer, program1, width, height);
+        const texture2 = await this.renderToTexture(renderer, program2, width, height);
+
+
+        if (texture1 == null || texture2 == null) {
+            return 0;
+        }
+
+        const mismatches = Pixelmatch(texture1, texture2, null, width, height, { threshold: MATCH_THRESHOLD });
+
+        const matchDegree = 1.0 - mismatches / (width * height);
+        return matchDegree;
+    }
+
+    private async renderToTexture(renderer: THREE.WebGLRenderer, program: GlProgramSettings, width: number, height: number): Promise<Uint8Array | null> {
+        renderer.setSize(width, height);
         
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -84,57 +155,12 @@ export class GlService {
 
         this.hasIssue = false;
 
-        this.renderer.setRenderTarget(frameTexture);
-        this.renderer.render(scene, camera);
-        this.renderer.readRenderTargetPixels(frameTexture, 0, 0, width, height, buffer);
-
-        console.error = this.originalConsoleError;
+        renderer.setRenderTarget(frameTexture);
+        this.isRendering = true;
+        renderer.render(scene, camera);
+        this.isRendering = false;
+        renderer.readRenderTargetPixels(frameTexture, 0, 0, width, height, buffer);
 
         return this.hasIssue ? null : buffer;
-    }
-
-    public async compare(program1: GlProgramSettings, program2: GlProgramSettings): Promise<number> {
-        const width = 256;
-        const height = 256;
-
-        const texture1 = await this.renderToTexture(program1, width, height);
-        const texture2 = await this.renderToTexture(program2, width, height);
-
-        if (texture1 == null || texture2 == null) {
-            return 0;
-        }
-
-        const mismatches = Pixelmatch(texture1, texture2, null, width, height, { threshold: MATCH_THRESHOLD, includeAA: true });
-
-        const matchDegree = 1.0 - mismatches / (width * height);
-        return matchDegree;
-    }
-
-    public async compareAnimations(program1: GlProgramSettings, program2: GlProgramSettings, steps: number, stepTime: number): Promise<number> {
-        let matchDegree = 0;
-        for (let i = 0; i < steps; i++) {
-            matchDegree += await this.compare({...program1, time: i * stepTime}, {...program2, time: i * stepTime});
-        }
-        return matchDegree / steps;
-    }
-
-    public async loadTexture(file?: File): Promise<THREE.Texture | null> {
-        if (!file || !(file instanceof File)) {
-          return Promise.resolve(null);
-        }
-    
-        var loader = new THREE.TextureLoader();
-        loader.setCrossOrigin("");
-    
-        const fileURL = URL.createObjectURL(file);
-        const textue = await loader.loadAsync(fileURL);
-
-        if (textue) {
-            textue.minFilter = THREE.NearestFilter;
-            textue.magFilter = THREE.NearestFilter;
-            textue.generateMipmaps = false;
-        }
-
-        return textue;
     }
 }

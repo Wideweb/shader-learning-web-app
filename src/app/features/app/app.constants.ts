@@ -43,4 +43,4 @@ const foo = () => {
 1. item a
 2. item b`;
 
-export const MATCH_THRESHOLD = 0.05;
+export const MATCH_THRESHOLD = 0.00;
