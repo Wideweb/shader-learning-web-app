@@ -26,7 +26,7 @@ export class HomeComponent {
         vec2 uv = (gl_FragCoord.xy - 0.5 * iResolution)/ iResolution.y * SCALE;
         
         float st = radians(-31.0); // start position (180 = inf)
-        float t = st+(iTime*TAU)/3600.0; // #sec for num line
+        float t = st+(iTime * 0.32 * TAU)/3600.0; // #sec for num line
         float n = (cos(t) > 0.0) ? sin(t): 1.0/sin(t); // time to sin/csc
         float az = pow(500.0, n); // autozoom
         az = clamp(az, CL(az, 1e-16, 1e-15), CL(az, 1e+17, 1e+18)); // clamp at precision lost
@@ -36,7 +36,7 @@ export class HomeComponent {
         float i = a/TAU; // spiral increment 0.5 per 180°
         float l = pow(length(uv), 0.5/n); // logarithmic (archimedean at 0.5)
         float r = l-i; // spiral radius
-        float ls = (iTime*TAU)/5.0; // light animation speed
+        float ls = (iTime * 0.32 * TAU)/5.0; // light animation speed
         c += sin(ls+pow(TAU*ceil(r)+a, 2.0)/(2.0*TAU*n)); // segmented spiral magic
         c *= pow(abs(sin(r*PI)), abs(n*2.0)+5.0); // smooth edges & thin near inf
         float vd = (ceil(r)*TAU+a)/n; // visual denominator
