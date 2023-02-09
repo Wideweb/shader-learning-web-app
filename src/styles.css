@@ -2,7 +2,9 @@
 
 @import '/node_modules/codemirror/lib/codemirror.css';
 
-html, body, #index {
+html,
+body,
+#index {
     min-width: 100%;
     height: 100%;
     margin: 0;
@@ -30,14 +32,14 @@ html, body, #index {
     background-color: #ececef;
     border-radius: 4px;
     display: inline-block;
-    font-family: var(--default-mono-font, "Menlo"),"DejaVu Sans Mono","Liberation Mono","Consolas","Ubuntu Mono","Courier New","andale mono","lucida console",monospace;
+    font-family: var(--default-mono-font, "Menlo"), "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
 }
 
 .description-markdown-compiled *:first-child {
     margin-top: 0;
 }
 
-.description-markdown-compiled pre > code {
+.description-markdown-compiled pre>code {
     display: block;
     padding: 12px;
     background-color: #fff;
@@ -109,14 +111,14 @@ a {
 
 ul {
     list-style: none;
-	left: 0;
-	left: 0;
+    left: 0;
+    left: 0;
 }
 
 .btn {
     width: 100px;
     height: 50px;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -125,7 +127,7 @@ ul {
     border: 0;
 }
 
-.btn + .btn {
+.btn+.btn {
     margin-left: 10px;
 }
 
@@ -138,6 +140,15 @@ ul {
 .btn.btn-submit {
     color: white;
     background-color: darkcyan;
+}
+
+.btn.btn-rounded {
+    border-radius: 5px;
+}
+
+.btn.disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
 }
 
 .page-container {
@@ -207,4 +218,16 @@ ul {
 
 .mat-mdc-menu-panel .mat-mdc-menu-content {
     padding: 0;
+}
+
+.mdc-checkbox__ripple {
+    display: none !important;
+}
+
+.mat-ripple-element {
+    display: none !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 0 !important;
 }

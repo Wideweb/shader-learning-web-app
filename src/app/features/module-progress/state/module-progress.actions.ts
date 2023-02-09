@@ -1,4 +1,4 @@
-import { TaskSubmitDto } from "../models/task.model";
+import { TaskFeedbackDto, TaskSubmitDto } from "../models/task.model";
 
 export class ModuleProgressLoad {
     static readonly type = '[ModuleProgress] Load Module';
@@ -20,6 +20,7 @@ export class ModuleProgressToggleTaskLike {
 
 export class ModuleProgressToggleTaskDislike {
     static readonly type = '[ModuleProgress] Toggle Task Dislike';
+    constructor(public feedback: TaskFeedbackDto | null = null) {}
 }
 
 export class ModuleProgressSubmitTask {

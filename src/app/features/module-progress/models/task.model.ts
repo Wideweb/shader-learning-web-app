@@ -43,3 +43,10 @@ export interface TaskSubmitDto {
     vertexShader: string;
     fragmentShader: string;
 }
+
+export interface TaskFeedbackDto {
+    unclearDescription: false;
+    strictRuntime: false;
+    other: false;
+    message: string;
+}

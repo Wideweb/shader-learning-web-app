@@ -5,7 +5,7 @@ import { API } from 'src/environments/environment';
 import { GlProgramSettings, GlService } from '../../common/services/gl.service';
 import { UserTaskDto } from '../models/user-task.model';
 import { TaskProgressDto } from '../models/task-progress.model';
-import { TaskDto, TaskSubmitDto } from '../models/task.model';
+import { TaskDto, TaskFeedbackDto, TaskSubmitDto } from '../models/task.model';
 import { CANCEL_SPINNER_TOKEN } from '../../common/interceptors/spinner.interceptor';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
 
@@ -77,5 +77,9 @@ export class UserTaskService {
 
     public dislike(taskId: number, value: boolean): Observable<{likes: number; dislikes: number, updated: boolean}> {
         return this.http.put<{likes: number; dislikes: number, updated: boolean}>(`${API}/tasks/${taskId}/dislike`, {value}).pipe(shareReplay(1));
+    }
+
+    public saveFeedback(taskId: number, feedback: TaskFeedbackDto): Observable<void> {
+        return this.http.post<void>(`${API}/tasks/${taskId}/feedback`, feedback).pipe(shareReplay(1));
     }
 }

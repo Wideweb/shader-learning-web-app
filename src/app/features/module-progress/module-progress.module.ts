@@ -20,6 +20,7 @@ import { UserTaskService } from "./services/user-task.service";
 import { ModuleProgressState } from "./state/module-progress.state";
 import { ModuleNavigationComponent } from "./components/module-navigation/module-navigation.component";
 import { ModuleNavigationTaskStatusComponent } from "./components/module-navigation/task-status/task-status.component";
+import { FeedbackComponent } from "./components/feedback-dialog/feedback-dialog.component";
 
 @NgModule({
   declarations: [
@@ -38,6 +39,8 @@ import { ModuleNavigationTaskStatusComponent } from "./components/module-navigat
     TaskSubmitResultDialogComponent,
     TaskTrainingComponent,
     TaskChannelComponent,
+
+    FeedbackComponent,
   ],
   imports: [
     AppCommonModule.forChild(),

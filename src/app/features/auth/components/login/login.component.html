@@ -18,14 +18,16 @@
             <mat-form-field>
                 <mat-label>Password</mat-label>
                 <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher">
-                
-                <mat-error *ngIf="form.get('password')?.hasError('required')">Password is <strong>required</strong></mat-error>
 
-                <mat-error *ngIf="form.get('password')?.hasError('PASSWORD_NOT_MATCH')">Password does not match</mat-error>
+                <mat-error *ngIf="form.get('password')?.hasError('required')">Password is
+                    <strong>required</strong></mat-error>
+
+                <mat-error *ngIf="form.get('password')?.hasError('PASSWORD_NOT_MATCH')">Password does not
+                    match</mat-error>
             </mat-form-field>
 
             <div class="action">
-                <button type="submit" class="btn btn-submit" (click)="login()">Login</button>
+                <button type="submit" class="btn btn-submit btn-rounded" (click)="login()">Login</button>
             </div>
         </form>
 
