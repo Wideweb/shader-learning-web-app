@@ -3,7 +3,7 @@
     <task-result [model]="data"></task-result>
   </div>
   <div class="actions">
-    <a class="btn btn-retry" (click)="retry()">Retry</a>
-    <a class="btn btn-next" (click)="next()" *ngIf="data.accepted">Next</a>
+    <a class="btn btn-cancel" (click)="retry()">Retry</a>
+    <a class="btn btn-submit" (click)="next()" *ngIf="data.accepted">Next</a>
   </div>
 </div>

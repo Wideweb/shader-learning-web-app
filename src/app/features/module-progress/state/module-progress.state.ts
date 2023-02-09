@@ -321,13 +321,19 @@ export class ModuleProgressState {
   }
 
   @Action(ModuleProgressToggleTaskDislike)
-  async toggleDislike(ctx: StateContext<ModuleProgressStateModel>) {
+  async toggleDislike(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressToggleTaskDislike) {
     const userTask = ctx.getState().userTask;
     if (!userTask) {
       throw "no task";
     }
 
-    this.toggleLikeOrDislike(ctx, false, !userTask.disliked);
+    if (action.feedback) {
+      try{
+        await firstValueFrom(this.userTaskService.saveFeedback(userTask.task.id, action.feedback));
+      } catch (_) { }
+    }
+
+    await this.toggleLikeOrDislike(ctx, false, !userTask.disliked);
   }
 
   private async toggleLikeOrDislike(ctx: StateContext<ModuleProgressStateModel>, likePass: boolean, value: boolean) {
