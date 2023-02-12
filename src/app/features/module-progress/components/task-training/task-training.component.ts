@@ -6,10 +6,11 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { UserTaskDto } from '../../models/user-task.model';
 import { TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../../models/task.model';
-import { ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike } from '../../state/module-progress.actions';
+import { ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from '../../state/module-progress.actions';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
-import { ModuleProgressState } from '../../state/module-progress.state';
+import { ModuleProgressState, UserFragmentProgram } from '../../state/module-progress.state';
 import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component';
+import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/common/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'task-training',
@@ -19,6 +20,9 @@ import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component'
 export class TaskTrainingComponent implements OnDestroy {
   @Input()
   public userTask!: UserTaskDto | null;
+
+  @Input()
+  public userFragmentCode!: UserFragmentProgram;
 
   @Input()
   public canEdit!: boolean;
@@ -78,13 +82,49 @@ export class TaskTrainingComponent implements OnDestroy {
     }
 
     this.dialog
-      .open<FeedbackComponent, any, TaskFeedbackDto | null>(FeedbackComponent, {  disableClose: false, })
+      .open<FeedbackComponent, any, TaskFeedbackDto | null>(FeedbackComponent, { disableClose: false })
       .afterClosed()
       .pipe(
         filter(result => !!result),
         takeUntil(this.destroy$)
       )
       .subscribe(feedback => this.store.dispatch(new ModuleProgressToggleTaskDislike(feedback)));
+  }
+
+  handleFragmentCodeChange(code: string) {
+    this.store.dispatch(new ModuleProgressUpdateUserFragmentCode(code));
+  }
+
+  resetToLastSubmettedCode() {
+    this.dialog
+      .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(ConfirmDialogComponent, {
+        disableClose: false,
+        data: {
+          message: `Your code will be discarded and replaced with your last submission's code!`,
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter(result => !!result),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(_ => this.store.dispatch(new ModuleProgressResetToLastSubmettedCode()));
+  }
+
+  resetToDefaultCode() {
+    this.dialog
+      .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(ConfirmDialogComponent, {
+        disableClose: false,
+        data: {
+          message: `Your current code will be discarded and reset to the default code!`,
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter(result => !!result),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(_ => this.store.dispatch(new ModuleProgressResetToDefaultCode()));
   }
 
   ngOnDestroy() {

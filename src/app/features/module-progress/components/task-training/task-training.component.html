@@ -2,13 +2,16 @@
   <task
     [model]="userTask.task"
     [userVertexShader]="userTask.vertexShader"
-    [userFragmentShader]="userTask.fragmentShader"
+    [userFragmentShader]="userFragmentCode"
     [liked]="userTask.liked"
     [disliked]="userTask.disliked"
     [canEdit]="canEdit"
     (onEdit)="edit()"
     (onLike)="like()"
     (onDislike)="dislike()"
+    (onFragmentCodeChange)="handleFragmentCodeChange($event)"
+    (onResetToLastSubmettedCode)="resetToLastSubmettedCode()"
+    (onResetToDefaultCode)="resetToDefaultCode()"
     (onSubmit)="submit($event)">
   </task>
 </ng-container>

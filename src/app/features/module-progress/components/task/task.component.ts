@@ -3,6 +3,7 @@ import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features
 import * as marked from 'marked';
 import { TaskDto, TaskHintDto, TaskSubmitDto } from '../../models/task.model';
 import { CodeEditorPrompt } from 'src/app/features/common/components/code-editor/declarations';
+import { UserFragmentProgram } from '../../state/module-progress.state';
 
 @Component({
   selector: 'task',
@@ -17,7 +18,7 @@ export class TaskComponent implements OnChanges {
   public userVertexShader: string = DEFAULT_VERTEX_SHADER;
 
   @Input()
-  public userFragmentShader: string = DEFAULT_FRAGMENT_SHADER;
+  public userFragmentShader!: UserFragmentProgram;
 
   @Input()
   public liked: boolean = false;
@@ -40,9 +41,18 @@ export class TaskComponent implements OnChanges {
   @Output()
   public onDislike = new EventEmitter<boolean>();
 
+  @Output()
+  public onFragmentCodeChange = new EventEmitter<string>();
+
+  @Output()
+  public onResetToLastSubmettedCode = new EventEmitter<void>();
+
+  @Output()
+  public onResetToDefaultCode = new EventEmitter<void>();
+
   public visibleHints: TaskHintDto[] = [];
 
-  public userFragmentShaderApplied: string = this.userFragmentShader;
+  public userFragmentShaderApplied: string = this.userFragmentShader?.code || DEFAULT_FRAGMENT_SHADER;
 
   public programPrompts: CodeEditorPrompt[] = [];
 
@@ -58,8 +68,7 @@ export class TaskComponent implements OnChanges {
       this.run();
     }
 
-    if ('userFragmentShader' in changes) {
-      this.userFragmentShader = this.userFragmentShader || DEFAULT_FRAGMENT_SHADER;
+    if ('userFragmentShader' in changes && this.userFragmentShader.compile) {
       this.run();
     }
 
@@ -71,11 +80,11 @@ export class TaskComponent implements OnChanges {
   }
 
   handleCodeChange(code: string) {
-    this.userFragmentShader = code;
+    this.onFragmentCodeChange.emit(code);
   }
 
   run(): void {
-    this.userFragmentShaderApplied = this.userFragmentShader;
+    this.userFragmentShaderApplied = this.userFragmentShader?.code || DEFAULT_FRAGMENT_SHADER;
     this.compileTrigger++;
   }
 
@@ -83,7 +92,7 @@ export class TaskComponent implements OnChanges {
     const taskSubmit: TaskSubmitDto = {
       id: this.model.id,
       vertexShader: this.userVertexShader,
-      fragmentShader: this.userFragmentShader,
+      fragmentShader: this.userFragmentShader.code,
     }
     this.onSubmit.emit(taskSubmit);
   }
@@ -118,5 +127,13 @@ export class TaskComponent implements OnChanges {
 
   edit() {
     this.onEdit.emit();
+  }
+
+  resetToLastSubmettedCode() {
+    this.onResetToLastSubmettedCode.emit();
+  }
+
+  resetToDefaultCode() {
+    this.onResetToDefaultCode.emit();
   }
 }

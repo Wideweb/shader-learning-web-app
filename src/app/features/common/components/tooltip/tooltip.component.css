@@ -1,14 +1,15 @@
 .tooltip-container {
     position: relative;
-    background-color: #606060;
-    color: rgb(230, 230, 230);
+    background-color: #222;
+    color: white;
+    font-weight: bold;
     text-align: left;
     box-sizing: border-box;
     max-width: 400px;
     white-space: normal;
 }
 
-.tooltip-container::after {
+/* .tooltip-container::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -17,4 +18,4 @@
     border-width: 5px;
     border-style: solid;
     border-color: #606060 transparent transparent transparent;
-}
+} */

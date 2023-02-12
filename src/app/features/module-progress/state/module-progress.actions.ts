@@ -23,6 +23,19 @@ export class ModuleProgressToggleTaskDislike {
     constructor(public feedback: TaskFeedbackDto | null = null) {}
 }
 
+export class ModuleProgressUpdateUserFragmentCode {
+    static readonly type = '[ModuleProgress] Update User Fragment Code';
+    constructor(public code: string) {}
+}
+
+export class ModuleProgressResetToLastSubmettedCode {
+    static readonly type = '[ModuleProgress] Reset To Last Submitted Code';
+}
+
+export class ModuleProgressResetToDefaultCode {
+    static readonly type = '[ModuleProgress] Reset To Default Code';
+}
+
 export class ModuleProgressSubmitTask {
     static readonly type = '[ModuleProgress] Submit Task';
     constructor(public payload: TaskSubmitDto) {}

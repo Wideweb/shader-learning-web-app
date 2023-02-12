@@ -24,6 +24,7 @@
         <ng-container *ngIf="(finished$ | async) !== true">
             <task-training
                 [userTask]="userTask$ | async"
+                [userFragmentCode]="(userFragmentCode$ | async)!"
                 [canEdit]="(canEditTask$ | async) == true"
                 (onNext)="nextTask()"
             >

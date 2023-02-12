@@ -30,7 +30,7 @@ export class AppTooltipRendererDirective {
         }
 
         const positions = [
-            new ConnectionPositionPair({ originX: 'center', originY: 'top' }, { overlayX: 'center', overlayY: 'bottom' }, undefined, -5),
+            new ConnectionPositionPair({ originX: 'center', originY: 'top' }, { overlayX: 'center', overlayY: 'bottom' }, undefined, -8),
             new ConnectionPositionPair({ originX: 'center', originY: 'bottom' }, { overlayX: 'center', overlayY: 'top' }, undefined, 5)
         ];
 
