@@ -28,6 +28,7 @@ import { CodeEditorLinePromptComponent } from "./components/code-editor/line-pro
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { AppTooltipComponent } from "./components/tooltip/tooltip.component";
 import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-renderer.directive";
+import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-render
     AppTooltipComponent,
     UserTaskResultStatusPipe,
     AppTooltipRendererDirective,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +87,7 @@ import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-render
     CodeEditorComponent,
     AppTooltipRendererDirective,
     UserTaskResultStatusPipe,
+    ConfirmDialogComponent,
   ],
 })
 export class AppCommonModule {

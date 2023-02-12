@@ -1,7 +1,7 @@
 <div class="container">
   <div class="heading">
     <h2 class="header">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h2>
-    
+
     <div class="header-tools">
       <a class="like-btn" [ngClass]="{ selected: liked }" (click)="like()"><mat-icon class="like-icon">thumb_up</mat-icon><span class="counter">{{ model.likes }}</span></a>
       <a class="like-btn" [ngClass]="{ selected: disliked }" (click)="dislike()"><mat-icon class="like-icon">thumb_down</mat-icon><span class="counter">{{ model.dislikes }}</span></a>
@@ -67,13 +67,29 @@
           </ul>
         </div> -->
 
-        <div class="section">
+        <div class="code-editor-container">
+          <ng-template #lastSubmitted>
+            <div class="code-editor-tool-tooltip">Retrieve last submitted code</div>
+          </ng-template>
+
+          <ng-template #resetToDefault>
+            <div class="code-editor-tool-tooltip">Reset to default code definition</div>
+          </ng-template>
+
+          <div class="tools">
+            <div class="spacer"></div>
+            <a class="tools-action" (click)="resetToLastSubmettedCode()" appTooltip [appTooltipTemplate]=lastSubmitted>
+              <mat-icon class="icon">history</mat-icon>
+            </a>
+            <a class="tools-action" (click)="resetToDefaultCode()" appTooltip [appTooltipTemplate]=resetToDefault>
+              <mat-icon class="icon">restart_alt</mat-icon>
+            </a>
+          </div>
           <code-editor
-            [code]="userFragmentShader"
+            [code]="userFragmentShader.code"
             [prompts]="programPrompts"
             (onChange)="handleCodeChange($event)"
-            (onRun)="run()"
-          ></code-editor>
+            (onRun)="run()"></code-editor>
         </div>
 
         <div class="actions-container">

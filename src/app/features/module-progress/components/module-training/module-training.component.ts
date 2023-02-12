@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, distinctUntilChanged, filter, map, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { ModuleProgressState } from '../../state/module-progress.state';
+import { ModuleProgressState, UserFragmentProgram } from '../../state/module-progress.state';
 import { ModuleProgressDto } from '../../models/module-progress.model';
 import { UserTaskDto } from '../../models/user-task.model';
 import { ModuleProgressLoadNextTask, ModuleProgressLoadTask } from '../../state/module-progress.actions';
@@ -34,6 +34,9 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   @Select(ModuleProgressState.userTask)
   public userTask$!: Observable<UserTaskDto>;
+  
+  @Select(ModuleProgressState.userFragmentCode)
+  public userFragmentCode$!: Observable<UserFragmentProgram>;
 
   @Select(ModuleProgressState.userTaskLoaded)
   public userTaskLoaded$!: Observable<boolean>;

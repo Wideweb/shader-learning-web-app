@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
+import { DEFAULT_FRAGMENT_SHADER } from "../../app/app.constants";
 import { Logout } from "../../auth/state/auth.actions";
 import { ModuleProgressDto } from "../models/module-progress.model";
 import { TaskProgressDto } from "../models/task-progress.model";
@@ -9,11 +10,17 @@ import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
 import { UserTaskDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
 import { UserTaskService } from "../services/user-task.service";
-import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike } from "./module-progress.actions";
+import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from "./module-progress.actions";
+
+export interface UserFragmentProgram {
+  code: string,
+  compile: boolean,
+};
 
 export interface ModuleProgressStateModel {
   module: ModuleProgressDto | null;
   userTask: UserTaskDto | null,
+  userFragmentCode: UserFragmentProgram,
   userTaskLoaded: boolean;
   userTaskLoading: boolean;
   userTasks: UserTaskDto[],
@@ -28,6 +35,10 @@ const defaults = (): ModuleProgressStateModel => {
   return {
     module: null,
     userTask: null,
+    userFragmentCode: {
+      code: DEFAULT_FRAGMENT_SHADER,
+      compile: false,
+    },
     userTaskLoaded: false,
     userTaskLoading: false,
     userTasks: [],
@@ -80,7 +91,12 @@ export class ModuleProgressState {
 
   @Selector()
   static userTask(state: ModuleProgressStateModel): UserTaskDto | null {
-    return state.userTask
+    return state.userTask;
+  }
+
+  @Selector()
+  static userFragmentCode(state: ModuleProgressStateModel): UserFragmentProgram {
+    return state.userFragmentCode;
   }
 
   @Selector()
@@ -160,7 +176,14 @@ export class ModuleProgressState {
 
     const userTask = ctx.getState().userTasks.find(userTask => userTask.task.id == action.id);
     if (userTask) {
-      ctx.setState(patch<ModuleProgressStateModel>({ userTask, error: null }));
+      ctx.setState(patch<ModuleProgressStateModel>({
+        userTask,
+        userFragmentCode: {
+          code: userTask.fragmentShader,
+          compile: true,
+        },
+        error: null
+      }));
       return userTask;
     }
 
@@ -172,6 +195,10 @@ export class ModuleProgressState {
       ctx.setState(patch<ModuleProgressStateModel>({ 
         userTasks: insertItem(userTask),
         userTask,
+        userFragmentCode: {
+          code: userTask.fragmentShader,
+          compile: true,
+        },
         error: null
       }));
       return userTask;
@@ -220,6 +247,10 @@ export class ModuleProgressState {
            }))
         }),
         userTask,
+        userFragmentCode: {
+          code: userTask.fragmentShader,
+          compile: true,
+        },
         error: null
       }));
 
@@ -385,6 +416,46 @@ export class ModuleProgressState {
     {
       ctx.setState(patch<ModuleProgressStateModel>({ error }));
     }
+  }
+
+  @Action(ModuleProgressUpdateUserFragmentCode)
+  async updateUserTaskFragmentCode(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressUpdateUserFragmentCode) {
+    ctx.setState(patch<ModuleProgressStateModel>({
+      userFragmentCode: {
+        code: action.code,
+        compile: false,
+      },
+    }));
+  }
+
+  @Action(ModuleProgressResetToLastSubmettedCode)
+  async resetToLastSubmittedCode(ctx: StateContext<ModuleProgressStateModel>) {
+    const userTask = ctx.getState().userTask;
+    if (!userTask) {
+      throw "no task";
+    }
+
+    ctx.setState(patch<ModuleProgressStateModel>({
+      userFragmentCode: {
+        code: userTask.fragmentShader || DEFAULT_FRAGMENT_SHADER,
+        compile: true,
+      },
+    }));
+  }
+
+  @Action(ModuleProgressResetToDefaultCode)
+  async resetToDefaultCode(ctx: StateContext<ModuleProgressStateModel>) {
+    const userTask = ctx.getState().userTask;
+    if (!userTask) {
+      throw "no task";
+    }
+
+    ctx.setState(patch<ModuleProgressStateModel>({
+      userFragmentCode: {
+        code: userTask.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER,
+        compile: true,
+      },
+    }));
   }
 
   @Action(Logout)

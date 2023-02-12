@@ -18,6 +18,6 @@ export class ModuleProgressService {
 
     public getView(moduleId: number): Observable<ModuleDto | null> {
       return this.http.get<ModuleDto>(`${API}/modules/${moduleId}/view`).pipe(shareReplay(1));
-  }
+    }
 
 }
