@@ -5,7 +5,7 @@ import { API } from 'src/environments/environment';
 import { GlProgramSettings, GlService } from '../../common/services/gl.service';
 import { UserTaskDto } from '../models/user-task.model';
 import { TaskProgressDto } from '../models/task-progress.model';
-import { TaskDto, TaskFeedbackDto, TaskSubmitDto } from '../models/task.model';
+import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../models/task.model';
 import { CANCEL_SPINNER_TOKEN } from '../../common/interceptors/spinner.interceptor';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
 
@@ -38,7 +38,7 @@ export class UserTaskService {
         return this.http.get<UserTaskDto>(`${API}/tasks/next/${moduleId}`).pipe(shareReplay(1));
     }
 
-    public async submit(taskSubmit: TaskSubmitDto, task: TaskDto): Promise<TaskProgressDto> {
+    public async submit(taskSubmit: TaskSubmitDto, task: TaskDto): Promise<TaskSubmitResultDto> {
         const taskProgram: GlProgramSettings = {
             vertexShader: task.vertexShader,
             fragmentShader: task.fragmentShader,
@@ -59,7 +59,7 @@ export class UserTaskService {
         }
 
         return lastValueFrom(
-            this.http.post<TaskProgressDto>(`${API}/tasks/${taskSubmit.id}/submit`, {...taskSubmit, match}, {
+            this.http.post<TaskSubmitResultDto>(`${API}/tasks/${taskSubmit.id}/submit`, {...taskSubmit, match}, {
                 context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true)
             }).pipe(shareReplay(1))
         );

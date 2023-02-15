@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleProgressState, UserFragmentProgram } from '../../state/module-progress.state';
 import { ModuleProgressDto } from '../../models/module-progress.model';
-import { UserTaskDto } from '../../models/user-task.model';
+import { UserTaskDto, UserTaskSubmissionDto } from '../../models/user-task.model';
 import { ModuleProgressLoadNextTask, ModuleProgressLoadTask } from '../../state/module-progress.actions';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { TaskProgressDto } from '../../models/task-progress.model';
@@ -37,6 +37,9 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
   
   @Select(ModuleProgressState.userFragmentCode)
   public userFragmentCode$!: Observable<UserFragmentProgram>;
+
+  @Select(ModuleProgressState.userTaskSubmissions)
+  public userTaskSubmissions$!: Observable<UserTaskSubmissionDto[]>;
 
   @Select(ModuleProgressState.userTaskLoaded)
   public userTaskLoaded$!: Observable<boolean>;

@@ -21,6 +21,7 @@ import { ModuleProgressState } from "./state/module-progress.state";
 import { ModuleNavigationComponent } from "./components/module-navigation/module-navigation.component";
 import { ModuleNavigationTaskStatusComponent } from "./components/module-navigation/task-status/task-status.component";
 import { FeedbackComponent } from "./components/feedback-dialog/feedback-dialog.component";
+import { TaskSubmissionsComponent } from "./components/task/submissions/submissions.component";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { FeedbackComponent } from "./components/feedback-dialog/feedback-dialog.
     ModuleViewComponent,
     ModuleViewTaskTableComponent,
     TaskComponent,
+    TaskSubmissionsComponent,
     TaskResultComponent,
     TaskSubmitDialogComponent,
     TaskSubmitResultDialogComponent,

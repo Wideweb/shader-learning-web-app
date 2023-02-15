@@ -4,6 +4,7 @@ import * as marked from 'marked';
 import { TaskDto, TaskHintDto, TaskSubmitDto } from '../../models/task.model';
 import { CodeEditorPrompt } from 'src/app/features/common/components/code-editor/declarations';
 import { UserFragmentProgram } from '../../state/module-progress.state';
+import { UserTaskSubmissionDto } from '../../models/user-task.model';
 
 @Component({
   selector: 'task',
@@ -19,6 +20,9 @@ export class TaskComponent implements OnChanges {
 
   @Input()
   public userFragmentShader!: UserFragmentProgram;
+
+  @Input()
+  public submissions!: UserTaskSubmissionDto[];
 
   @Input()
   public liked: boolean = false;
@@ -49,6 +53,9 @@ export class TaskComponent implements OnChanges {
 
   @Output()
   public onResetToDefaultCode = new EventEmitter<void>();
+
+  @Output()
+  public onSubmissionSelect = new EventEmitter<UserTaskSubmissionDto>();
 
   public visibleHints: TaskHintDto[] = [];
 
@@ -135,5 +142,9 @@ export class TaskComponent implements OnChanges {
 
   resetToDefaultCode() {
     this.onResetToDefaultCode.emit();
+  }
+
+  selectSubmission(submission: UserTaskSubmissionDto) {
+    this.onSubmissionSelect.emit(submission);
   }
 }

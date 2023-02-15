@@ -36,6 +36,11 @@ export class ModuleProgressResetToDefaultCode {
     static readonly type = '[ModuleProgress] Reset To Default Code';
 }
 
+export class ModuleProgressReplaceCode {
+    static readonly type = '[ModuleProgress] Replace Code';
+    constructor(public code: string) {}
+}
+
 export class ModuleProgressSubmitTask {
     static readonly type = '[ModuleProgress] Submit Task';
     constructor(public payload: TaskSubmitDto) {}

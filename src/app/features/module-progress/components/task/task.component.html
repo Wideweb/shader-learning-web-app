@@ -12,92 +12,104 @@
     </div>
   </div>
 
-  <div class="body">
-    <div class="body-scroll">
-      <div class="body-content">
-        <div class="section" *ngIf="model?.description">
-          <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
-        </div>
+  <div class="row">
 
-        <div class="section">
+    <div class="body body-left">
 
-          <div class="demo-container">
-            <div class="demo-item target-result">
-              <h3>Target</h3>
-              <div class="scene">
-                <app-gl-scene
-                  [vertexShader]="model.vertexShader"
-                  [fragmentShader]="model.fragmentShader"
-                  [channels]="model.channels"
-                  [compileTrigger]="compileTrigger"
-                  ></app-gl-scene>
+          <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" class="bordered-header">
+            <mat-tab label="Description">
+              <div class="tab-content tab-content-description" *ngIf="model?.description">
+
+                <div class="section">
+                  <div class="description-markdown-compiled" [innerHtml]="compiledDescription"></div>
+                </div>
+
+                <div class="section">
+                  <div class="scene">
+                    <app-gl-scene
+                      [vertexShader]="model.vertexShader"
+                      [fragmentShader]="model.fragmentShader"
+                      [channels]="model.channels"
+                      [compileTrigger]="compileTrigger"
+                      [maxWidth]="500"
+                      [ratio]="2"
+                      ></app-gl-scene>
+                  </div>
+                </div>
               </div>
-            </div>
+            </mat-tab>
 
-            <div class="demo-item user-result">
-              <h3>Your Result</h3>
+            <mat-tab label="Submissions">
+              <div class="tab-content">
+                <task-submissions [data]="submissions" (onSubmissionSelect)="selectSubmission($event)"></task-submissions>
+              </div>
+            </mat-tab>
+        </mat-tab-group>
+
+    </div>
+
+    <div class="body body-right">
+      <div class="body-scroll">
+        <div class="body-content">
+          
+            <div class="section">
               <div class="scene">
                 <app-gl-scene
                   [vertexShader]="userVertexShader"
                   [fragmentShader]="userFragmentShaderApplied"
                   [channels]="model.channels"
                   [compileTrigger]="compileTrigger"
+                  [maxWidth]="500"
+                  [ratio]="2"
                   (onError)="handleFragmentShaderCompilationError($event)"
                   (onSuccess)="handleFragmentShaderCompilationSuccess()">
                 </app-gl-scene>
+              </div>
+            </div>
+
+            <div class="section channels" *ngIf="model.channels.length > 0">
+              <ng-container *ngFor="let channel of model.channels; let i = index">
+                <task-channel [label]="'iChannel' + i" [file]="channel.file"></task-channel>
+              </ng-container>
+            </div>
+
+            <div>
+              <div class="code-editor-container">
+                <ng-template #lastSubmitted>
+                  <div class="code-editor-tool-tooltip">Retrieve last submitted code</div>
+                </ng-template>
+
+                <ng-template #resetToDefault>
+                  <div class="code-editor-tool-tooltip">Reset to default code definition</div>
+                </ng-template>
+
+                <div class="tools">
+                  <div class="spacer"></div>
+                  <a class="tools-action" (click)="resetToLastSubmettedCode()" appTooltip [appTooltipTemplate]=lastSubmitted>
+                    <mat-icon class="icon">history</mat-icon>
+                  </a>
+                  <a class="tools-action" (click)="resetToDefaultCode()" appTooltip [appTooltipTemplate]=resetToDefault>
+                    <mat-icon class="icon">restart_alt</mat-icon>
+                  </a>
+                </div>
+                <code-editor
+                  [code]="userFragmentShader.code"
+                  [prompts]="programPrompts"
+                  (onChange)="handleCodeChange($event)"
+                  (onRun)="run()"></code-editor>
+              </div>
+
+              <div class="actions-container">
+                <a *hasPermission="['task_submit']" class="btn btn-submit" (click)="submit()">
+                  <span>Submit</span>
+                </a>
               </div>
             </div>
           </div>
 
         </div>
 
-        <div class="section channels" *ngIf="model.channels.length > 0">
-          <ng-container *ngFor="let channel of model.channels; let i = index">
-            <task-channel [label]="'iChannel' + i" [file]="channel.file"></task-channel>
-          </ng-container>
-        </div>
-
-        <!-- <div *ngIf="hasHints()">
-          <h3>Hints</h3>
-          <ul>
-            <li *ngFor="let hint of model.hints;">
-              <button (click)="revealHint(hint)" *ngIf="!isHintRevealed(hint)">show</button>
-              <span *ngIf="isHintRevealed(hint)">{{ hint.message }}</span>
-            </li>
-          </ul>
-        </div> -->
-
-        <div class="code-editor-container">
-          <ng-template #lastSubmitted>
-            <div class="code-editor-tool-tooltip">Retrieve last submitted code</div>
-          </ng-template>
-
-          <ng-template #resetToDefault>
-            <div class="code-editor-tool-tooltip">Reset to default code definition</div>
-          </ng-template>
-
-          <div class="tools">
-            <div class="spacer"></div>
-            <a class="tools-action" (click)="resetToLastSubmettedCode()" appTooltip [appTooltipTemplate]=lastSubmitted>
-              <mat-icon class="icon">history</mat-icon>
-            </a>
-            <a class="tools-action" (click)="resetToDefaultCode()" appTooltip [appTooltipTemplate]=resetToDefault>
-              <mat-icon class="icon">restart_alt</mat-icon>
-            </a>
-          </div>
-          <code-editor
-            [code]="userFragmentShader.code"
-            [prompts]="programPrompts"
-            (onChange)="handleCodeChange($event)"
-            (onRun)="run()"></code-editor>
-        </div>
-
-        <div class="actions-container">
-          <a *hasPermission="['task_submit']" class="btn btn-submit" (click)="submit()">
-            <span>Submit</span>
-          </a>
-        </div>
       </div>
     </div>
-  </div>
+
 </div>

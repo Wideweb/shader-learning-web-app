@@ -1,0 +1,48 @@
+:host {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+a.row {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    outline: none;
+}
+
+.spacer {
+    flex: 1;
+}
+
+a.row:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+a.row {
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.status {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.status.accepted {
+    color: green;
+}
+
+.status.rejected {
+    color: red;
+}
+
+.date {
+    font-size: 13px;
+    color: #888;
+}
+
+mat-icon {
+    color: #888;
+}

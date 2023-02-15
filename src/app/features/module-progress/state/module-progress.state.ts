@@ -7,10 +7,10 @@ import { Logout } from "../../auth/state/auth.actions";
 import { ModuleProgressDto } from "../models/module-progress.model";
 import { TaskProgressDto } from "../models/task-progress.model";
 import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
-import { UserTaskDto } from "../models/user-task.model";
+import { UserTaskDto, UserTaskSubmissionDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
 import { UserTaskService } from "../services/user-task.service";
-import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from "./module-progress.actions";
+import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from "./module-progress.actions";
 
 export interface UserFragmentProgram {
   code: string,
@@ -97,6 +97,11 @@ export class ModuleProgressState {
   @Selector()
   static userFragmentCode(state: ModuleProgressStateModel): UserFragmentProgram {
     return state.userFragmentCode;
+  }
+
+  @Selector()
+  static userTaskSubmissions(state: ModuleProgressStateModel): UserTaskSubmissionDto[] {
+    return state.userTask?.submissions || [];
   }
 
   @Selector()
@@ -300,6 +305,13 @@ export class ModuleProgressState {
       const score = taskSubmitResult.score > task.score ? taskSubmitResult.score : task.score;
       const match = taskSubmitResult.match > task.match ? taskSubmitResult.match : task.match;
 
+      const submission: UserTaskSubmissionDto = {
+        score: taskSubmitResult.score,
+        accepted: taskSubmitResult.accepted,
+        fragmentShader: taskSubmitResult.fragmentShader,
+        at: taskSubmitResult.at,
+      };
+
       ctx.setState(patch<ModuleProgressStateModel>({
         module: patch<ModuleProgressDto>({
           tasks: updateItem(task => task?.id == userTask.task.id, patch({ 
@@ -311,9 +323,11 @@ export class ModuleProgressState {
         }),
         userTask: patch<UserTaskDto>({
           fragmentShader: action.payload.fragmentShader,
+          submissions: insertItem(submission, 0)
         }),
         userTasks: updateItem(it => it?.task.id == userTask.task.id, patch({ 
           fragmentShader: action.payload.fragmentShader,
+          submissions: insertItem(submission, 0)
         })),
         taskSubmitResult,
         error: null
@@ -453,6 +467,16 @@ export class ModuleProgressState {
     ctx.setState(patch<ModuleProgressStateModel>({
       userFragmentCode: {
         code: userTask.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER,
+        compile: true,
+      },
+    }));
+  }
+
+  @Action(ModuleProgressReplaceCode)
+  async replaceCode(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressReplaceCode) {
+    ctx.setState(patch<ModuleProgressStateModel>({
+      userFragmentCode: {
+        code: action.code || DEFAULT_FRAGMENT_SHADER,
         compile: true,
       },
     }));

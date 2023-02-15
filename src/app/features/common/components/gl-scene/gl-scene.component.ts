@@ -21,6 +21,12 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input()
   public compileTrigger = 0;
 
+  @Input()
+  public maxWidth: number | null = null;
+
+  @Input()
+  public ratio: number | null = null;
+
   @Output()
   public onError = new EventEmitter<{line: number; message: string}[]>();
 
@@ -63,24 +69,25 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @HostListener('window:resize', ['$event'])
   onResize() {
     if (this.isRunning) {
-      const width = this.elementRef.nativeElement.clientWidth;
-      const height = this.elementRef.nativeElement.clientHeight;
-
-      this.canvas.width = width;
-      this.canvas.height = height;
-
-      this.material.uniforms['iResolution'].value = new THREE.Vector2(width, height);
-
-      this.renderer.setSize(width, height);
+      this.setCanvasSize();
+      this.material.uniforms['iResolution'].value = new THREE.Vector2(this.canvas.width, this.canvas.height);
+      this.renderer.setSize(this.canvas.width, this.canvas.height);
     }
   }
 
-  ngOnInit(): void {
+  setCanvasSize() {
+    const width = Math.min(this.elementRef.nativeElement.clientWidth, this.maxWidth || Number.MAX_VALUE);
+    const height = this.ratio ? width / this.ratio : this.elementRef.nativeElement.clientHeight;
 
+    this.canvas.width = width;
+    this.canvas.height = height;
   }
+
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      this.setCanvasSize();
       this.createRenderer();
       this.createScene();
       this.startRenderingLoop();
@@ -128,7 +135,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true })
     this.renderer.debug.checkShaderErrors = true;
     this.renderer.setPixelRatio(1);
-    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this.renderer.setSize(this.canvas.width, this.canvas.height);
 
     let component: GlSceneComponent = this;
     component.originalConsoleError = console.error.bind(this.renderer.getContext());
