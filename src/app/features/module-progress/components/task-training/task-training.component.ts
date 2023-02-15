@@ -4,9 +4,9 @@ import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dia
 import { filter, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { UserTaskDto } from '../../models/user-task.model';
+import { UserTaskDto, UserTaskSubmissionDto } from '../../models/user-task.model';
 import { TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../../models/task.model';
-import { ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from '../../state/module-progress.actions';
+import { ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from '../../state/module-progress.actions';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
 import { ModuleProgressState, UserFragmentProgram } from '../../state/module-progress.state';
 import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component';
@@ -20,6 +20,9 @@ import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/comm
 export class TaskTrainingComponent implements OnDestroy {
   @Input()
   public userTask!: UserTaskDto | null;
+
+  @Input()
+  public submissions!: UserTaskSubmissionDto[];
 
   @Input()
   public userFragmentCode!: UserFragmentProgram;
@@ -125,6 +128,22 @@ export class TaskTrainingComponent implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(_ => this.store.dispatch(new ModuleProgressResetToDefaultCode()));
+  }
+
+  selectSubmission(submission: UserTaskSubmissionDto) {
+    this.dialog
+      .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(ConfirmDialogComponent, {
+        disableClose: false,
+        data: {
+          message: `Your current code will be discarded and replaced with the selected submission's code!`,
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter(result => !!result),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(_ => this.store.dispatch(new ModuleProgressReplaceCode(submission.fragmentShader)));
   }
 
   ngOnDestroy() {

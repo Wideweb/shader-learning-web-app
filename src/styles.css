@@ -231,3 +231,7 @@ ul {
 .mat-mdc-dialog-container .mdc-dialog__surface {
     border-radius: 0 !important;
 }
+
+mat-tab-group.bordered-header mat-tab-header {
+    border-bottom: 1px solid #e3e3e3;
+}

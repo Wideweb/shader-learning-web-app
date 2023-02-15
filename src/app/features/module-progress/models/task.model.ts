@@ -36,6 +36,8 @@ export interface TaskSubmitResultDto {
     match: number;
     score: number;
     accepted: boolean;
+    fragmentShader: string;
+    at: Date;
 }
 
 export interface TaskSubmitDto {

@@ -1,0 +1,18 @@
+<div class="table">
+
+    <a *ngFor="let submission of data" class="row" (click)="select(submission)">
+        <div>
+            <div class="status" [ngClass]="submission.accepted ? 'accepted' : 'rejected'">
+                {{ submission.accepted ? 'Accepted' : 'Rejected' }}
+            </div>
+            <div class="date">
+                {{ submission.at | date:'mediumDate' }}
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <mat-icon>chevron_right</mat-icon>
+    </a>
+
+</div>
