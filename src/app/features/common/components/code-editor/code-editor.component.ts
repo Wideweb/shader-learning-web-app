@@ -1,6 +1,8 @@
-import { ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewContainerRef, } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewContainerRef, } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
+import * as CodeMirror from 'codemirror';
 import { groupBy } from '../../services/utils';
+import { CodeEditorAutocomplete } from './code-editor-autocomplete';
 import { CodeEditorOutput, CodeEditorPrompt } from './declarations';
 import { CodeEditorLinePromptComponent } from './line-prompt/line-prompt.component';
 
@@ -9,7 +11,7 @@ import { CodeEditorLinePromptComponent } from './line-prompt/line-prompt.compone
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css']
 })
-export class CodeEditorComponent implements OnChanges, OnDestroy {
+export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @ViewChild(CodemirrorComponent)
   public codemirror!: CodemirrorComponent;
@@ -28,14 +30,42 @@ export class CodeEditorComponent implements OnChanges, OnDestroy {
 
   public output: CodeEditorOutput = { message: '', type: 'success' };
 
+  private static autocomplete: CodeEditorAutocomplete = new CodeEditorAutocomplete();
+
   constructor(
-    private ref: ElementRef,
     private appRef: ApplicationRef,
     private injector: Injector,
     private resolver: ComponentFactoryResolver,
   ) {}
 
   private promptedLines: { line: number, widget: CodeMirror.LineWidget, wrapperRef: ComponentRef<CodeEditorLinePromptComponent> }[] = [];
+
+  ngAfterViewInit() { 
+    this.initCodeMirror();
+  }
+
+  initCodeMirror(): void {
+    if (!this.codemirror.codeMirror) {
+      setTimeout(() => this.initCodeMirror(), 100);
+      return;
+    }
+
+    this.initCodeMirrorAutocomplete();
+  }
+
+  initCodeMirrorAutocomplete(): void {
+    this.codemirror.codeMirror?.on("inputRead", (instance) => {
+      if (instance.state.completionActive) {
+        return;
+      }
+
+      CodeMirror.commands.autocomplete(
+        instance,
+        (editor, otions) => CodeEditorComponent.autocomplete.showHints(editor, otions),
+        { completeSingle: false }
+      );
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('prompts' in changes) {
