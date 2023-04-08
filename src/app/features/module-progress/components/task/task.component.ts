@@ -91,26 +91,44 @@ export class TaskComponent implements OnChanges {
   }
 
   createProgramFiles() {
-    this.programFiles = [];
-
     if (!this.model || !this.shaderProgram) {
+      this.programFiles = [];
       return;
     }
 
+    const vertexFile = this.programFiles.find(f => f.name === 'vertex.glsl');
+    const fragmentFile = this.programFiles.find(f => f.name === 'fragment.glsl');
+
     if (this.model.vertexCodeEditable) {
-      this.programFiles.push({ 
-        name: 'vertex.glsl',
-        data: this.shaderProgram.vertex,
-        mode: 'x-shader/x-vertex'
-      });
+      if (vertexFile) {
+        vertexFile.data = this.shaderProgram.vertex;
+      } else {
+        this.programFiles.push({ 
+          name: 'vertex.glsl',
+          data: this.shaderProgram.vertex,
+          mode: 'x-shader/x-vertex'
+        });
+      }
+    }
+
+    if (!this.model.vertexCodeEditable && vertexFile) {
+      this.programFiles = this.programFiles.filter(f => f !== vertexFile);
     }
 
     if (this.model.fragmentCodeEditable) {
-      this.programFiles.push({ 
-        name: 'fragment.glsl',
-        data: this.shaderProgram.fragment,
-        mode: 'x-shader/x-fragment'
-      });
+      if (fragmentFile) {
+        fragmentFile.data = this.shaderProgram.fragment;
+      } else {
+        this.programFiles.push({ 
+          name: 'fragment.glsl',
+          data: this.shaderProgram.fragment,
+          mode: 'x-shader/x-fragment'
+        });
+      }
+    }
+
+    if (!this.model.fragmentCodeEditable && fragmentFile) {
+      this.programFiles = this.programFiles.filter(f => f !== fragmentFile);
     }
   }
 

@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core';
 import * as Pixelmatch from 'pixelmatch';
 import * as THREE from 'three';
 import { MATCH_THRESHOLD } from '../../app/app.constants';
+import { GlProgramSettings } from '../gl-scene/models';
+import { GlFactory } from './gl.factory';
 
-export interface GlProgramChannel {
-    file: File
-}
-
-export interface GlProgramSettings {
-    vertexShader: string;
-    fragmentShader: string;
-    time?: number;
-    channels?: GlProgramChannel[];
+interface GlProgram {
+    scene: THREE.Scene,
+    camera: THREE.Camera,
+    material: THREE.ShaderMaterial,
 }
 
 @Injectable({
@@ -24,22 +21,34 @@ export class GlService {
 
     private isRendering: boolean = false;
 
-    public async compare(program1: GlProgramSettings, program2: GlProgramSettings): Promise<number> {
+    constructor(private glFactory: GlFactory) {}
+
+    public async compare(programSettings1: GlProgramSettings, programSettings2: GlProgramSettings, width: number, height: number): Promise<number> {
         const renderer = this.createRenderer();
+
+        const program1 = await this.createProgram(programSettings1, width, height);
+        const program2 = await this.createProgram(programSettings2, width, height);
+
         try {
-            return await await this.doCompare(renderer, program1, program2);
+            return await await this.doCompare(renderer, program1, program2, width, height);
         } finally {
             this.disposeRenderer(renderer);
         }
     }
 
-    public async compareAnimations(program1: GlProgramSettings, program2: GlProgramSettings, steps: number, stepTime: number): Promise<number> {
+    public async compareAnimations(programSettings1: GlProgramSettings, programSettings2: GlProgramSettings, width: number, height: number, steps: number, stepTime: number): Promise<number> {
         const renderer = this.createRenderer();
+
+        const program1 = await this.createProgram(programSettings1, width, height);
+        const program2 = await this.createProgram(programSettings2, width, height);
 
         try {
             let matchDegree = 0;
             for (let i = 0; i < steps; i++) {
-                matchDegree += await this.doCompare(renderer, {...program1, time: i * stepTime}, {...program2, time: i * stepTime});
+                program1.material.uniforms['iTime'].value = i * stepTime;
+                program2.material.uniforms['iTime'].value = i * stepTime;
+
+                matchDegree += await this.doCompare(renderer, program1, program2, width, height);
             }
             return matchDegree / steps;
         } finally {
@@ -65,6 +74,23 @@ export class GlService {
         }
 
         return textue;
+    }
+
+    public async createProgram(settings: GlProgramSettings, width: number, height: number): Promise<GlProgram> {
+        const channelsSrc = (settings.channels || []);
+        const channels = [];
+        for (let i = 0; i < channelsSrc.length; i++) {
+            channels.push(await this.loadTexture(channelsSrc[i].file));
+        }
+
+        const resolution = new THREE.Vector2(width, height);
+        const camera = this.glFactory.createCamera(settings.scene.camera, width, height);
+        const scene = this.glFactory.createScene(settings.scene);
+        const material = this.glFactory.createMaterial(settings.vertexShader, settings.fragmentShader, resolution, channels, 0);
+        const obj = this.glFactory.createObject(settings.scene.object, material);
+        scene.add(obj);
+
+        return {scene, camera, material};
     }
 
     private createRenderer(): THREE.WebGLRenderer {
@@ -98,13 +124,9 @@ export class GlService {
         renderer.dispose();
     }
 
-    private async doCompare(renderer: THREE.WebGLRenderer, program1: GlProgramSettings, program2: GlProgramSettings) {
-        const width = 1024;
-        const height = 512;
-
+    private async doCompare(renderer: THREE.WebGLRenderer, program1: GlProgram, program2: GlProgram, width: number, height: number) {
         const texture1 = await this.renderToTexture(renderer, program1, width, height);
         const texture2 = await this.renderToTexture(renderer, program2, width, height);
-
 
         if (texture1 == null || texture2 == null) {
             return 0;
@@ -116,39 +138,8 @@ export class GlService {
         return matchDegree;
     }
 
-    private async renderToTexture(renderer: THREE.WebGLRenderer, program: GlProgramSettings, width: number, height: number): Promise<Uint8Array | null> {
+    private async renderToTexture(renderer: THREE.WebGLRenderer, program: GlProgram, width: number, height: number): Promise<Uint8Array | null> {
         renderer.setSize(width, height);
-        
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x000000);
-
-        const camera = new THREE.OrthographicCamera(0, 1, 1, 0, 0.1, 1000);
-        camera.position.set(0, 0, 1);
-
-        const channels = (program.channels || []);
-        const channelsUniforms = {} as any;
-        for (let i = 0; i < channels.length; i++) {
-            channelsUniforms[`iChannel${i}`] = { value: await this.loadTexture(channels[i].file) };
-        }
-
-        const geometry = new THREE.PlaneGeometry(1, 1);
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                iResolution: { 
-                    value: new THREE.Vector2(width, height),
-                },
-                ...channelsUniforms,
-                iTime: { 
-                    value: program.time
-                },
-            },
-            vertexShader: program.vertexShader,
-            fragmentShader: program.fragmentShader,
-        });
-
-        const plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0.5, 0.5, 0);
-        scene.add(plane);
 
         const frameTexture = new THREE.WebGLRenderTarget(width, height, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, generateMipmaps: false, depthBuffer: false });
         const buffer = new Uint8Array(width * height * 4);
@@ -157,7 +148,7 @@ export class GlService {
 
         renderer.setRenderTarget(frameTexture);
         this.isRendering = true;
-        renderer.render(scene, camera);
+        renderer.render(program.scene, program.camera);
         this.isRendering = false;
         renderer.readRenderTargetPixels(frameTexture, 0, 0, width, height, buffer);
 

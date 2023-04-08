@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import * as THREE from 'three';
-import { BufferGeometry, Texture } from 'three';
-import { GlGeometry, GlScene, GlSceneObject } from '../../gl-scene/models';
-import { GlProgramChannel, GlService } from '../../services/gl.service';
+import { Texture } from 'three';
+import { GlProgramChannel, GlScene } from '../../gl-scene/models';
+import { GlFactory } from '../../services/gl.factory';
+import { GlService } from '../../services/gl.service';
 
 export interface GlProgramErrors {
   vertex: { line: number; message: string }[];
@@ -73,7 +74,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private textures: (Texture | null)[] = [];
 
-  constructor(private elementRef: ElementRef, private glService: GlService) {}
+  constructor(private elementRef: ElementRef, private glService: GlService, private glFactory: GlFactory) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -140,6 +141,11 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   ngOnDestroy(): void {
     this.stopRenderingLoop();
+
+    if (this.renderer) {
+      this.renderer.dispose();
+      console.error = this.originalConsoleError;
+    }
   }
 
   private createRenderer(): void {
@@ -199,84 +205,12 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private createScene(): void {
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(this.sceneData.background);
-
-    if (this.sceneData.camera.isOrthographic)
-    {
-      this.camera = new THREE.OrthographicCamera(
-        this.sceneData.camera.left,
-        this.sceneData.camera.right,
-        this.sceneData.camera.top,
-        this.sceneData.camera.bottom,
-        this.sceneData.camera.near,
-        this.sceneData.camera.far
-      );
-    }
-    else
-    {
-      this.camera = new THREE.PerspectiveCamera(
-        this.sceneData.camera.fov,
-        this.canvas.width / this.canvas.height,
-        this.sceneData.camera.near,
-        this.sceneData.camera.far
-      );
-    }
-    
-    this.camera.position.set(
-      this.sceneData.camera.position.x,
-      this.sceneData.camera.position.y,
-      this.sceneData.camera.position.z
-    );
-
-    this.addObjectToScene(this.sceneData.object);
-  }
-
-  private createBufferGeometry(geometry: GlGeometry): BufferGeometry
-  {
-    if (geometry == GlGeometry.Triangle)
-    {
-      var g = new THREE.BufferGeometry();
-      var positions = new Float32Array([-0.5,-0.5,0, 0.5,-0.5,0, 0,0.5,0])
-      g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      return g;
-    }
-
-    switch (geometry)
-    {
-      case GlGeometry.Plane: return new THREE.PlaneGeometry(1, 1);
-      case GlGeometry.Box: return new THREE.BoxGeometry(1, 1, 1, 1);
-      case GlGeometry.Sphere: return new THREE.SphereGeometry(0.5, 32, 32);
-      default: return new THREE.PlaneGeometry(1, 1);
-    }
-  }
-
-  private addObjectToScene(obj: GlSceneObject): void {
-    const geometry = this.createBufferGeometry(Number.parseInt(obj.geometry as any));
-    geometry.computeVertexNormals();
-
-    const channelsUniforms = (this.textures || []).reduce((acc, value, i) => ({...acc, [`iChannel${i}`]: { value }}), {});
-
-    this.material = new THREE.ShaderMaterial({
-      uniforms: {
-        iResolution: { 
-          value: new THREE.Vector2(this.canvas.clientWidth, this.canvas.clientHeight),
-        },
-        ...channelsUniforms,
-        iTime: { value: this.time },
-      },
-      vertexShader: this.vertexShader,
-      fragmentShader: this.fragmentShader,
-    });
-
-    const mesh = new THREE.Mesh(geometry, this.material);
-    mesh.rotateY(obj.rotation.y);
-    mesh.rotateX(obj.rotation.x);
-    mesh.rotateZ(obj.rotation.z);
-    mesh.scale.set(obj.scale.x, obj.scale.y, obj.scale.z)
-    mesh.position.set(obj.position.x, obj.position.y, obj.position.z);
-
-    this.scene.add(mesh);
+    const resolution = new THREE.Vector2(this.canvas.width, this.canvas.height);
+    this.camera = this.glFactory.createCamera(this.sceneData.camera, this.canvas.width, this.canvas.height);
+    this.scene = this.glFactory.createScene(this.sceneData);
+    this.material = this.glFactory.createMaterial(this.vertexShader, this.fragmentShader, resolution, this.textures, 0);
+    const obj = this.glFactory.createObject(this.sceneData.object, this.material);
+    this.scene.add(obj);
   }
 
   private startRenderingLoop(): void {

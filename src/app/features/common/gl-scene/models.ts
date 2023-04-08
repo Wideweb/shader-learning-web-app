@@ -13,7 +13,7 @@ export class Vec3
 
 export class GlCamera
 {
-  public position = new Vec3(-0.5, -0.5, 2.0);
+  public position = new Vec3(-0.5, -0.5, 1.0);
   public rotation = new Vec3();
 
   public near = 0.1;
@@ -51,4 +51,16 @@ export class GlScene
   public object = new GlSceneObject();
 
   public background = 0xFFFFFF;
+}
+
+export interface GlProgramChannel {
+  file: File
+}
+
+export interface GlProgramSettings {
+  scene: GlScene,
+  vertexShader: string;
+  fragmentShader: string;
+  time?: number;
+  channels?: GlProgramChannel[];
 }

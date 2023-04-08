@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { firstValueFrom, lastValueFrom, Observable, shareReplay } from 'rxjs';
 import { API } from 'src/environments/environment';
-import { GlProgramSettings, GlService } from '../../common/services/gl.service';
+import { GlService } from '../../common/services/gl.service';
 import { UserTaskDto } from '../models/user-task.model';
 import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../models/task.model';
 import { CANCEL_SPINNER_TOKEN } from '../../common/interceptors/spinner.interceptor';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
-import { GlScene } from '../../common/gl-scene/models';
+import { GlProgramSettings, GlScene } from '../../common/gl-scene/models';
 
 @Injectable({
   providedIn: 'root',
@@ -42,12 +42,14 @@ export class UserTaskService {
 
     public async submit(taskSubmit: TaskSubmitDto, task: TaskDto): Promise<TaskSubmitResultDto> {
         const taskProgram: GlProgramSettings = {
+            scene: task.sceneSettings,
             vertexShader: task.vertexShader,
             fragmentShader: task.fragmentShader,
             channels: task.channels.map(c => ({ file: c.file })),
         }
 
         const userProgram: GlProgramSettings = {
+            scene: task.sceneSettings,
             vertexShader: taskSubmit.vertexShader,
             fragmentShader: taskSubmit.fragmentShader,
             channels: task.channels.map(c => ({ file: c.file })),
@@ -55,9 +57,9 @@ export class UserTaskService {
 
         let match = 0;
         if (task.animated) {
-            match = await this.gl.compareAnimations(taskProgram, userProgram, task.animationSteps!, task.animationStepTime! / 1000);
+            match = await this.gl.compareAnimations(taskProgram, userProgram, 1024, 512, task.animationSteps!, task.animationStepTime! / 1000);
         } else {
-            match = await this.gl.compare(taskProgram, userProgram);
+            match = await this.gl.compare(taskProgram, userProgram, 1024, 512);
         }
 
         return lastValueFrom(

@@ -36,8 +36,6 @@ export class SceneSettingsFormComponent {
       distinctUntilChanged(),
       takeUntil(destroy$),
     ).subscribe(color => {
-      console.log('background');
-
       form.get('backgroundRGBA')?.setValue(color.toString(16).toUpperCase());
       form.get('backgroundRGBA')?.updateValueAndValidity();
     });
@@ -47,8 +45,6 @@ export class SceneSettingsFormComponent {
       takeUntil(destroy$),
     ).subscribe(color => {
       const opts = {onlySelf: true, emitEvent: false};
-
-      console.log('backgroundRGBA');
 
       if (form.get('backgroundRGBA')?.invalid || color == null) {
         form.get('background')?.setValue(0, opts);

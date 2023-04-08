@@ -1,5 +1,4 @@
-import { GlScene } from "../../common/gl-scene/models";
-import { GlProgramChannel } from "../../common/services/gl.service";
+import { GlProgramChannel, GlScene } from "../../common/gl-scene/models";
 
 export interface TaskDto {
     id: number;

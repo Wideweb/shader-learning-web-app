@@ -10,10 +10,9 @@ import { Store } from '@ngxs/store';
 import { TaskDto } from '../../../models/task.model';
 import { TaskCreate, TaskUpdate } from '../../../state/task.actions';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { GlProgramChannel } from 'src/app/features/common/services/gl.service';
 import { CodeEditorFile, CodeEditorPrompt, CodeEditorPrompts } from 'src/app/features/common/components/code-editor/declarations';
 import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
-import { GlScene } from 'src/app/features/common/gl-scene/models';
+import { GlProgramChannel, GlScene } from 'src/app/features/common/gl-scene/models';
 import { SceneSettingsFormComponent } from '../scene-settings-form/scene-settings-form.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
