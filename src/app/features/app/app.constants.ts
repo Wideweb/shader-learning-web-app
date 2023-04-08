@@ -44,3 +44,6 @@ const foo = () => {
 2. item b`;
 
 export const MATCH_THRESHOLD = 0.00;
+
+export const FLOAT_PATTERN = /[+-]?([0-9]*[.])?[0-9]+/;
+export const RGBA_PATTERN = /^(?:[0-9a-fA-F]{6})$/;

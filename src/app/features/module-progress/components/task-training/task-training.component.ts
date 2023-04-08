@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { UserTaskDto, UserTaskSubmissionDto } from '../../models/user-task.model';
 import { TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../../models/task.model';
-import { ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from '../../state/module-progress.actions';
+import { ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserProgramCode } from '../../state/module-progress.actions';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
-import { ModuleProgressState, UserFragmentProgram } from '../../state/module-progress.state';
+import { ModuleProgressState, UserShaderProgram } from '../../state/module-progress.state';
 import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/common/components/confirm-dialog/confirm-dialog.component';
 
@@ -25,7 +25,7 @@ export class TaskTrainingComponent implements OnDestroy {
   public submissions!: UserTaskSubmissionDto[];
 
   @Input()
-  public userFragmentCode!: UserFragmentProgram;
+  public userShaderProgram!: UserShaderProgram;
 
   @Input()
   public canEdit!: boolean;
@@ -94,8 +94,8 @@ export class TaskTrainingComponent implements OnDestroy {
       .subscribe(feedback => this.store.dispatch(new ModuleProgressToggleTaskDislike(feedback)));
   }
 
-  handleFragmentCodeChange(code: string) {
-    this.store.dispatch(new ModuleProgressUpdateUserFragmentCode(code));
+  handleFragmentCodeChange(program: {vertex: string, fragment: string}) {
+    this.store.dispatch(new ModuleProgressUpdateUserProgramCode(program.vertex, program.fragment));
   }
 
   resetToLastSubmettedCode() {
@@ -143,7 +143,7 @@ export class TaskTrainingComponent implements OnDestroy {
         filter(result => !!result),
         takeUntil(this.destroy$)
       )
-      .subscribe(_ => this.store.dispatch(new ModuleProgressReplaceCode(submission.fragmentShader)));
+      .subscribe(_ => this.store.dispatch(new ModuleProgressReplaceCode(submission.vertexShader, submission.fragmentShader)));
   }
 
   ngOnDestroy() {

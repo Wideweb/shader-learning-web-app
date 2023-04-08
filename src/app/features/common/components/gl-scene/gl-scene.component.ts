@@ -1,7 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import * as THREE from 'three';
-import { Texture } from 'three';
+import { BufferGeometry, Texture } from 'three';
+import { GlGeometry, GlScene, GlSceneObject } from '../../gl-scene/models';
 import { GlProgramChannel, GlService } from '../../services/gl.service';
+
+export interface GlProgramErrors {
+  vertex: { line: number; message: string }[];
+  fragment: { line: number; message: string }[];
+};
 
 @Component({
   selector: 'app-gl-scene',
@@ -27,8 +33,11 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input()
   public ratio: number | null = null;
 
+  @Input()
+  public sceneData = new GlScene();
+
   @Output()
-  public onError = new EventEmitter<{line: number; message: string}[]>();
+  public onError = new EventEmitter<GlProgramErrors>();
 
   @Output()
   public onSuccess = new EventEmitter<string>();
@@ -44,7 +53,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private scene!: THREE.Scene;
 
-  private camera!: THREE.OrthographicCamera;
+  private camera!: THREE.Camera;
 
   private isRunning = false;
 
@@ -106,6 +115,8 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     if (['compileTrigger', 'channels'].some(p => p in changes)) {
       this.restart();
+    } else if ('sceneData' in changes) {
+      this.createScene();
     }
   }
 
@@ -132,15 +143,20 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private createRenderer(): void {
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true })
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true,
+      precision: 'highp',
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: true,
+    });
+
     this.renderer.debug.checkShaderErrors = true;
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(this.canvas.width, this.canvas.height);
 
     let component: GlSceneComponent = this;
     component.originalConsoleError = console.error.bind(this.renderer.getContext());
-
-    const canvas = this.canvas;
 
     console.error = function(
         summary: string, getError, programParamCode, programParam, 
@@ -153,15 +169,13 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         component.hasIssue = true;
         component.stopRenderingLoop();
 
-        const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
-        const matches = [...summary.matchAll(errorPattern)];
-        const errors = matches.map(match => {
-          const line = match ? Number.parseInt(match[1]) - 31 : -1;
-          const message = match ? match[2] : '';
-          return {line, message};
-        });
+        const vertexSummaty = summary.split('FRAGMENT')[0];
+        const fragmentSummaty = summary.split('FRAGMENT')[1];
+
+        const vertex = component.parseShaderProgramErrors(vertexSummaty, 57);
+        const fragment = component.parseShaderProgramErrors(fragmentSummaty, 31);
         
-        component.onError.emit(errors);
+        component.onError.emit({vertex, fragment});
 
         return component.originalConsoleError(
             summary, getError, programParamCode, programParam, 
@@ -170,18 +184,76 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     };
   }
 
-  private createScene(): void {
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x000000);
+  private parseShaderProgramErrors(summary: string, lineOffset: number) {
+    if (!summary) {
+      return [];
+    }
 
-    this.camera = new THREE.OrthographicCamera(0, 1, 1, 0, 0.1, 1000);
-    this.camera.position.set(0, 0, 1);
-
-    this.addPlaneToScene();
+    const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
+    const matches = [...summary.matchAll(errorPattern)];
+    return matches.map(match => {
+      const line = match ? Number.parseInt(match[1]) - lineOffset : -1;
+      const message = match ? match[2] : '';
+      return {line, message};
+    });
   }
 
-  private addPlaneToScene(): void {
-    const geometry = new THREE.PlaneGeometry(1, 1);
+  private createScene(): void {
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(this.sceneData.background);
+
+    if (this.sceneData.camera.isOrthographic)
+    {
+      this.camera = new THREE.OrthographicCamera(
+        this.sceneData.camera.left,
+        this.sceneData.camera.right,
+        this.sceneData.camera.top,
+        this.sceneData.camera.bottom,
+        this.sceneData.camera.near,
+        this.sceneData.camera.far
+      );
+    }
+    else
+    {
+      this.camera = new THREE.PerspectiveCamera(
+        this.sceneData.camera.fov,
+        this.canvas.width / this.canvas.height,
+        this.sceneData.camera.near,
+        this.sceneData.camera.far
+      );
+    }
+    
+    this.camera.position.set(
+      this.sceneData.camera.position.x,
+      this.sceneData.camera.position.y,
+      this.sceneData.camera.position.z
+    );
+
+    this.addObjectToScene(this.sceneData.object);
+  }
+
+  private createBufferGeometry(geometry: GlGeometry): BufferGeometry
+  {
+    if (geometry == GlGeometry.Triangle)
+    {
+      var g = new THREE.BufferGeometry();
+      var positions = new Float32Array([-0.5,-0.5,0, 0.5,-0.5,0, 0,0.5,0])
+      g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      return g;
+    }
+
+    switch (geometry)
+    {
+      case GlGeometry.Plane: return new THREE.PlaneGeometry(1, 1);
+      case GlGeometry.Box: return new THREE.BoxGeometry(1, 1, 1, 1);
+      case GlGeometry.Sphere: return new THREE.SphereGeometry(0.5, 32, 32);
+      default: return new THREE.PlaneGeometry(1, 1);
+    }
+  }
+
+  private addObjectToScene(obj: GlSceneObject): void {
+    const geometry = this.createBufferGeometry(Number.parseInt(obj.geometry as any));
+    geometry.computeVertexNormals();
 
     const channelsUniforms = (this.textures || []).reduce((acc, value, i) => ({...acc, [`iChannel${i}`]: { value }}), {});
 
@@ -197,9 +269,14 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       fragmentShader: this.fragmentShader,
     });
 
-    const plane = new THREE.Mesh(geometry, this.material);
-    plane.position.set(0.5, 0.5, 0);
-    this.scene.add(plane);
+    const mesh = new THREE.Mesh(geometry, this.material);
+    mesh.rotateY(obj.rotation.y);
+    mesh.rotateX(obj.rotation.x);
+    mesh.rotateZ(obj.rotation.z);
+    mesh.scale.set(obj.scale.x, obj.scale.y, obj.scale.z)
+    mesh.position.set(obj.position.x, obj.position.y, obj.position.z);
+
+    this.scene.add(mesh);
   }
 
   private startRenderingLoop(): void {

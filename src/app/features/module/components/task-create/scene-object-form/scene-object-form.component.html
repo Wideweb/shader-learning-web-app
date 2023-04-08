@@ -1,0 +1,35 @@
+<div [formGroup]="form">
+    <div class="form-row">
+        <mat-form-field appearance="fill">
+            <mat-label>Geometry</mat-label>
+            <select matNativeControl formControlName="geometry" [errorStateMatcher]="matcher">
+              <option *ngFor="let geometry of geometries" [value]="geometry.value">
+                {{geometry.label}}
+              </option>
+            </select>
+          </mat-form-field>
+    </div>
+
+    <div class="form-row">
+        <div class="form-column">
+            <div class="row-header">
+                Position
+            </div>
+            <vector-form [form]="form.get('position')"></vector-form>
+        </div>
+        <div class="form-column divider"></div>
+        <div class="form-column">
+            <div class="row-header">
+                Rotation
+            </div>
+            <vector-form [form]="form.get('rotation')"></vector-form>
+        </div>
+        <div class="form-column divider"></div>
+        <div class="form-column">
+            <div class="row-header">
+                Scale
+            </div>
+            <vector-form [form]="form.get('scale')"></vector-form>
+        </div>
+    </div>
+</div>

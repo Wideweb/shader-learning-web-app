@@ -2,9 +2,10 @@ import { Component, Input, Output, EventEmitter, SimpleChange, OnChanges, Simple
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features/app/app.constants';
 import * as marked from 'marked';
 import { TaskDto, TaskHintDto, TaskSubmitDto } from '../../models/task.model';
-import { CodeEditorPrompt } from 'src/app/features/common/components/code-editor/declarations';
-import { UserFragmentProgram } from '../../state/module-progress.state';
+import { CodeEditorFile, CodeEditorPrompt, CodeEditorPrompts } from 'src/app/features/common/components/code-editor/declarations';
+import { UserShaderProgram } from '../../state/module-progress.state';
 import { UserTaskSubmissionDto } from '../../models/user-task.model';
+import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
 
 @Component({
   selector: 'task',
@@ -16,10 +17,10 @@ export class TaskComponent implements OnChanges {
   public model!: TaskDto;
 
   @Input()
-  public userVertexShader: string = DEFAULT_VERTEX_SHADER;
+  public vertexShader: string = DEFAULT_VERTEX_SHADER;
 
   @Input()
-  public userFragmentShader!: UserFragmentProgram;
+  public shaderProgram!: UserShaderProgram;
 
   @Input()
   public submissions!: UserTaskSubmissionDto[];
@@ -46,7 +47,7 @@ export class TaskComponent implements OnChanges {
   public onDislike = new EventEmitter<boolean>();
 
   @Output()
-  public onFragmentCodeChange = new EventEmitter<string>();
+  public onUShaderProgramChange = new EventEmitter<{vertex: string, fragment: string}>();
 
   @Output()
   public onResetToLastSubmettedCode = new EventEmitter<void>();
@@ -59,9 +60,13 @@ export class TaskComponent implements OnChanges {
 
   public visibleHints: TaskHintDto[] = [];
 
-  public userFragmentShaderApplied: string = this.userFragmentShader?.code || DEFAULT_FRAGMENT_SHADER;
+  public vertexShaderApplied: string = this.shaderProgram?.vertex || DEFAULT_VERTEX_SHADER;
 
-  public programPrompts: CodeEditorPrompt[] = [];
+  public fragmentShaderApplied: string = this.shaderProgram?.fragment || DEFAULT_FRAGMENT_SHADER;
+
+  public programPrompts: CodeEditorPrompts = {};
+
+  public programFiles: CodeEditorFile[] = [];
 
   public compileTrigger = 0;
 
@@ -70,12 +75,11 @@ export class TaskComponent implements OnChanges {
   constructor(private ref: ElementRef, private resolver: ComponentFactoryResolver) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('userVertexShader' in changes) {
-      this.userVertexShader = this.userVertexShader || DEFAULT_VERTEX_SHADER;
-      this.run();
+    if ('shaderProgram' in changes || 'model' in changes) {
+      this.createProgramFiles();
     }
 
-    if ('userFragmentShader' in changes && this.userFragmentShader.compile) {
+    if ('shaderProgram' in changes && this.shaderProgram.compile) {
       this.run();
     }
 
@@ -86,30 +90,61 @@ export class TaskComponent implements OnChanges {
     }
   }
 
-  handleCodeChange(code: string) {
-    this.onFragmentCodeChange.emit(code);
+  createProgramFiles() {
+    this.programFiles = [];
+
+    if (!this.model || !this.shaderProgram) {
+      return;
+    }
+
+    if (this.model.vertexCodeEditable) {
+      this.programFiles.push({ 
+        name: 'vertex.glsl',
+        data: this.shaderProgram.vertex,
+        mode: 'x-shader/x-vertex'
+      });
+    }
+
+    if (this.model.fragmentCodeEditable) {
+      this.programFiles.push({ 
+        name: 'fragment.glsl',
+        data: this.shaderProgram.fragment,
+        mode: 'x-shader/x-fragment'
+      });
+    }
+  }
+
+  handleProgramFileChange(file: CodeEditorFile) {
+    const vertex = file.name === 'vertex.glsl' ? file.data : this.shaderProgram.vertex;
+    const fragment = file.name === 'fragment.glsl' ? file.data : this.shaderProgram.fragment;
+
+    this.onUShaderProgramChange.emit({vertex, fragment});
   }
 
   run(): void {
-    this.userFragmentShaderApplied = this.userFragmentShader?.code || DEFAULT_FRAGMENT_SHADER;
+    this.vertexShaderApplied = this.shaderProgram?.vertex;
+    this.fragmentShaderApplied = this.shaderProgram?.fragment;
     this.compileTrigger++;
   }
 
   submit(): void {
     const taskSubmit: TaskSubmitDto = {
       id: this.model.id,
-      vertexShader: this.userVertexShader,
-      fragmentShader: this.userFragmentShader.code,
+      vertexShader: this.shaderProgram.vertex,
+      fragmentShader: this.shaderProgram.fragment,
     }
     this.onSubmit.emit(taskSubmit);
   }
 
-  handleFragmentShaderCompilationError(errors: {line: number; message: string}[]): void {
-    this.programPrompts = errors.map(error => ({ line: error.line, message: error.message, type: 'error' }));
+  handleProgramCompilationError(errors: GlProgramErrors): void {
+    this.programPrompts = {
+      ['vertex.glsl']: errors.vertex.map(error => ({ ...error, type: 'error' } as CodeEditorPrompt)),
+      ['fragment.glsl']: errors.fragment.map(error => ({ ...error, type: 'error' } as CodeEditorPrompt)),
+    }
   }
 
-  handleFragmentShaderCompilationSuccess(): void {
-    this.programPrompts = [];
+  handleProgramCompilationSuccess(): void {
+    this.programPrompts = {};
   }
 
   hasHints(): boolean {

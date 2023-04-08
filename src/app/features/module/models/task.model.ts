@@ -1,10 +1,15 @@
+import { GlScene } from "../../common/gl-scene/models";
+
 export interface TaskDto {
     id: number;
     moduleId: number;
     name: string;
     vertexShader: string;
     fragmentShader: string;
+    defaultVertexShader: string | null;
     defaultFragmentShader: string | null;
+    vertexCodeEditable: boolean,
+    fragmentCodeEditable: boolean,
     hints: TaskHintDto[];
     restrictions: TaskRestrictionDto[];
     cost: number;
@@ -19,6 +24,7 @@ export interface TaskDto {
     animated: boolean;
     animationSteps: number | null;
     animationStepTime: number | null;
+    sceneSettings: GlScene;
 }
 
 export interface TaskSaveDto {
@@ -27,7 +33,10 @@ export interface TaskSaveDto {
     name: string;
     vertexShader: string;
     fragmentShader: string;
+    defaultVertexShader: string | null;
     defaultFragmentShader: string | null;
+    vertexCodeEditable: boolean,
+    fragmentCodeEditable: boolean,
     hints: TaskHintDto[];
     restrictions: TaskRestrictionDto[];
     cost: number;
@@ -38,6 +47,7 @@ export interface TaskSaveDto {
     animated: boolean;
     animationSteps: number | null;
     animationStepTime: number | null;
+    sceneSettings: GlScene;
 }
 
 export interface TaskChannelDto {

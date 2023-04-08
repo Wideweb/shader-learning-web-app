@@ -1,3 +1,4 @@
+import { GlScene } from "../../common/gl-scene/models";
 import { GlProgramChannel } from "../../common/services/gl.service";
 
 export interface TaskDto {
@@ -6,6 +7,8 @@ export interface TaskDto {
     name: string;
     vertexShader: string;
     fragmentShader: string;
+    vertexCodeEditable: boolean,
+    fragmentCodeEditable: boolean,
     hints: TaskHintDto[];
     restrictions: TaskRestrictionDto[];
     order: number;
@@ -18,6 +21,7 @@ export interface TaskDto {
     animated: boolean;
     animationSteps: number | null;
     animationStepTime: number | null;
+    sceneSettings: GlScene;
 }
 
 export interface TaskHintDto {
@@ -36,6 +40,7 @@ export interface TaskSubmitResultDto {
     match: number;
     score: number;
     accepted: boolean;
+    vertexShader: string;
     fragmentShader: string;
     at: Date;
 }

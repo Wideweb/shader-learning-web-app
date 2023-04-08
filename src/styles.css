@@ -237,6 +237,10 @@ mat-tab-group.bordered-header mat-tab-header {
     border-bottom: 1px solid #e3e3e3;
 }
 
+.mat-mdc-tab.error .mdc-tab__text-label {
+    color: brown !important;
+}
+
 .CodeMirror-hints {
     background: #e3e3e3;
     border: none;

@@ -4,10 +4,10 @@ import { firstValueFrom, lastValueFrom, Observable, shareReplay } from 'rxjs';
 import { API } from 'src/environments/environment';
 import { GlProgramSettings, GlService } from '../../common/services/gl.service';
 import { UserTaskDto } from '../models/user-task.model';
-import { TaskProgressDto } from '../models/task-progress.model';
 import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../models/task.model';
 import { CANCEL_SPINNER_TOKEN } from '../../common/interceptors/spinner.interceptor';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
+import { GlScene } from '../../common/gl-scene/models';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +30,8 @@ export class UserTaskService {
 
         userTask.task.channels = await Promise.all(channelsFeatures);
         userTask.task.vertexShader = userTask.task.vertexShader || DEFAULT_VERTEX_SHADER;
+
+        userTask.task.sceneSettings = userTask.task.sceneSettings ? JSON.parse(userTask.task.sceneSettings as any) : new GlScene();
 
         return userTask;
     }

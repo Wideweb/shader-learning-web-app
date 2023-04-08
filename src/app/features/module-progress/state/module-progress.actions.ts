@@ -23,9 +23,9 @@ export class ModuleProgressToggleTaskDislike {
     constructor(public feedback: TaskFeedbackDto | null = null) {}
 }
 
-export class ModuleProgressUpdateUserFragmentCode {
-    static readonly type = '[ModuleProgress] Update User Fragment Code';
-    constructor(public code: string) {}
+export class ModuleProgressUpdateUserProgramCode {
+    static readonly type = '[ModuleProgress] Update User Program Code';
+    constructor(public vertex: string, public fragment: string) {}
 }
 
 export class ModuleProgressResetToLastSubmettedCode {
@@ -38,7 +38,7 @@ export class ModuleProgressResetToDefaultCode {
 
 export class ModuleProgressReplaceCode {
     static readonly type = '[ModuleProgress] Replace Code';
-    constructor(public code: string) {}
+    constructor(public vertex: string, public fragment: string) {}
 }
 
 export class ModuleProgressSubmitTask {

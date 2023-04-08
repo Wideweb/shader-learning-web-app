@@ -27,6 +27,7 @@
                 <div class="section">
                   <div class="scene">
                     <app-gl-scene
+                      [sceneData]="model.sceneSettings"
                       [vertexShader]="model.vertexShader"
                       [fragmentShader]="model.fragmentShader"
                       [channels]="model.channels"
@@ -55,14 +56,15 @@
             <div class="section">
               <div class="scene">
                 <app-gl-scene
-                  [vertexShader]="userVertexShader"
-                  [fragmentShader]="userFragmentShaderApplied"
+                  [sceneData]="model.sceneSettings"
+                  [vertexShader]="vertexShaderApplied"
+                  [fragmentShader]="fragmentShaderApplied"
                   [channels]="model.channels"
                   [compileTrigger]="compileTrigger"
                   [maxWidth]="500"
                   [ratio]="2"
-                  (onError)="handleFragmentShaderCompilationError($event)"
-                  (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                  (onError)="handleProgramCompilationError($event)"
+                  (onSuccess)="handleProgramCompilationSuccess()">
                 </app-gl-scene>
               </div>
             </div>
@@ -93,10 +95,11 @@
                   </a>
                 </div>
                 <code-editor
-                  [code]="userFragmentShader.code"
+                  [files]="programFiles"
                   [prompts]="programPrompts"
-                  (onChange)="handleCodeChange($event)"
-                  (onRun)="run()"></code-editor>
+                  (onChange)="handleProgramFileChange($event)"
+                  (onRun)="run()">
+                </code-editor>
               </div>
 
               <div class="actions-container">
