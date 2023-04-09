@@ -21,7 +21,7 @@ export class GlCamera
 
   public isOrthographic = true;
 
-  public fov = 45;
+  public fov = 75;
 
   public left = 0;
   public right = 1;
