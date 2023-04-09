@@ -29,6 +29,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { AppTooltipComponent } from "./components/tooltip/tooltip.component";
 import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-renderer.directive";
 import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
+import { MatSelectModule } from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dial
     DragDropModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatSelectModule,
   ],
   exports: [
     CommonModule,
@@ -82,7 +84,8 @@ import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dial
     MatCheckboxModule,
     DragDropModule,
     MatSnackBarModule,
-
+    MatSelectModule,
+    
     GlSceneComponent,
     CodeEditorComponent,
     AppTooltipRendererDirective,

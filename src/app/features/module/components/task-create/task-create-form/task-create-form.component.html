@@ -79,6 +79,10 @@
         </div>
     </div>
 
+    <div class="form-section description-section">
+        <scene-settings-form [form]="form.get('sceneSettings')"></scene-settings-form>
+    </div>
+
     <div class="programs-section">
         <div class="task-program">
 
@@ -89,12 +93,13 @@
             <div class="form-row">
                 <div class="scene">
                     <app-gl-scene
-                        [vertexShader]="vertexShader"
-                        [fragmentShader]="fragmentShaderApplied"
+                        [sceneData]="form.value.sceneSettings"
+                        [vertexShader]="taskVertexShaderApplied"
+                        [fragmentShader]="taskFragmentShaderApplied"
                         [channels]="glProgramChannels"
-                        [compileTrigger]="compileTrigger"
-                        (onError)="handleFragmentShaderCompilationError($event)"
-                        (onSuccess)="handleFragmentShaderCompilationSuccess()">
+                        [compileTrigger]="taskCompileTrigger"
+                        (onError)="handleTaskProgramCompilationError($event)"
+                        (onSuccess)="handleTaskProgramCompilationSuccess()">
                     </app-gl-scene>
                 </div>
             </div>
@@ -116,15 +121,15 @@
                     </ng-container>
                 </ng-container>
             </div>
-    
-            <div class="section">
+
+            <div class="form-row">
                 <code-editor
-                  [code]="fragmentShader"
-                  [prompts]="programPrompts"
-                  (onChange)="handleCodeChange($event)"
-                  (onRun)="run()"
+                  [files]="taskProgram"
+                  [prompts]="taskProgramPrompts"
+                  (onChange)="handleTaskProgramFileChange($event)"
+                  (onRun)="runTask()"
                 ></code-editor>
-              </div>
+            </div>
         </div>
     
         <div class="default-program">
@@ -136,12 +141,13 @@
             <div class="form-row">
                 <div class="scene">
                     <app-gl-scene
-                        [vertexShader]="vertexShader"
+                        [sceneData]="form.value.sceneSettings"
+                        [vertexShader]="defaultVertexShaderApplied"
                         [fragmentShader]="defaultFragmentShaderApplied"
                         [channels]="glProgramChannels"
                         [compileTrigger]="defaultCompileTrigger"
-                        (onError)="handleDefaultFragmentShaderCompilationError($event)"
-                        (onSuccess)="handleDefaultFragmentShaderCompilationSuccess()">
+                        (onError)="handleDefaultProgramCompilationError($event)"
+                        (onSuccess)="handleDefaultSProgramCompilationSuccess()">
                     </app-gl-scene>
                 </div>
             </div>
@@ -163,16 +169,21 @@
                     </ng-container>
                 </ng-container>
             </div>
-    
-            <div class="section">
+
+            <div class="form-row">
                 <code-editor
-                  [code]="defaultFragmentShader"
+                  [files]="defaultProgram"
                   [prompts]="defaultProgramPrompts"
-                  (onChange)="handleDefaultCodeChange($event)"
+                  (onChange)="handleDefaultProgramFileChange($event)"
                   (onRun)="runDefault()"
                 ></code-editor>
-              </div>
+            </div>
         </div>
+    </div>
+
+    <div class="form-row">
+        <mat-checkbox formControlName="vertexCodeEditable" color="primary">Vertex Shader</mat-checkbox>
+        <mat-checkbox formControlName="fragmentCodeEditable" color="primary">Fragment Shader</mat-checkbox>
     </div>
 
     <div *hasPermission="['task_edit_visibility']" class="form-section">

@@ -5,6 +5,7 @@ import { API } from 'src/environments/environment';
 import { TaskDto, TaskSaveDto } from '../models/task.model';
 import { FileService } from '../../common/services/file.service';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from '../../app/app.constants';
+import { GlScene } from '../../common/gl-scene/models';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,12 @@ export class TaskService {
       });
 
       const channels = await Promise.all(channelsFeatures);
+      const sceneSettings = task.sceneSettings ? JSON.parse(task.sceneSettings as any) : new GlScene();
 
       task.vertexShader = task.vertexShader || DEFAULT_VERTEX_SHADER;
       task.fragmentShader = task.fragmentShader || DEFAULT_FRAGMENT_SHADER;
 
-      return {...task, channels};
+      return {...task, channels, sceneSettings};
     }
 
     public async create(task: TaskSaveDto): Promise<number> {
@@ -37,8 +39,9 @@ export class TaskService {
       });
 
       const channels = await Promise.all(channelsFeatures);
+      const sceneSettings = JSON.stringify(task.sceneSettings);
 
-      return await firstValueFrom(this.http.post<number>(`${API}/tasks/create`, {...task, channels}).pipe(shareReplay(1)));
+      return await firstValueFrom(this.http.post<number>(`${API}/tasks/create`, {...task, channels, sceneSettings }).pipe(shareReplay(1)));
     }
 
     public async update(task: TaskSaveDto): Promise<number> {
@@ -48,7 +51,8 @@ export class TaskService {
       });
 
       const channels = await Promise.all(channelsFeatures);
+      const sceneSettings = JSON.stringify(task.sceneSettings);
 
-      return await firstValueFrom(this.http.put<number>(`${API}/tasks/${task.id}/update`, {...task, channels}).pipe(shareReplay(1)));
+      return await firstValueFrom(this.http.put<number>(`${API}/tasks/${task.id}/update`, {...task, channels, sceneSettings}).pipe(shareReplay(1)));
     }
 }

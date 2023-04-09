@@ -1,0 +1,9 @@
+.form-row {
+    display: flex;
+}
+
+.form-column.divider {
+    width: 0px;
+    margin: 0 4px;
+    border-right: 1px solid #ccc;
+}

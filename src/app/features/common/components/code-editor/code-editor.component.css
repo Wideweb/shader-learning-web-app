@@ -51,3 +51,11 @@ a.btn-run {
 a.btn-run:hover .btn-run-ico {
     border-left: 15px solid rgb(0, 176, 176);
 }
+
+.files {
+    box-shadow: inset 0px -1px 0px 0px #ccc;
+}
+
+.error {
+    color: red;
+}

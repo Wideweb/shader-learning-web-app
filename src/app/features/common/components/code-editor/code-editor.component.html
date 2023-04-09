@@ -1,13 +1,23 @@
 <div class="code-editor-container">
+  
+  <div class="files">
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="selectFile($event)">
+      <ng-container *ngFor="let file of files">
+        <mat-tab [label]="file.name" [labelClass]="file.hasError ? 'error' : []">
+        </mat-tab>
+      </ng-container>
+    </mat-tab-group>
+  </div>
+
   <div class="code">
     <ngx-codemirror
-      [ngModel]="code"
+      [ngModel]="currentFile.data"
       (ngModelChange)="hanldeCodeChange($event)"
       [options]="{
         tabSize: 2,
         autofocus: false,
         lineNumbers: true,
-        mode: 'x-shader/x-fragment'
+        mode: currentFile.mode
       }"
     ></ngx-codemirror>
   </div>

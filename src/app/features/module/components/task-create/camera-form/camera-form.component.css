@@ -1,0 +1,17 @@
+mat-form-field {
+    max-width: 75px !important;
+}
+
+mat-form-field + mat-form-field {
+    margin-left: 5px;
+}
+
+.form-row {
+    display: flex;
+}
+
+.form-column.divider {
+    width: 0px;
+    margin: 0 4px;
+    border-right: 1px solid #ccc;
+}

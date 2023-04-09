@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
-import { DEFAULT_FRAGMENT_SHADER } from "../../app/app.constants";
+import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from "../../app/app.constants";
 import { Logout } from "../../auth/state/auth.actions";
 import { ModuleProgressDto } from "../models/module-progress.model";
 import { TaskProgressDto } from "../models/task-progress.model";
@@ -10,17 +10,18 @@ import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
 import { UserTaskDto, UserTaskSubmissionDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
 import { UserTaskService } from "../services/user-task.service";
-import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserFragmentCode } from "./module-progress.actions";
+import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserProgramCode } from "./module-progress.actions";
 
-export interface UserFragmentProgram {
-  code: string,
+export interface UserShaderProgram {
+  vertex: string,
+  fragment: string,
   compile: boolean,
 };
 
 export interface ModuleProgressStateModel {
   module: ModuleProgressDto | null;
   userTask: UserTaskDto | null,
-  userFragmentCode: UserFragmentProgram,
+  userShaderProgram: UserShaderProgram,
   userTaskLoaded: boolean;
   userTaskLoading: boolean;
   userTasks: UserTaskDto[],
@@ -35,8 +36,9 @@ const defaults = (): ModuleProgressStateModel => {
   return {
     module: null,
     userTask: null,
-    userFragmentCode: {
-      code: DEFAULT_FRAGMENT_SHADER,
+    userShaderProgram: {
+      vertex: DEFAULT_VERTEX_SHADER,
+      fragment: DEFAULT_FRAGMENT_SHADER,
       compile: false,
     },
     userTaskLoaded: false,
@@ -95,8 +97,8 @@ export class ModuleProgressState {
   }
 
   @Selector()
-  static userFragmentCode(state: ModuleProgressStateModel): UserFragmentProgram {
-    return state.userFragmentCode;
+  static userShaderProgram(state: ModuleProgressStateModel): UserShaderProgram {
+    return state.userShaderProgram;
   }
 
   @Selector()
@@ -183,8 +185,9 @@ export class ModuleProgressState {
     if (userTask) {
       ctx.setState(patch<ModuleProgressStateModel>({
         userTask,
-        userFragmentCode: {
-          code: userTask.fragmentShader,
+        userShaderProgram: {
+          vertex: userTask.vertexShader,
+          fragment: userTask.fragmentShader,
           compile: true,
         },
         error: null
@@ -200,8 +203,9 @@ export class ModuleProgressState {
       ctx.setState(patch<ModuleProgressStateModel>({ 
         userTasks: insertItem(userTask),
         userTask,
-        userFragmentCode: {
-          code: userTask.fragmentShader,
+        userShaderProgram: {
+          vertex: userTask.vertexShader,
+          fragment: userTask.fragmentShader,
           compile: true,
         },
         error: null
@@ -252,8 +256,9 @@ export class ModuleProgressState {
            }))
         }),
         userTask,
-        userFragmentCode: {
-          code: userTask.fragmentShader,
+        userShaderProgram: {
+          vertex: userTask.vertexShader,
+          fragment: userTask.fragmentShader,
           compile: true,
         },
         error: null
@@ -308,6 +313,7 @@ export class ModuleProgressState {
       const submission: UserTaskSubmissionDto = {
         score: taskSubmitResult.score,
         accepted: taskSubmitResult.accepted,
+        vertexShader: taskSubmitResult.vertexShader,
         fragmentShader: taskSubmitResult.fragmentShader,
         at: taskSubmitResult.at,
       };
@@ -432,11 +438,12 @@ export class ModuleProgressState {
     }
   }
 
-  @Action(ModuleProgressUpdateUserFragmentCode)
-  async updateUserTaskFragmentCode(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressUpdateUserFragmentCode) {
+  @Action(ModuleProgressUpdateUserProgramCode)
+  async updateUserTaskFragmentCode(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressUpdateUserProgramCode) {
     ctx.setState(patch<ModuleProgressStateModel>({
-      userFragmentCode: {
-        code: action.code,
+      userShaderProgram: {
+        vertex: action.vertex,
+        fragment: action.fragment,
         compile: false,
       },
     }));
@@ -450,9 +457,10 @@ export class ModuleProgressState {
     }
 
     ctx.setState(patch<ModuleProgressStateModel>({
-      userFragmentCode: {
-        code: userTask.fragmentShader || DEFAULT_FRAGMENT_SHADER,
-        compile: true,
+      userShaderProgram: {
+        vertex: userTask.vertexShader || DEFAULT_VERTEX_SHADER,
+        fragment: userTask.fragmentShader || DEFAULT_FRAGMENT_SHADER,
+        compile: false,
       },
     }));
   }
@@ -465,9 +473,10 @@ export class ModuleProgressState {
     }
 
     ctx.setState(patch<ModuleProgressStateModel>({
-      userFragmentCode: {
-        code: userTask.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER,
-        compile: true,
+      userShaderProgram: {
+        vertex: userTask.defaultVertexShader || DEFAULT_VERTEX_SHADER,
+        fragment: userTask.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER,
+        compile: false,
       },
     }));
   }
@@ -475,8 +484,9 @@ export class ModuleProgressState {
   @Action(ModuleProgressReplaceCode)
   async replaceCode(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressReplaceCode) {
     ctx.setState(patch<ModuleProgressStateModel>({
-      userFragmentCode: {
-        code: action.code || DEFAULT_FRAGMENT_SHADER,
+      userShaderProgram: {
+        vertex: action.vertex || DEFAULT_VERTEX_SHADER,
+        fragment: action.fragment || DEFAULT_FRAGMENT_SHADER,
         compile: true,
       },
     }));

@@ -1,7 +1,14 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import * as THREE from 'three';
 import { Texture } from 'three';
-import { GlProgramChannel, GlService } from '../../services/gl.service';
+import { GlProgramChannel, GlScene } from '../../gl-scene/models';
+import { GlFactory } from '../../services/gl.factory';
+import { GlService } from '../../services/gl.service';
+
+export interface GlProgramErrors {
+  vertex: { line: number; message: string }[];
+  fragment: { line: number; message: string }[];
+};
 
 @Component({
   selector: 'app-gl-scene',
@@ -27,8 +34,11 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input()
   public ratio: number | null = null;
 
+  @Input()
+  public sceneData = new GlScene();
+
   @Output()
-  public onError = new EventEmitter<{line: number; message: string}[]>();
+  public onError = new EventEmitter<GlProgramErrors>();
 
   @Output()
   public onSuccess = new EventEmitter<string>();
@@ -44,7 +54,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private scene!: THREE.Scene;
 
-  private camera!: THREE.OrthographicCamera;
+  private camera!: THREE.Camera;
 
   private isRunning = false;
 
@@ -64,7 +74,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private textures: (Texture | null)[] = [];
 
-  constructor(private elementRef: ElementRef, private glService: GlService) {}
+  constructor(private elementRef: ElementRef, private glService: GlService, private glFactory: GlFactory) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -106,6 +116,8 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     if (['compileTrigger', 'channels'].some(p => p in changes)) {
       this.restart();
+    } else if ('sceneData' in changes) {
+      this.createScene();
     }
   }
 
@@ -129,18 +141,28 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   ngOnDestroy(): void {
     this.stopRenderingLoop();
+
+    if (this.renderer) {
+      this.renderer.dispose();
+      console.error = this.originalConsoleError;
+    }
   }
 
   private createRenderer(): void {
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, precision: 'highp', premultipliedAlpha: false, preserveDrawingBuffer: true })
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true,
+      precision: 'highp',
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: true,
+    });
+
     this.renderer.debug.checkShaderErrors = true;
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(this.canvas.width, this.canvas.height);
 
     let component: GlSceneComponent = this;
     component.originalConsoleError = console.error.bind(this.renderer.getContext());
-
-    const canvas = this.canvas;
 
     console.error = function(
         summary: string, getError, programParamCode, programParam, 
@@ -153,15 +175,13 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         component.hasIssue = true;
         component.stopRenderingLoop();
 
-        const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
-        const matches = [...summary.matchAll(errorPattern)];
-        const errors = matches.map(match => {
-          const line = match ? Number.parseInt(match[1]) - 31 : -1;
-          const message = match ? match[2] : '';
-          return {line, message};
-        });
+        const vertexSummaty = summary.split('FRAGMENT')[0];
+        const fragmentSummaty = summary.split('FRAGMENT')[1];
+
+        const vertex = component.parseShaderProgramErrors(vertexSummaty, 57);
+        const fragment = component.parseShaderProgramErrors(fragmentSummaty, 31);
         
-        component.onError.emit(errors);
+        component.onError.emit({vertex, fragment});
 
         return component.originalConsoleError(
             summary, getError, programParamCode, programParam, 
@@ -170,36 +190,27 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     };
   }
 
-  private createScene(): void {
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x000000);
+  private parseShaderProgramErrors(summary: string, lineOffset: number) {
+    if (!summary) {
+      return [];
+    }
 
-    this.camera = new THREE.OrthographicCamera(0, 1, 1, 0, 0.1, 1000);
-    this.camera.position.set(0, 0, 1);
-
-    this.addPlaneToScene();
+    const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
+    const matches = [...summary.matchAll(errorPattern)];
+    return matches.map(match => {
+      const line = match ? Number.parseInt(match[1]) - lineOffset : -1;
+      const message = match ? match[2] : '';
+      return {line, message};
+    });
   }
 
-  private addPlaneToScene(): void {
-    const geometry = new THREE.PlaneGeometry(1, 1);
-
-    const channelsUniforms = (this.textures || []).reduce((acc, value, i) => ({...acc, [`iChannel${i}`]: { value }}), {});
-
-    this.material = new THREE.ShaderMaterial({
-      uniforms: {
-        iResolution: { 
-          value: new THREE.Vector2(this.canvas.clientWidth, this.canvas.clientHeight),
-        },
-        ...channelsUniforms,
-        iTime: { value: this.time },
-      },
-      vertexShader: this.vertexShader,
-      fragmentShader: this.fragmentShader,
-    });
-
-    const plane = new THREE.Mesh(geometry, this.material);
-    plane.position.set(0.5, 0.5, 0);
-    this.scene.add(plane);
+  private createScene(): void {
+    const resolution = new THREE.Vector2(this.canvas.width, this.canvas.height);
+    this.camera = this.glFactory.createCamera(this.sceneData.camera, this.canvas.width, this.canvas.height);
+    this.scene = this.glFactory.createScene(this.sceneData);
+    this.material = this.glFactory.createMaterial(this.vertexShader, this.fragmentShader, resolution, this.textures, 0);
+    const obj = this.glFactory.createObject(this.sceneData.object, this.material);
+    this.scene.add(obj);
   }
 
   private startRenderingLoop(): void {

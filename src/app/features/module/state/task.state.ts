@@ -4,6 +4,7 @@ import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_TASK_DESCRIPTION, DEFAULT_VERTEX_SHADER } from "../../app/app.constants";
 import { Logout } from "../../auth/state/auth.actions";
+import { GlScene } from "../../common/gl-scene/models";
 import { SpinnerService } from "../../common/services/spinner.service";
 import { TaskDto } from "../models/task.model";
 import { TaskService } from "../services/task.service";
@@ -56,7 +57,10 @@ export class TaskState {
         name: '',
         vertexShader: DEFAULT_VERTEX_SHADER,
         fragmentShader: DEFAULT_FRAGMENT_SHADER,
+        defaultVertexShader: DEFAULT_VERTEX_SHADER,
         defaultFragmentShader: DEFAULT_FRAGMENT_SHADER,
+        vertexCodeEditable: true,
+        fragmentCodeEditable: true,
         hints: [],
         restrictions: [],
         cost: null as any,
@@ -71,6 +75,7 @@ export class TaskState {
         animated: false,
         animationSteps: null,
         animationStepTime: null,
+        sceneSettings: new GlScene(),
       }
     });
   }

@@ -1,0 +1,22 @@
+<div [formGroup]="form">
+    <mat-form-field>
+        <mat-label>X</mat-label>
+        <input type="text" matInput formControlName="x" [errorStateMatcher]="matcher" autocomplete="off">
+        
+        <mat-error *ngIf="form.get('x')?.hasError('pattern')">invalid</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Y</mat-label>
+        <input type="text" matInput formControlName="y" [errorStateMatcher]="matcher" autocomplete="off">
+        
+        <mat-error *ngIf="form.get('y')?.hasError('pattern')">invalid</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Z</mat-label>
+        <input type="text" matInput formControlName="z" [errorStateMatcher]="matcher" autocomplete="off">
+        
+        <mat-error *ngIf="form.get('z')?.hasError('pattern')">invalid</mat-error>
+    </mat-form-field>
+</div>

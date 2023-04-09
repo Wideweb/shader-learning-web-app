@@ -1,10 +1,18 @@
 import { AfterViewInit, ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewContainerRef, } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import * as CodeMirror from 'codemirror';
 import { groupBy } from '../../services/utils';
 import { CodeEditorAutocomplete } from './code-editor-autocomplete';
-import { CodeEditorOutput, CodeEditorPrompt } from './declarations';
+import { CodeEditorOutput, CodeEditorPrompt, CodeEditorFile, CodeEditorPrompts } from './declarations';
 import { CodeEditorLinePromptComponent } from './line-prompt/line-prompt.component';
+
+const EMPTY_FILE: CodeEditorFile = {
+  name: '',
+  data: '',
+  mode: '',
+  hasError: false,
+}
 
 @Component({
   selector: 'code-editor',
@@ -17,16 +25,18 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy 
   public codemirror!: CodemirrorComponent;
 
   @Input()
-  public code: string = '';
+  public files: CodeEditorFile[] = [];
 
   @Input()
-  public prompts: CodeEditorPrompt[] = [];
+  public prompts: CodeEditorPrompts = {};
 
   @Output()
   public onRun = new EventEmitter();
 
   @Output()
-  public onChange = new EventEmitter<string>();
+  public onChange = new EventEmitter<CodeEditorFile>();
+
+  public currentFile: CodeEditorFile = EMPTY_FILE;
 
   public output: CodeEditorOutput = { message: '', type: 'success' };
 
@@ -70,7 +80,8 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy 
   ngOnChanges(changes: SimpleChanges): void {
     if ('prompts' in changes) {
       this.updatePrompts();
-      const hasError = (this.prompts || []).some(p => p.type == 'error');
+      this.updateFilesStatus();
+      const hasError = (this.files || []).some(f => f.hasError);
       if (hasError) {
         this.output.type = 'error';
         this.output.message = 'Program compilation error.';
@@ -79,16 +90,44 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy 
         this.output.message = 'Program successfully compiled.';
       }
     }
+
+    if ('files' in changes)
+    {
+      if (!this.files || this.files.length === 0)
+      {
+        this.currentFile = EMPTY_FILE;
+      } else {
+        this.currentFile = this.files[0];
+      }
+      this.updateFilesStatus();
+    }
+  }
+
+  public selectFile(event: MatTabChangeEvent) {
+    this.currentFile = this.files[event.index];
+    setTimeout(() => this.updatePrompts(), 100);
+  }
+
+  updateFilesStatus(): void {
+    if (!this.files || this.files.length === 0) {
+      return;
+    }
+
+    for (const file of this.files) {
+      file.hasError = (this.prompts[file.name] || []).some(p => p.type == 'error');
+    }
   }
 
   updatePrompts(): void {
     this.removePrompts();
 
-    if (!this.prompts || this.prompts.length <= 0) {
+    const filePrompts = this.prompts[this.currentFile.name];
+
+    if (!filePrompts || filePrompts.length <= 0) {
       return;
     }
 
-    const groupedPrompts = groupBy(this.prompts.filter(p => p.line >= 0), prompt => prompt.line);
+    const groupedPrompts = groupBy(filePrompts.filter(p => p.line >= 0), prompt => prompt.line);
 
     Object
       .entries(groupedPrompts)
@@ -126,8 +165,8 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy 
     this.onRun.emit();
   }
 
-  hanldeCodeChange(code: string): void {
-    this.onChange.emit(code);
+  hanldeCodeChange(data: string): void {
+    this.onChange.emit({...this.currentFile, data});
   }
 
   ngOnDestroy(): void {

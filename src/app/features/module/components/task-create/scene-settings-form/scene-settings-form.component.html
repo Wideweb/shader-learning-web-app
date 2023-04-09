@@ -1,0 +1,32 @@
+<div [formGroup]="form">
+
+    <div class="form-section">
+        <div class="section-header">
+            Scene
+        </div>
+        <div class="form-row">
+            <mat-form-field>
+                <mat-label>Background</mat-label>
+                <input type="text" matInput formControlName="backgroundRGBA" [errorStateMatcher]="matcher" autocomplete="off">
+                
+                <mat-error *ngIf="form.get('backgroundRGBA')?.hasError('required')">Background is <strong>required</strong></mat-error>
+    
+                <mat-error *ngIf="form.get('backgroundRGBA')?.hasError('pattern')">Please enter a valid value</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    
+    <div class="form-section">
+        <div class="section-header">
+            Camera
+        </div>
+        <camera-form [form]="form.get('camera')"></camera-form>
+    </div>
+
+    <div class="form-section">
+        <div class="section-header">
+            Object
+        </div>
+        <scene-object-form [form]="form.get('object')"></scene-object-form>
+    </div>
+</div>

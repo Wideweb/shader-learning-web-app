@@ -163,8 +163,6 @@ export class CodeEditorAutocomplete {
         const cur = editor.getCursor();
         let token = editor.getTokenAt(cur);
 
-        console.log(token);
-    
         if (!token.type || /\b(?:string|comment)\b/.test(token.type)) {
             return null;
         }
