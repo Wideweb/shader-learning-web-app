@@ -6,7 +6,7 @@ import { hasAll, hasAny } from "../../common/services/utils";
 import { SessionData } from "../models/session-data.model";
 import { UserDto } from "../models/user.model";
 import { AuthService } from "../services/auth.service";
-import { AuthClear, IsAccessTokenExpired, IsRefreshTokenExpired, LoadMe, Login, Logout, RefreshAccessToken, SignUp, UpdateAccessToken, UpdateRefreshToken } from "./auth.actions";
+import { IsTokenExpired, LoadMe, Login, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
 
 export interface AuthStateModel {
   user: UserDto | null;
@@ -153,6 +153,51 @@ export class AuthState {
     );
   }
 
+  @Action(RequestResetPassword)
+  resetPasswordRequest(ctx: StateContext<AuthStateModel>, action: RequestResetPassword) {
+    return this.authService.requestResetPassword(action.email).pipe(
+      catchError((err) => {
+        ctx.setState(
+          patch<AuthStateModel>({
+            loginError: err
+          })
+        );
+        return throwError(() => err);
+      }),
+    );
+  }
+
+  @Action(ResetPassword)
+  resetPassword(ctx: StateContext<AuthStateModel>, action: ResetPassword) {
+    return this.authService.resetPassword(action.payload).pipe(
+      tap((sesionData: SessionData) => {
+        ctx.setState({
+          user: sesionData.user,
+          accessToken: {
+            value: sesionData.tokenData.accessToken,
+            life: sesionData.tokenData.accessTokenLife,
+            expired: false,
+          },
+          refreshToken: {
+            value: sesionData.tokenData.refreshToken,
+            life: sesionData.tokenData.refreshTokenLife,
+            expired: false,
+          },
+          loginError: null,
+          signUpError: null,
+        });
+      }),
+      catchError((err) => {
+        ctx.setState(
+          patch<AuthStateModel>({
+            loginError: err
+          })
+        );
+        return throwError(() => err);
+      }),
+    );
+  }
+
   @Action(Logout)
   logout(ctx: StateContext<AuthStateModel>) {
     if (ctx.getState().accessToken.expired && ctx.getState().refreshToken.expired) {
@@ -171,6 +216,10 @@ export class AuthState {
 
   @Action(LoadMe)
   loadMe(ctx: StateContext<AuthStateModel>) {
+    if (ctx.getState().user !== null) {
+      return;
+    }
+
     return this.authService.loadMe().pipe(
       tap((user) => {
         ctx.patchState({
@@ -202,41 +251,33 @@ export class AuthState {
     );
   }
 
-  @Action(UpdateAccessToken)
-  updateAccessToken(ctx: StateContext<AuthStateModel>, action: UpdateAccessToken) {
+  @Action(UpdateToken)
+  updateAccessToken(ctx: StateContext<AuthStateModel>, action: UpdateToken) {
+    if (action.accessToken.expired && action.refreshToken.expired) {
+      return ctx.setState(defaults());
+    }
+
     return ctx.setState(
       patch<AuthStateModel>({
-        accessToken: { ...action.payload }
+        accessToken: { ...action.accessToken },
+        refreshToken: { ...action.refreshToken }
       })
     );
   }
 
-  @Action(IsAccessTokenExpired)
-  setIsAccessTokenExpired(ctx: StateContext<AuthStateModel>, action: IsAccessTokenExpired) {
+  @Action(IsTokenExpired)
+  setIsTokenExpired(ctx: StateContext<AuthStateModel>, action: IsTokenExpired) {
+    if (action.accessToken && action.refreshToken) {
+      return ctx.setState(defaults());
+    }
+
     return ctx.setState(
       patch<AuthStateModel>({
         accessToken: patch<AuthStateTokenModel>({
-          expired: action.payload,
-        })
-      })
-    );
-  }
-
-  @Action(UpdateRefreshToken)
-  updateRefreshToken(ctx: StateContext<AuthStateModel>, action: UpdateRefreshToken) {
-    return ctx.setState(
-      patch<AuthStateModel>({
-        refreshToken: { ...action.payload }
-      })
-    );
-  }
-
-  @Action(IsRefreshTokenExpired)
-  setIsRefreshTokenExpired(ctx: StateContext<AuthStateModel>, action: IsRefreshTokenExpired) {
-    return ctx.setState(
-      patch<AuthStateModel>({
+          expired: action.accessToken,
+        }),
         refreshToken: patch<AuthStateTokenModel>({
-          expired: action.payload,
+          expired: action.refreshToken,
         })
       })
     );

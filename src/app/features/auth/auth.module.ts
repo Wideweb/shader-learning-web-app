@@ -4,6 +4,8 @@ import { NgxsModule } from "@ngxs/store";
 import { AppCommonModule } from "../common/common.module";
 import { LoginComponent } from "./components/login/login.component";
 import { LogoutComponent } from "./components/logout/logout.component";
+import { ResetPasswordRequestComponent } from "./components/reset-password-request/reset-password-request.component";
+import { ResetPasswordComponent } from "./components/reset-password/reset-password.component";
 import { SignUpComponent } from "./components/sign-up/sign-up.component";
 import { UnauthorizedComponent } from "./components/unauthorized/unauthorized.component";
 import { HasPermissionDirective } from "./directives/has-permission.directive";
@@ -18,6 +20,8 @@ import { AuthState } from "./state/auth.state";
     LoginComponent,
     LogoutComponent,
     SignUpComponent,
+    ResetPasswordComponent,
+    ResetPasswordRequestComponent,
     UnauthorizedComponent,
     HasPermissionDirective,
     NoPermissionDirective,

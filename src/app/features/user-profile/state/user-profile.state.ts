@@ -83,6 +83,7 @@ export class UserProfileState {
     {
       const userProfile = await firstValueFrom(this.service.getProfileMe());
       const userProgress = await firstValueFrom(this.service.getProgressMe());
+      
       ctx.setState(patch<UserProfileStateModel>({ me: userProfile, userProfile, userProgress, error: null }));
     } 
     catch(error)
