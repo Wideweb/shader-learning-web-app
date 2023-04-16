@@ -6,6 +6,7 @@ import { UserDto } from '../models/user.model';
 import { UserSignUp } from '../models/user-sign-up.model';
 import { SessionData } from '../models/session-data.model';
 import { UserLogIn } from '../models/user-login.model';
+import { ResetPasswordData } from '../models/reset-password-data.model';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,18 @@ export class AuthService {
 
   public login(user: UserLogIn): Observable<SessionData> {
     return this.http.post<SessionData>(`${API}/login`, user).pipe(
+      shareReplay(1),
+    );
+  }
+
+  public requestResetPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${API}/requestResetPassword`, {email}).pipe(
+      shareReplay(1),
+    );
+  }
+
+  public resetPassword(data: ResetPasswordData): Observable<SessionData> {
+    return this.http.post<SessionData>(`${API}/resetPassword`, data).pipe(
       shareReplay(1),
     );
   }

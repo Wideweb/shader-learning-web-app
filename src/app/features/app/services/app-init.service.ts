@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { interval, lastValueFrom, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, interval, lastValueFrom, Subject, takeUntil, zip } from 'rxjs';
 import { AuthToken } from '../../auth/services/auth.token';
-import { IsAccessTokenExpired, IsRefreshTokenExpired, LoadMe, UpdateAccessToken, UpdateRefreshToken } from '../../auth/state/auth.actions';
+import { IsTokenExpired, LoadMe, UpdateToken } from '../../auth/state/auth.actions';
 import { AuthState } from '../../auth/state/auth.state';
 import { LocalService } from '../../common/services/local-storage.service';
-import { UserProfileLoad } from '../../user-profile/state/user-profile.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -29,23 +28,24 @@ export class AppInitService implements OnDestroy {
   }
 
   public async init(): Promise<any> {
-    this.accessToken.update$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(e => this.store.dispatch(new UpdateAccessToken(e)));
-
-    this.refreshToken.update$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(e => this.store.dispatch(new UpdateRefreshToken(e)));
+    zip(this.refreshToken.update$, this.accessToken.update$)
+      .pipe(
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([refreshToken, accessToken]) => {
+        this.store.dispatch(new UpdateToken(accessToken, refreshToken));
+      });
 
     interval(1000)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.store.dispatch(new IsAccessTokenExpired(this.accessToken.isExpired())),
-        this.store.dispatch(new IsRefreshTokenExpired(this.refreshToken.isExpired()))
-      });
+      .subscribe(() => this.store.dispatch(new IsTokenExpired(this.accessToken.isExpired(), this.refreshToken.isExpired())));
 
     this.store.select(AuthState.auth)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        takeUntil(this.destroy$)
+      )
       .subscribe(auth => {
         this.accessToken.set(auth.accessToken.value, auth.accessToken.life);
         this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.life);
@@ -54,7 +54,6 @@ export class AppInitService implements OnDestroy {
     const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
     if (isAuthenticated) {
       await lastValueFrom(this.store.dispatch(new LoadMe()));
-
     }
   }
 }

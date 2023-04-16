@@ -1,4 +1,4 @@
-import { BehaviorSubject, filter, map } from "rxjs";
+import { BehaviorSubject, filter, map, zip } from "rxjs";
 import { LocalService } from "../../common/services/local-storage.service";
 
 export interface AuthTokenUpdateEvent {
@@ -14,18 +14,20 @@ export class AuthToken {
     constructor(private valueKey: string, private lifeKey: string, private storage: LocalService) { 
         this.update$ = new BehaviorSubject(this.getUpdateEvent());
 
-        this.storage.message$.pipe(
-            filter(message => message.key == valueKey || message.key == lifeKey),
-            map(() => this.getUpdateEvent())
-        ).subscribe(this.update$);
+        const value$ = this.storage.message$.pipe(filter(message => message.key == valueKey));
+        const life$ = this.storage.message$.pipe(filter(message => message.key == lifeKey));
+
+        zip(value$, life$).pipe(map(() => this.getUpdateEvent())).subscribe(this.update$);
     }
 
     private getUpdateEvent() {
-        return {
+        const event = {
             value: this.getValue(),
             life: this.getLife(),
             expired: this.isExpired(),
         };
+
+        return event;
     }
 
     public getValue(): string {
@@ -37,7 +39,7 @@ export class AuthToken {
         this.setLife(life);
     }
 
-    public setValue(value: string): void {
+    private setValue(value: string): void {
         if (value == this.getValue()) {
             return;
         }
@@ -49,7 +51,7 @@ export class AuthToken {
         return Number.parseInt(this.storage.getData(this.lifeKey));
     }
     
-    public setLife(life: number) {
+    private setLife(life: number) {
         if (life == this.getLife() || (isNaN(life) && isNaN(this.getLife()))) {
             return;
         }

@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { distinctUntilChanged, Observable, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Observable, pairwise, Subject, takeUntil } from 'rxjs';
+import { LoadMe } from 'src/app/features/auth/state/auth.actions';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { SpinnerService } from 'src/app/features/common/services/spinner.service';
@@ -23,14 +25,20 @@ export class AppComponent implements OnInit, OnDestroy {
     private store: Store,
     private title: Title,
     private meta: Meta,
-    private pageMetaService: PageMetaService
+    private pageMetaService: PageMetaService,
+    private router: Router,
   ) {
     this.isAuthenticated$.pipe(
       distinctUntilChanged(),
+      pairwise(),
       takeUntil(this.destroy$),
-    ).subscribe((isAuthenticated) =>  {
-      if (isAuthenticated) {
-        this.store.dispatch(new UserProfileLoadMe())
+    ).subscribe(([prev, curr]) =>  {
+      if (curr) {
+        this.store.dispatch(new UserProfileLoadMe());
+        this.store.dispatch(new LoadMe());
+      }
+      if (!curr && prev != curr) {
+        this.router.navigateByUrl('/')
       }
     });
 
