@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { distinctUntilChanged, Observable, pairwise, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, filter, Observable, pairwise, Subject, takeUntil } from 'rxjs';
 import { LoadMe } from 'src/app/features/auth/state/auth.actions';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
@@ -31,16 +31,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isAuthenticated$.pipe(
       distinctUntilChanged(),
       pairwise(),
+      filter(([prev, curr]) => !curr && prev != curr),
       takeUntil(this.destroy$),
-    ).subscribe(([prev, curr]) =>  {
-      if (curr) {
-        this.store.dispatch(new UserProfileLoadMe());
-        this.store.dispatch(new LoadMe());
-      }
-      if (!curr && prev != curr) {
-        this.router.navigateByUrl('/')
-      }
-    });
+    ).subscribe(() => this.router.navigateByUrl('/'));
+
+    this.isAuthenticated$.pipe(
+      distinctUntilChanged(),
+      filter(isAuthenticated => isAuthenticated),
+      takeUntil(this.destroy$),
+    ).subscribe(() =>  this.store.dispatch([new UserProfileLoadMe(), new LoadMe()]));
 
     this.pageMetaService.title$
       .pipe(takeUntil(this.destroy$))

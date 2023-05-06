@@ -10,7 +10,7 @@ import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
 import { UserTaskDto, UserTaskSubmissionDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
 import { UserTaskService } from "../services/user-task.service";
-import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserProgramCode } from "./module-progress.actions";
+import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUnselectCurrentTask, ModuleProgressUpdateUserProgramCode } from "./module-progress.actions";
 
 export interface UserShaderProgram {
   vertex: string,
@@ -121,6 +121,11 @@ export class ModuleProgressState {
     return state.userTaskLoaded;
   }
 
+  @Selector()
+  static userTaskLoading(state: ModuleProgressStateModel): boolean {
+    return state.userTaskLoading;
+  }
+
   constructor(private moduleProgressService: ModuleProgressService, private userTaskService: UserTaskService) {}
 
   @Action(ModuleProgressLoad)
@@ -131,7 +136,11 @@ export class ModuleProgressState {
     {
       if (action.userProgress) {
         const module = await firstValueFrom(this.moduleProgressService.getUserProgress(action.id));
-        ctx.setState(patch<ModuleProgressStateModel>({ module, error: null }));
+        ctx.setState(patch<ModuleProgressStateModel>({
+          module,
+          finished: !!module && this.findNextTaskId(module) === null,
+          error: null
+        }));
         return module;
       } else {
         const module = await firstValueFrom(this.moduleProgressService.getView(action.id));
@@ -159,7 +168,11 @@ export class ModuleProgressState {
           };
         }
 
-        ctx.setState(patch<ModuleProgressStateModel>({ module: moduleProgress, error: null }));
+        ctx.setState(patch<ModuleProgressStateModel>({
+          module: moduleProgress,
+          finished: !!moduleProgress && this.findNextTaskId(moduleProgress) === null,
+          error: null
+        }));
         return module;
       }
       
@@ -181,25 +194,15 @@ export class ModuleProgressState {
       return;
     }
 
-    const userTask = ctx.getState().userTasks.find(userTask => userTask.task.id == action.id);
-    if (userTask) {
-      ctx.setState(patch<ModuleProgressStateModel>({
-        userTask,
-        userShaderProgram: {
-          vertex: userTask.vertexShader,
-          fragment: userTask.fragmentShader,
-          compile: true,
-        },
-        error: null
-      }));
-      return userTask;
-    }
-
     ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: false, userTaskLoading: true }));
 
     try 
     {
-      const userTask = await this.userTaskService.get(action.id);
+      let userTask = ctx.getState().userTasks.find(userTask => userTask.task.id == action.id);
+      if (!userTask) {
+        userTask = await this.userTaskService.get(action.id);
+      }
+
       ctx.setState(patch<ModuleProgressStateModel>({ 
         userTasks: insertItem(userTask),
         userTask,
@@ -208,7 +211,8 @@ export class ModuleProgressState {
           fragment: userTask.fragmentShader,
           compile: true,
         },
-        error: null
+        error: null,
+        userTaskLoaded: true,
       }));
       return userTask;
     } 
@@ -219,7 +223,7 @@ export class ModuleProgressState {
     }
     finally
     {
-      ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true, userTaskLoading: false }));
+      ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoading: false }));
     }
   }
 
@@ -240,11 +244,12 @@ export class ModuleProgressState {
     {
       const nextTaskId = this.findNextTaskId(module);
       if (!nextTaskId) {
-        ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
+        ctx.setState(patch<ModuleProgressStateModel>({ userTask: null, finished: true }));
         return null;
       }
 
       if (ctx.getState().userTask?.task.id == nextTaskId) {
+        ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
         return ctx.getState().userTask;
       }
 
@@ -261,7 +266,8 @@ export class ModuleProgressState {
           fragment: userTask.fragmentShader,
           compile: true,
         },
-        error: null
+        error: null,
+        userTaskLoaded: true,
       }));
 
       return userTask;
@@ -273,7 +279,7 @@ export class ModuleProgressState {
     }
     finally
     {
-      ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true, userTaskLoading: false }));
+      ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoading: false }));
     }
   }
   
@@ -489,6 +495,16 @@ export class ModuleProgressState {
         fragment: action.fragment || DEFAULT_FRAGMENT_SHADER,
         compile: true,
       },
+    }));
+  }
+
+  @Action(ModuleProgressUnselectCurrentTask)
+  async unselectCurrentTask(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressUnselectCurrentTask) {
+    ctx.setState(patch<ModuleProgressStateModel>({
+      userTask: null,
+      error: null,
+      userTaskLoaded: false,
+      userTaskLoading: false,
     }));
   }
 

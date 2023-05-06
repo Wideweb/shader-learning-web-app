@@ -22,9 +22,9 @@ export const routes: Routes = [
       },
 
       { 
-        path: 'training', component: ModuleTrainingComponent,
-        canActivate:[AuthGuard],
-        data: { permissions: ['task_submit'] }
+        path: 'training',
+        pathMatch: 'full',
+        redirectTo: 'training/',
       },
       
       { 
