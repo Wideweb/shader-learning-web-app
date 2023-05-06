@@ -45,3 +45,7 @@ export class ModuleProgressSubmitTask {
     static readonly type = '[ModuleProgress] Submit Task';
     constructor(public payload: TaskSubmitDto) {}
 }
+
+export class ModuleProgressUnselectCurrentTask {
+    static readonly type = '[ModuleProgress] Unselect Current Task';
+}
