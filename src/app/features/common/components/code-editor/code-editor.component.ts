@@ -19,7 +19,7 @@ const EMPTY_FILE: CodeEditorFile = {
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css']
 })
-export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy, OnChanges {
 
   @ViewChild(CodemirrorComponent)
   public codemirror!: CodemirrorComponent;

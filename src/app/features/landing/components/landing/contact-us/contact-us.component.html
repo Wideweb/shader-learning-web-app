@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="animation-box-1">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube1Fragment" [dencity]="2"></app-gl-scene>
+  </div>
+
+  <div class="animation-box-2">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube2Vertex" [fragmentShader]="cube2Fragment" [dencity]="2"></app-gl-scene>
+  </div>
+
+  <div class="main">
+    <h1 class="contact-us-message">You can contact us <br> and discuss the project <br> and ask any questions you <br> may have</h1>
+    <div>
+      <a class="btn-link btn-link-ico-addon darker">Start learning<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+    </div>
+  </div>
+
+  <div class="animation-box-3">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube2Vertex" [fragmentShader]="cube3Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
+  </div>
+
+  <div class="animation-box-4">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube4Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
 import { routes as userProfileRoutes } from '../user-profile/routes';
 import { routes as authRoutes } from '../auth/routes';
+import { LandingComponent } from '../landing/components/landing/landing.component';
 
 export const routes: Routes = [
 
@@ -43,7 +44,15 @@ export const routes: Routes = [
         loadChildren: () => import('../user-rank-list/user-rank-list.module').then(m => m.UserRankListModule)
       },
 
-      { path: '**', component: HomeComponent },
+      { 
+        path: 'home', 
+        component: HomeComponent 
+      },
+
+      { 
+        path: '**', 
+        component: LandingComponent 
+      },
     ]
   },
 ];

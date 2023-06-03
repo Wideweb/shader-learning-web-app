@@ -37,6 +37,12 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input()
   public sceneData = new GlScene();
 
+  @Input()
+  public dencity = 1;
+
+  @Input()
+  public timeOffset = 0;
+
   @Output()
   public onError = new EventEmitter<GlProgramErrors>();
 
@@ -80,8 +86,10 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   onResize() {
     if (this.isRunning) {
       this.setCanvasSize();
-      this.material.uniforms['iResolution'].value = new THREE.Vector2(this.canvas.width, this.canvas.height);
       this.renderer.setSize(this.canvas.width, this.canvas.height);
+      this.renderer.setPixelRatio(this.dencity);
+      this.material.uniforms['iResolution'].value = new THREE.Vector2(this.canvas.width, this.canvas.height);
+      this.camera = this.glFactory.createCamera(this.sceneData.camera, this.canvas.width, this.canvas.height);
     }
   }
 
@@ -156,10 +164,10 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       premultipliedAlpha: false,
       preserveDrawingBuffer: true,
     });
-
+  
     this.renderer.debug.checkShaderErrors = true;
-    this.renderer.setPixelRatio(1);
     this.renderer.setSize(this.canvas.width, this.canvas.height);
+    this.renderer.setPixelRatio(this.dencity);
 
     let component: GlSceneComponent = this;
     component.originalConsoleError = console.error.bind(this.renderer.getContext());
@@ -219,7 +227,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     let t0 = performance.now();
     let t1 = t0;
 
-    this.time = 0;
+    this.time = this.timeOffset;
 
     let component: GlSceneComponent = this;
     (function render() {

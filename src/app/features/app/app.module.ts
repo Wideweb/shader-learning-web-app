@@ -17,6 +17,7 @@ import { DonateComponent } from './components/donate/donate.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LandingModule } from '../landing/landing.module';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -44,6 +45,7 @@ export function initializeAppFactory(appInitService: AppInitService) {
     AuthModule.forRoot(),
     AppCommonModule.forRoot(),
     UserProfileModule,
+    LandingModule,
   ],
   providers: [
     {

@@ -1,0 +1,20 @@
+<div class="container">
+
+  <div class="table" [style.width]="tableWidth + 'px'">
+    <ng-container *ngFor="let card of data; let i = index">
+      <div class="item" [style.left]="positions[i] + 'px'">
+        <carousel-card [model]="card" [style.width]="cardWdith + 'px'"></carousel-card>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="gradient-left"></div>
+  <div class="gradient-right"></div>
+
+  <div class="left-ctrl">
+    <a class="btn-circle" (click)="prev()" [attr.disabled]="prevDisabled"><i class="ico chevron-left-ico"></i></a>
+  </div>
+  <div class="right-ctrl">
+    <a class="btn-circle" (click)="next()" [attr.disabled]="nextDisabled"><i class="ico chevron-right-ico"></i></a>
+  </div>
+</div>

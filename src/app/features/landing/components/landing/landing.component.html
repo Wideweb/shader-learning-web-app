@@ -1,0 +1,90 @@
+<div class="page-container">
+
+  <div class="page">
+
+    <div class="page-scroll">
+
+      <div class="landing-page">
+
+        <div class="main-animation padded">
+          <landing-animation></landing-animation>
+        </div>
+
+        <div class="navbar padded">
+          <div class="nav-group">
+            <div class="site-brand">
+              <img class="ico" src="assets/logo.svg" alt="Shader Learning">
+            </div>
+          </div>
+
+          <div class="spacer-5"></div>
+
+          <div class="nav-group">
+            <div class="nav-menu">
+              <a class="nav-link" routerLink="/explore">Explore</a>
+              <a class="nav-link" routerLink="/donate">Donate</a>
+              <a class="nav-link" routerLink="/users-rating">About</a>
+            </div>
+          </div>
+
+          <div class="nav-group nav-group-right">
+            <div class="nav-menu">
+              <a class="btn-link" routerLink="/sign-up">Sign in</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="intro padded">
+          <div class="content">
+            <h1>Discover what math can do with Shader Learning</h1>
+            <p class="p1">Learn GPU programming or improve your existing skills by solving tasks</p>
+            <a class="btn-link btn-link-ico-addon">Start learning<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+          </div>
+        </div>
+
+        <div class="slogan padded">
+          <span class="quotes">
+            <i class="quote-filled-ico"></i>
+            <i class="quote-blank-ico"></i>
+          </span>
+          
+          <h3>
+            With Shader Learning, you're not just learning to code on OpenGL, you're joining a community of like-minded individuals who share your passion for creativity and innovation
+          </h3>
+        </div>
+
+        <div class="modules not-padded">
+          <h2>Modules</h2>
+          <carousel class="table" [data]="modules" [viewCapacity]="3"></carousel>
+        </div>
+
+        <div class="reviews padded">
+          <h2>What our users says</h2>
+          <feedback [data]="feedback"></feedback>
+        </div>
+
+        <div class="contact-us">
+          <div class="container padded">
+            <landing-contact-us></landing-contact-us>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="container padded">
+            <div class="copyright p3">Alkevich Entertainment</div>
+            <div class="nav-menu">
+              <a class="nav-link" routerLink="/explore">Explore</a>
+              <a class="nav-link" routerLink="/donate">Donate</a>
+              <a class="nav-link" routerLink="/users-rating">About</a>
+            </div>
+            <a class="btn-circle" (click)="scrollTop()"><i class="ico arrow-up-ico"></i></a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

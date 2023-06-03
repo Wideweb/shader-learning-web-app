@@ -1,0 +1,22 @@
+<div class="container" [ngClass]="isPrimary ? 'primary' : 'secondary'">
+  <p class="body">{{model.body}}</p>
+
+  <div class="row">
+    <div class="author">
+      <h3 class="name">{{model.authorName}}</h3>
+      <div class="title p2">{{model.authorTitle}}</div>
+    </div>
+
+    <div class="quotes">
+      <ng-container *ngIf="isPrimary">
+        <i class="quote-ico quote-filled-ico"></i>
+        <i class="quote-ico quote-filled-ico"></i>
+      </ng-container>
+      
+      <ng-container *ngIf="!isPrimary">
+        <i class="quote-ico quote-blank-ico"></i>
+        <i class="quote-ico quote-blank-ico"></i>
+      </ng-container>
+    </div>
+  </div>
+</div>
