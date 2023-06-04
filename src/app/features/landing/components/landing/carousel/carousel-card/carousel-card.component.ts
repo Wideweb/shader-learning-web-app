@@ -4,6 +4,7 @@ export interface CarouselCardModel {
   title: string;
   body: string;
   label: string;
+  link: string;
 }
 
 @Component({

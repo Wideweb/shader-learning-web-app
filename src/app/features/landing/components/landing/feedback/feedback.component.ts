@@ -23,6 +23,9 @@ class OpacityAction extends FinitAction {
 export class FeedbackComponent implements OnDestroy, OnInit { 
 
   @Input()
+  public loaded = false;
+
+  @Input()
   public data: FeedbackCardModel[] = [];
 
   public visibleIndex = 0;
@@ -40,11 +43,11 @@ export class FeedbackComponent implements OnDestroy, OnInit {
   private action = emptyAction;
 
   get nextDisabled() {
-    return this.index + 2 >= this.data.length;
+    return !this.loaded || this.index + 2 >= this.data.length;
   }
 
   get prevDisabled() {
-    return this.index == 0;
+    return !this.loaded || this.index == 0;
   }
 
   get isPrimaryVisible() {

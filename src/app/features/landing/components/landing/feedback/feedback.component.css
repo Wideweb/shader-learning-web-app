@@ -8,6 +8,8 @@
     display: flex;
     flex-direction: row;
     gap: 40px;
+    position: relative;
+    overflow: hidden;
 }
 
 .ctrls {

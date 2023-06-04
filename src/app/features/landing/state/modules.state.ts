@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { patch } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { ModulesLoad } from "./modules.actions";
-import { ModuleDto } from "../../module/models/module.model";
+import { ModuleDto } from "../models/module.model";
 import { ModulesService } from "../services/modules.service";
 
 export interface ModulesStateModel {

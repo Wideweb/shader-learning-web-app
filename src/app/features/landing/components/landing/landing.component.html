@@ -38,7 +38,7 @@
           <div class="content">
             <h1>Discover what math can do with Shader Learning</h1>
             <p class="p1">Learn GPU programming or improve your existing skills by solving tasks</p>
-            <a class="btn-link btn-link-ico-addon">Start learning<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+            <a class="btn-link btn-link-ico-addon" routerLink="/explore">Start learning<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
           </div>
         </div>
 
@@ -55,12 +55,12 @@
 
         <div class="modules not-padded">
           <h2>Modules</h2>
-          <carousel class="table" [data]="modules" [viewCapacity]="3"></carousel>
+          <carousel class="table" [loaded]="(modulesLoaded$ | async)!" [data]="(modules$ | async)!" [viewCapacity]="3"></carousel>
         </div>
 
         <div class="reviews padded">
           <h2>What our users says</h2>
-          <feedback [data]="feedback"></feedback>
+          <feedback [loaded]="(feedbackLoaded$ | async)!" [data]="(feedback$ | async)!"></feedback>
         </div>
 
         <div class="contact-us">

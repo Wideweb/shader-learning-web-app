@@ -1,7 +1,10 @@
 <div class="container">
   <div class="column">
-    <ng-container *ngIf="isPrimaryVisible">
+    <ng-container *ngIf="isPrimaryVisible && loaded">
       <feedback-card [model]="data[visibleIndex]" [isPrimary]="true" [style.opacity]="opacity"></feedback-card>
+    </ng-container>
+    <ng-container *ngIf="!loaded">
+      <feedback-card-placeholder></feedback-card-placeholder>
     </ng-container>
   </div>
 
@@ -11,8 +14,11 @@
       <a class="btn-circle" [attr.disabled]="nextDisabled" (click)="next()"><i class="ico chevron-right-ico"></i></a>
     </div>
 
-    <ng-container *ngIf="isSecondaryVisible">
+    <ng-container *ngIf="isSecondaryVisible && loaded">
       <feedback-card [model]="data[visibleIndex + 1]" [isPrimary]="false" [style.opacity]="opacity"></feedback-card>
+    </ng-container>
+    <ng-container *ngIf="!loaded">
+      <feedback-card-placeholder></feedback-card-placeholder>
     </ng-container>
   </div>
 </div>

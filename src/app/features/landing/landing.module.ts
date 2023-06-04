@@ -14,6 +14,8 @@ import { FeedbackState } from "./state/feedback.state";
 import { ModulesService } from "./services/modules.service";
 import { ModulesState } from "./state/modules.state";
 import { LandingContactUsComponent } from "./components/landing/contact-us/contact-us.component";
+import { CarouselCardPlaceholderComponent } from "./components/landing/carousel/carousel-card-placeholder/carousel-card-placeholder.component";
+import { FeedbackCardPlaceholderComponent } from "./components/landing/feedback/feedback-card-placeholder/feedback-card-placeholder.component";
 
 @NgModule({
   declarations: [
@@ -22,8 +24,10 @@ import { LandingContactUsComponent } from "./components/landing/contact-us/conta
     LandingAnimationComponent,
     CarouselComponent,
     CarouselCardComponent,
+    CarouselCardPlaceholderComponent,
     FeedbackComponent,
     FeedbackCardComponent,
+    FeedbackCardPlaceholderComponent,
     LandingContactUsComponent,
   ],
   imports: [

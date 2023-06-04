@@ -512,3 +512,32 @@ h3 {
 .btn-link.darker:active {
     background-color: #1F1F1F;
 }
+
+.ph-animation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: -50%;
+    z-index: 1;
+    width: 100%;
+    pointer-events: none;
+    content: " ";
+    background-color: #d9d9d900;
+    background: linear-gradient(to right, #d9d9d900 30%, #fafafa50 50%, #d9d9d900 70%);
+    animation: ph-animation 1s linear infinite;
+}
+
+@keyframes ph-animation {
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    90% {
+        transform: translate(150%, 0);
+    }
+
+    100% {
+        transform: translate(150%, 0);
+    }
+}

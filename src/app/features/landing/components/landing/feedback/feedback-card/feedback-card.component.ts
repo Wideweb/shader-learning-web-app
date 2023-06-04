@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 export interface FeedbackCardModel {
-  body: string;
+  message: string;
   authorName: string;
   authorTitle: string;
 }

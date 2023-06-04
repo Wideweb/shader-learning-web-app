@@ -1,11 +1,23 @@
 <div class="container">
 
   <div class="table" [style.width]="tableWidth + 'px'">
-    <ng-container *ngFor="let card of data; let i = index">
-      <div class="item" [style.left]="positions[i] + 'px'">
-        <carousel-card [model]="card" [style.width]="cardWdith + 'px'"></carousel-card>
-      </div>
+    
+    <ng-container *ngIf="loaded">
+      <ng-container *ngFor="let card of data; let i = index">
+        <div class="item" [style.left]="positions[i] + 'px'">
+          <carousel-card [model]="card" [style.width]="cardWdith + 'px'"></carousel-card>
+        </div>
+      </ng-container>
     </ng-container>
+  
+    <ng-container *ngIf="!loaded">
+      <ng-container *ngFor="let position of positions">
+        <div class="item" [style.left]="position + 'px'">
+          <carousel-card-placeholder [style.width]="cardWdith + 'px'"></carousel-card-placeholder>
+        </div>
+      </ng-container>
+    </ng-container>
+
   </div>
 
   <div class="gradient-left"></div>

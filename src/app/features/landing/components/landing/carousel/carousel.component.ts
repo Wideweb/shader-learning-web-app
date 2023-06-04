@@ -11,6 +11,9 @@ import { saturate } from 'src/app/features/common/services/math';
 export class CarouselComponent implements OnDestroy, OnInit { 
 
   @Input()
+  public loaded = false;
+
+  @Input()
   public data: CarouselCardModel[] = [];
 
   @Input()
@@ -56,12 +59,14 @@ export class CarouselComponent implements OnDestroy, OnInit {
     const hostWidth = 2 * (ctrlWidth + 50) + this.viewCapacity * this.cardWdith + (this.viewCapacity - 1) * this.cardsGap + hostPadding * 2;
     
     this.hostRef.nativeElement.style.setProperty('width', `${hostWidth}px`);
+
+    this.updatePosition();
     // this.hostRef.nativeElement.style.setProperty('padding-left', `${this.containerPadding}px`);
     // this.hostRef.nativeElement.style.setProperty('padding-right', `${this.containerPadding}px`);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('data' in changes) {
+    if ('loaded' in changes || 'data' in changes) {
       this.data = this.data || [];
       this.updatePosition();
     }
@@ -123,7 +128,8 @@ export class CarouselComponent implements OnDestroy, OnInit {
   }
 
   updatePosition() {
-    this.positions = this.data.map((_, index) => (index - this.position) * (this.cardWdith + this.cardsGap) + this.offset);
+    const items = this.loaded ? this.data : [...new Array(this.viewCapacity)];
+    this.positions = items.map((_, index) => (index - this.position) * (this.cardWdith + this.cardsGap) + this.offset);
   }
 
   ngOnDestroy(): void {

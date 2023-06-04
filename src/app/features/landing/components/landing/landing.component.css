@@ -28,7 +28,7 @@
 }
 
 .navbar {
-    margin-top: 40px;
+    margin: 40px 0;
     width: 100%;
     display: flex;
     z-index: 2;
@@ -84,7 +84,7 @@
 }
 
 .intro .content h1 {
-    margin: 10px 0 20px 0;
+    margin-bottom: 20px;
 }
 
 .intro .content p {
@@ -113,7 +113,7 @@
 
 .modules h2 {
     text-align: center;
-    margin: 10px 0 50px 0;
+    margin-bottom: 50px;
 }
 
 .modules .table {

@@ -28,6 +28,8 @@ export class AppInitService implements OnDestroy {
   }
 
   public async init(): Promise<any> {
+    return Promise.resolve();
+
     zip(this.refreshToken.update$, this.accessToken.update$)
       .pipe(
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
