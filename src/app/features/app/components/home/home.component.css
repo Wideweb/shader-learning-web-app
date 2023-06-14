@@ -14,7 +14,7 @@
     color: white;
 }
 
-@media screen and (min-width: 500px) {
+@media (min-width: 500px) {
     .title {
         font-size: 50px;
     }

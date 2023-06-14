@@ -43,6 +43,11 @@ export class ModuleUpdateDescription {
     constructor(public description: string) {}
 }
 
+export class ModuleUpdateCover {
+    static readonly type = '[Module] Cover Update';
+    constructor(public file: File) {}
+}
+
 export class ModuleToggleLock {
     static readonly type = '[Module] Toggle Lock';
 }

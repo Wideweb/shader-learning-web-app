@@ -1,46 +1,74 @@
-<div class="toolbar" role="banner" *ngIf="false">
-    <a class="home-logo" routerLink="/">H</a>
-    <a class="toolbar-link" routerLink="/explore">Explore</a>
-    <a class="toolbar-link" routerLink="/users-rating">Rating</a>
-    <a class="toolbar-link" routerLink="/donate">Donate</a>
-
-    <div class="spacer"></div>
-
-    <a  *ngIf="(isAuthenticated$ | async) === false" class="toolbar-link" routerLink="/login">Log In</a>
-    
-    <div *ngIf="isAuthenticated$ | async" class="profile">
-      <a mat-icon-button [matMenuTriggerFor]="menu" class="user-avatar">
-        <mat-icon class="user-avatar-icon">face_retouching_natural</mat-icon>
-      </a>
-      <mat-menu #menu="matMenu">
-        <div class="menu">
-          <ng-container>
-            <button button mat-menu-item routerLink="/profile">
-              <div class="user-details">
-                <div class="avatar-container">
-                  <mat-icon class="avatar">face_retouching_natural</mat-icon>
-                </div>
-                <div class="user-name">{{ userName$ | async }}</div>
-                <div class="user-email">{{ userEmail$ | async }}</div>
-                <div *hasPermission="['task_submit']" class="user-rank"><span>Rank: </span>&nbsp;<span>{{ userRank$ | async }}</span></div>
-              </div>
-            </button>
-            <mat-divider></mat-divider>
-          </ng-container>
-
-          <ng-container>
-            <mat-divider></mat-divider>
-            <button mat-menu-item routerLink="/logout">
-              <mat-icon>logout</mat-icon>
-              <span>Sign out</span>
-            </button>
-          </ng-container>
-
-        </div>
-      </mat-menu>
-    </div>
+<div class="navbar-menu-collapsible" *ngIf="!isNavbarMenuCollapsed">
+  <a class="collapse" (click)="hideNavbarMenu()"><i class="close-ico"></i></a>
+  <a class="nav-link" routerLink="/explore" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Explore</h2></a>
+  <a class="nav-link" routerLink="/donate" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Donate</h2></a>
+  <a class="nav-link" routerLink="/users-rating" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>About</h2></a>
 </div>
 
-<div class="content" role="main">
-  <router-outlet></router-outlet>
+<div class="page-container">
+  <div class="page">
+    <div class="page-scroll" (scroll)="onScroll($event)">
+
+      <div class="navbar navbar-big max-width">
+        <div class="nav-group">
+          <div class="site-brand">
+            <img class="ico" src="assets/logo.svg" alt="Shader Learning">
+          </div>
+        </div>
+
+        <div class="spacer-5"></div>
+
+        <div class="nav-group">
+          <div class="nav-menu">
+            <a class="nav-link p2" routerLink="/explore" routerLinkActive="active">Explore</a>
+            <a class="nav-link p2" routerLink="/donate" routerLinkActive="active">Donate</a>
+            <a class="nav-link p2" routerLink="/about" routerLinkActive="active">About</a>
+          </div>
+        </div>
+
+        <div class="nav-group nav-group-right">
+          <div class="nav-menu">
+            <a class="btn-link" routerLink="/sign-up">Sign in</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="navbar navbar-small max-width">
+        <a class="btn-ico navbar-menu-toggle" (click)="showNavbarMenu()"><i class="ico menu-ico"></i></a>
+
+        <div class="nav-group">
+          <div class="site-brand">
+            <img class="ico" src="assets/logo.svg" alt="Shader Learning" *ngIf="!isSmall">
+            <div class="small-logo-wrapper">
+              <img class="small-logo" src="assets/small-logo.svg" alt="Shader Learning" *ngIf="isSmall">
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-group nav-group-right">
+          <div class="nav-menu">
+            <a class="btn-link" routerLink="/sign-up">Sign in</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="main" class="route-container" role="main" [ngClass]="{'hide-page-overflow': hidePageOverflow$ | async }">
+        <router-outlet></router-outlet>
+      </div>
+
+      <div class="footer" [ngClass]="{'show-scroll-ctrl': showFooterScrollCtrl$ | async }">
+        <div class="container max-width">
+          <div class="copyright p3">Alkevich Entertainment</div>
+          <div class="nav-menu">
+            <a class="nav-link p2" routerLink="/explore" routerLinkActive="active" (click)="scrollTop()">Explore</a>
+            <a class="nav-link p2" routerLink="/donate" routerLinkActive="active" (click)="scrollTop()">Donate</a>
+            <a class="nav-link p2" routerLink="/about" routerLinkActive="active" (click)="scrollTop()">About</a>
+          </div>
+          <div class="scroll-ctrl">
+            <a class="btn-circle" (click)="scrollTop()"><i class="ico arrow-up-ico"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

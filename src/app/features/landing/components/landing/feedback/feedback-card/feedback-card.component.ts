@@ -9,7 +9,7 @@ export interface FeedbackCardModel {
 @Component({
   selector: 'feedback-card',
   templateUrl: './feedback-card.component.html',
-  styleUrls: ['./feedback-card.component.css']
+  styleUrls: ['./feedback-card.component.scss']
 })
 export class FeedbackCardComponent {
   @Input()

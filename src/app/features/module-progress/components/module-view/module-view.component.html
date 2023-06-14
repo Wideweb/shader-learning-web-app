@@ -1,48 +1,40 @@
-<div class="page-container" *ngIf="module && (loaded$ | async) == true">
+<div class="module" *ngIf="module && (loaded$ | async) == true">
 
-  <div class="page">
+  <app-sticky>
+    <div id="heading" class="heading">
+      <div class="container max-width">
 
-    <div class="page-scroll">
+        <a class="back-link" routerLink="/explore"><span class="ico-container"><i class="arrow-left-ico"></i></span><span class="p3">Back To Explore</span></a>
 
-        <div class="module">
+        <div class="title"><h2 class="module-name">{{module.name}}</h2><span class="p3 tasks">{{module.tasks.length}}&nbsp;tasks</span></div>
+        
+        <!-- <span class="p3 tasks">{{module.tasks.length}}&nbsp;tasks</span>&nbsp;<a *hasPermission="['module_edit']" class="action-link" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a></h2> -->
+        
+        <div class="description p2">{{ module.description }}</div>
 
-          <div class="module-heading-container">
+        <a class="btn-link btn-link-ico-addon darker" routerLink="/module-progress/{{ module.id }}/training">Start<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+        <!-- <div class="created-by">
+          <span>Author:</span>&nbsp;<a class="name" routerLink="/user-profile/{{module.createdBy.id}}">{{ module.createdBy.name }}</a>
+        </div> -->
 
-            <div class="module-heading">
+      </div>
+    </div>
+  </app-sticky>
 
-              <h1 class="title">{{module.name}}&nbsp;<a *hasPermission="['module_edit']" class="action-link" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a></h1>
-              <div class="description">{{ module.description }}</div>
-              <div class="created-by">
-                <span>Author:</span>&nbsp;<a class="name" routerLink="/user-profile/{{module.createdBy.id}}">{{ module.createdBy.name }}</a>
-              </div>
+  <div class="curriculum">
 
-            </div>
+    <div class="container">
+      
+      <div class="max-width">
+        <module-navigation
+          [moduleId]="module.id"
+          [tasks]="module.tasks"
+          [selectedId]="-1"
+        ></module-navigation>
+      </div>
 
-          </div>
-
-          <div class="curriculum-container">
-
-            <div class="curriculum">
-              
-              <div class="title">Module Curriculum</div>
-                
-              <module-navigation
-                [moduleId]="module.id"
-                [tasks]="module.tasks"
-                [selectedId]="-1"
-              ></module-navigation>
-
-            </div>
-
-          </div>
-
-        </div>
     </div>
 
   </div>
-
-  <div class="page-footer">
-    <a routerLink="/module-progress/{{ module.id }}/training"><span>Start</span></a>
-  </div> 
 
 </div>

@@ -1,0 +1,130 @@
+@import 'common.scss';
+
+:host {
+    width: 100%;
+}
+
+.landing-page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-animation {
+    position: absolute;
+    width: 100%;
+    height: toRem(590);
+    z-index: 1;
+
+    top: toRem(80);
+    @include for-phone-only {    
+        top: toRem(230);
+        &.padded {
+            max-width: 100%;
+        }
+    }
+}
+
+.intro {
+    z-index: 2;
+
+    margin-top: toRem(120);
+    @include for-phone-only {    
+        margin-top: toRem(70);
+    }
+}
+
+.intro .content {
+    max-width: toRem(560);
+}
+
+.intro .content h1 {
+    margin-bottom: toRem(20);
+}
+
+.intro .content p {
+    max-width: toRem(320);
+    margin-bottom: toRem(40);
+}
+
+.slogan {
+    display: flex;
+    justify-content: flex-end;
+    margin: toRem(120) 0;
+    z-index: 2;
+    gap: toRem(12);
+
+    @include for-phone-only {    
+        margin-top: toRem(200);
+        flex-direction: column;
+    }
+}
+
+.slogan .quotes {
+    white-space: nowrap;
+}
+
+.slogan .quotes i + i {
+    margin-left: toRem(4);
+}
+
+.slogan h3 {
+    max-width: toRem(440);
+
+    @include for-tablet-up {    
+        max-width: toRem(360);
+    }
+
+    @include for-desktop-up {    
+        max-width: toRem(440);
+    }
+}
+
+.modules {
+    z-index: 2;
+    width: 100%;
+}
+
+.modules h2 {
+    text-align: center;
+
+    margin-bottom: toRem(40);
+    @include for-phone-only {    
+        margin-bottom: toRem(20);
+    }
+}
+
+.modules .table {
+    height: toRem(416);
+}
+
+.reviews {
+    margin: toRem(120) 0;
+    z-index: 2;
+}
+
+.reviews h2 {
+    margin-bottom: toRem(50);
+    @include for-phone-only {    
+        margin-bottom: toRem(30);
+    }
+}
+
+.contact-us {
+    width: 100%;
+    border-top-left-radius: toRem(40);
+    border-top-right-radius: toRem(40);
+    background-color: #4F6AF4;
+}
+
+.contact-us .container {
+    margin: auto;
+
+    height: toRem(530);
+    @include for-phone-only {    
+        height: toRem(600);
+    }
+}

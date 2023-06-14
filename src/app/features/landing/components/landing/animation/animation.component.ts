@@ -1,11 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ComponentSize } from '../../../constants';
 
 @Component({
   selector: 'landing-animation',
   templateUrl: './animation.component.html',
-  styleUrls: ['./animation.component.css']
+  styleUrls: ['./animation.component.scss']
 })
 export class LandingAnimationComponent {
+
+  @Input()
+  public size: ComponentSize = ComponentSize.Big;
+
+  get dencity() {
+    if (this.size === ComponentSize.Small) {
+      return 4;
+    }
+
+    if (this.size === ComponentSize.Medium) {
+      return 3;
+    }
+
+    return 2;
+  }
 
   public vertexShader= `
     void main() {

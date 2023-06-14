@@ -120,8 +120,9 @@ export class GlService {
     }
 
     private disposeRenderer(renderer: THREE.WebGLRenderer) {
-        console.error = this.originalConsoleError;
         renderer.dispose();
+        renderer.forceContextLoss();
+        console.error = this.originalConsoleError;
     }
 
     private async doCompare(renderer: THREE.WebGLRenderer, program1: GlProgram, program2: GlProgram, width: number, height: number) {

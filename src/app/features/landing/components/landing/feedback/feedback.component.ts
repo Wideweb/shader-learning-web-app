@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, SimpleChanges } from '
 import { FeedbackCardModel } from './feedback-card/feedback-card.component';
 import { FinitAction, emptyAction } from './finit-action';
 import { easeLinier } from 'src/app/features/common/services/easing';
+import { ComponentSize } from '../../../constants';
 
 class OpacityAction extends FinitAction {
   constructor(private component: FeedbackComponent, duration: number, ease: (t: number) => number, private from: number, private to: number) {
@@ -18,7 +19,7 @@ class OpacityAction extends FinitAction {
 @Component({
   selector: 'feedback',
   templateUrl: './feedback.component.html',
-  styleUrls: ['./feedback.component.css']
+  styleUrls: ['./feedback.component.scss']
 })
 export class FeedbackComponent implements OnDestroy, OnInit { 
 
@@ -27,6 +28,9 @@ export class FeedbackComponent implements OnDestroy, OnInit {
 
   @Input()
   public data: FeedbackCardModel[] = [];
+
+  @Input()
+  public size: ComponentSize = ComponentSize.Big;
 
   public visibleIndex = 0;
 
@@ -43,7 +47,7 @@ export class FeedbackComponent implements OnDestroy, OnInit {
   private action = emptyAction;
 
   get nextDisabled() {
-    return !this.loaded || this.index + 2 >= this.data.length;
+    return !this.loaded || this.index + (this.isSecondaryVisible ? 2 : 1) >= this.data.length;
   }
 
   get prevDisabled() {
@@ -55,7 +59,19 @@ export class FeedbackComponent implements OnDestroy, OnInit {
   }
 
   get isSecondaryVisible() {
-    return this.index + 1 < this.data.length;
+    return !this.isSmall;
+  }
+
+  get isSmall() {
+    return this.size === ComponentSize.Small;
+  }
+
+  get isMedium() {
+    return this.size === ComponentSize.Medium;
+  }
+
+  get isBig() {
+    return this.size === ComponentSize.Big;
   }
 
   constructor(private hostRef: ElementRef) {}
@@ -63,6 +79,16 @@ export class FeedbackComponent implements OnDestroy, OnInit {
   ngOnInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if ('size' in changes) {
+      if (!this.isSmall && (this.visibleIndex + 2) > this.data.length) {
+        this.visibleIndex = Math.max(this.visibleIndex - 1, 0);
+      }
+
+      if (this.isSmall && (this.visibleIndex + 2) == this.data.length) {
+        this.visibleIndex = Math.min(this.visibleIndex + 1, this.data.length - 1);
+      }
+    }
+
     if ('data' in changes) {
       this.data = this.data || [];
     }

@@ -26,9 +26,14 @@
               "src/sitemap.xml",
               "src/robots.txt"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            },
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -98,7 +103,7 @@
               "src/robots.txt"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           }

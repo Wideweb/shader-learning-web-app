@@ -30,6 +30,9 @@ import { AppTooltipComponent } from "./components/tooltip/tooltip.component";
 import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-renderer.directive";
 import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
 import { MatSelectModule } from "@angular/material/select";
+import { ToRemPipe } from "./pipes/to-rem.pipe";
+import { AppStickyComponent } from "./components/sticky/sticky.component";
+import { AppSvgIconComponent } from "./components/svg-icon/svg-icon.component";
 
 @NgModule({
   declarations: [
@@ -38,8 +41,11 @@ import { MatSelectModule } from "@angular/material/select";
     CodeEditorLinePromptComponent,
     AppTooltipComponent,
     UserTaskResultStatusPipe,
+    ToRemPipe,
     AppTooltipRendererDirective,
     ConfirmDialogComponent,
+    AppStickyComponent,
+    AppSvgIconComponent,
   ],
   imports: [
     CommonModule,
@@ -90,7 +96,10 @@ import { MatSelectModule } from "@angular/material/select";
     CodeEditorComponent,
     AppTooltipRendererDirective,
     UserTaskResultStatusPipe,
+    ToRemPipe,
     ConfirmDialogComponent,
+    AppStickyComponent,
+    AppSvgIconComponent,
   ],
 })
 export class AppCommonModule {

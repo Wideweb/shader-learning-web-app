@@ -4,6 +4,8 @@ import { Texture } from 'three';
 import { GlProgramChannel, GlScene } from '../../gl-scene/models';
 import { GlFactory } from '../../services/gl.factory';
 import { GlService } from '../../services/gl.service';
+import { getRem, isEqual } from '../../services/utils';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 export interface GlProgramErrors {
   vertex: { line: number; message: string }[];
@@ -80,17 +82,17 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private textures: (Texture | null)[] = [];
 
+  private prevRem = getRem();
+
+  private resize$: Subject<void> = new Subject<void>();
+
+  private destroy$: Subject<void> = new Subject<void>();
+
   constructor(private elementRef: ElementRef, private glService: GlService, private glFactory: GlFactory) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    if (this.isRunning) {
-      this.setCanvasSize();
-      this.renderer.setSize(this.canvas.width, this.canvas.height);
-      this.renderer.setPixelRatio(this.dencity);
-      this.material.uniforms['iResolution'].value = new THREE.Vector2(this.canvas.width, this.canvas.height);
-      this.camera = this.glFactory.createCamera(this.sceneData.camera, this.canvas.width, this.canvas.height);
-    }
+    this.resize$.next();
   }
 
   setCanvasSize() {
@@ -101,7 +103,9 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.canvas.height = height;
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.resize$.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => this.resize());
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -142,18 +146,10 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.hasIssue = false;
     this.notifyStatusChange = true;
 
+    this.setCanvasSize();
     this.createRenderer();
     this.createScene();
     this.startRenderingLoop();
-  }
-
-  ngOnDestroy(): void {
-    this.stopRenderingLoop();
-
-    if (this.renderer) {
-      this.renderer.dispose();
-      console.error = this.originalConsoleError;
-    }
   }
 
   private createRenderer(): void {
@@ -214,7 +210,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private createScene(): void {
     const resolution = new THREE.Vector2(this.canvas.width, this.canvas.height);
-    this.camera = this.glFactory.createCamera(this.sceneData.camera, this.canvas.width, this.canvas.height);
+    this.camera = this.glFactory.createCamera(this.sceneData.camera, resolution.width, resolution.height);
     this.scene = this.glFactory.createScene(this.sceneData);
     this.material = this.glFactory.createMaterial(this.vertexShader, this.fragmentShader, resolution, this.textures, 0);
     const obj = this.glFactory.createObject(this.sceneData.object, this.material);
@@ -231,6 +227,13 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     let component: GlSceneComponent = this;
     (function render() {
+      const rem = getRem();
+      if (!isEqual(component.prevRem, rem)) {
+        component.prevRem = rem;
+        component.restart();
+        return;
+      }
+
       if (component.isRunning) {
         component.rafHandle = requestAnimationFrame(render);
       }
@@ -257,5 +260,28 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.isRendering = false;
     this.isRunning = false;
     cancelAnimationFrame(this.rafHandle);
+  }
+
+  resize() {
+    if (this.isRunning) {
+      this.setCanvasSize();
+      this.renderer.setSize(this.canvas.width, this.canvas.height);
+      this.renderer.setPixelRatio(this.dencity);
+      this.material.uniforms['iResolution'].value = new THREE.Vector2(this.canvas.width, this.canvas.height);
+      this.camera = this.glFactory.createCamera(this.sceneData.camera, this.canvas.width, this.canvas.height);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stopRenderingLoop();
+
+    if (this.renderer) {
+      this.renderer.dispose();
+      this.renderer.forceContextLoss();
+      console.error = this.originalConsoleError;
+    }
+
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 }

@@ -1,17 +1,26 @@
+@import 'common.scss';
+
 :host {
     display: inline-block;
-    width: 440px;
-    height: 270px;
+    width: toRem(440);
+    height: toRem(270);
+}
+
+@media (max-width: 639px) {
+    :host {
+        width: 100%;
+        height: toRem(350);
+    }
 }
 
 .container {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    padding: 25px 20px 30px 20px;
+    padding: toRem(25) toRem(20) toRem(30) toRem(20);
     display: flex;
     flex-direction: column;
-    border-radius: 16px;
+    border-radius: toRem(16);
 }
 
 .primary {
@@ -20,14 +29,14 @@
 
 .secondary {
     background-color: #FAFAFA;
-    box-shadow: inset 0 0 0 1px #4F6AF4;
+    box-shadow: inset 0 0 0 toRem(1) #4F6AF4;
 }
 
 .body {
     flex: 1;
     font-family: Roboto;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: toRem(16);
+    line-height: toRem(20);
 }
 
 .primary .body {
@@ -53,12 +62,12 @@
 }
 
 .quote-ico {
-    -webkit-mask-size: 18px;
-    width: 18px;
-    height: 36px;
+    -webkit-mask-size: toRem(18);
+    width: toRem(18);
+    height: toRem(36);
     background-color: #2D3C89;
 }
 
 .quote-ico + .quote-ico {
-    margin-left: 4px;
+    margin-left: toRem(4);
 }

@@ -1,31 +1,35 @@
-<div class="page-container">
+<div class="container max-width">
 
-  <div class="page">
-
-    <div class="page-scroll">
-
-      <div class="container">
-
-        <div class="overlay"></div>
-
-        <div class="author">
-          <h1 class="name">Alexander Alkevich</h1>
-
-          <img src="assets/me.jpeg">
-
-          <div class="contact"><a href="mailto:alckevich@live.com">alckevich@live.com</a></div>
-          <div class="contact"><a href="https://www.linkedin.com/in/alexander-alckevich-8841a4124/">LinkedIn</a></div>
-        </div>
-    
-        <div class="message">I hope you've enjoyed my work. Your help inspires me to further develop the project.</div>
-      </div>
-
-    </div>
-
+  <div class="animation-box-1" *ngIf="!isSmall">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube1Fragment" [dencity]="2"></app-gl-scene>
   </div>
 
-  <div class="page-footer">
-    <a href="https://www.buymeacoffee.com/alckevich"><span>Buy me a coffee</span></a>
-  </div> 
+  <div class="animation-box-2" *ngIf="isBig">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube2Vertex" [fragmentShader]="cube2Fragment" [dencity]="2"></app-gl-scene>
+  </div>
 
+  <div class="persons">
+    <div class="person">
+      <img class="photo" src="assets/alexander.svg">
+      <h3 class="name">Alexander Alkevich</h3>
+      <p class="p2 title">Project Creator</p>
+    </div>
+
+    <div class="person">
+      <img class="photo" src="assets/ulyana.svg">
+      <h3 class="name">Ulyana Khatkevich</h3>
+      <p class="p2 title">Project Designer</p>
+    </div>
+  </div>
+
+  <h1 class="message">We hope you've enjoyed our work. Your help inspires us to develop the project further!</h1>
+  <a class="btn-link btn-link-ico-addon darker btn-donate" href="https://www.buymeacoffee.com/alckevich">Donate<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+
+  <div class="animation-box-3" *ngIf="isBig">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube2Vertex" [fragmentShader]="cube3Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
+  </div>
+
+  <div class="animation-box-4" *ngIf="!isSmall">
+    <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube4Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
+  </div>
 </div>

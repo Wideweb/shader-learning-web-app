@@ -1,23 +1,27 @@
 <ng-container *ngIf="task.locked then locked else available"></ng-container>
 
 <ng-template #available>
-    <a class="task available" routerLink="/module-progress/{{ moduleId }}/training/{{ task.id }}">
-        <module-navigation-task-status
-            [selected]="selected"
-            [accepted]="task.accepted"
-            [locked]="task.locked"
-        ></module-navigation-task-status>
-        <div class="name">{{ task.name }}</div>
+    <a class="task"
+        [ngClass]="{'selected': selected, 'accepted': !selected && task.accepted, 'default': !selected && !task.accepted }"
+        routerLink="/module-progress/{{ moduleId }}/training/{{ task.id }}">
+        <div class="status"><i class="checked-ico"></i></div>
+        <div>
+            <h3 class="name">{{ task.name }}</h3>
+            <p class="p3 status-name">
+                <ng-container *ngIf="task.accepted">completed</ng-container>
+                <ng-container *ngIf="!task.accepted && selected">in progress</ng-container>
+                <ng-container *ngIf="!task.accepted && !selected">not done</ng-container>
+            </p>
+        </div>
     </a>
 </ng-template>
 
 <ng-template #locked>
-    <div class="task locked">
-        <module-navigation-task-status
-            [selected]="selected"
-            [accepted]="task.accepted"
-            [locked]="task.locked"
-        ></module-navigation-task-status>
-        <div class="name">{{ task.name }}</div>
+    <div class="task locked" [ngClass]="{'selected': selected }">
+        <i class="status"></i>
+        <div>
+            <h3 class="name">{{ task.name }}</h3>
+            <p class="p3 status-name">unavailable</p>
+        </div>
     </div>
 </ng-template>

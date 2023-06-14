@@ -1,0 +1,99 @@
+@import 'common.scss';
+
+:host {
+   display: block;
+   width: 100%;
+   height: 100%;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.main {
+    text-align: center;
+}
+
+.contact-us-message {
+    text-align: center;
+    width: toRem(518);
+    color: #FAFAFA;
+    margin-bottom: toRem(50);
+}
+
+.animation-box-1 {
+    width: toRem(100);
+    height: toRem(100);
+    position: absolute;
+    top: toRem(80);
+    left: toRem(50);
+}
+
+.animation-box-2 {
+    width: toRem(60);
+    height: toRem(60);
+    position: absolute;
+    top: toRem(180);
+    left: toRem(0);
+}
+
+.animation-box-3 {
+    position: absolute;
+    width: toRem(100);
+    height: toRem(100);
+    bottom: toRem(90);
+    right: toRem(70);
+}
+
+.animation-box-4 {
+    position: absolute;
+    width: toRem(60);
+    height: toRem(60);
+    bottom: toRem(180);
+    right: toRem(20);
+}
+
+.medium {
+    .animation-box-2 {
+        top: toRem(60);
+        left: toRem(0);
+    }
+
+    .animation-box-3 {
+        right: toRem(0);
+        bottom: toRem(80);
+    }
+}
+
+.container.small {
+    padding-top: 100px;
+    box-sizing: border-box;
+
+    .animation-box-2 {
+        width: toRem(50);
+        height: toRem(50);
+        top: toRem(40);
+        left: toRem(10);
+    }
+
+    .animation-box-3 {
+        width: toRem(70);
+        height: toRem(70);
+        top: toRem(75);
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .animation-box-4 {
+        width: toRem(50);
+        height: toRem(50);
+        top: toRem(40);
+        right: toRem(10);
+    }
+}

@@ -1,0 +1,36 @@
+$white: #FAFAFA;
+$black: #1F1F1F;
+$grey: #575757;
+$light-grey: #BCBCBC;
+$green: #85D94C;
+$green-secondary: #6AAE3D;
+$dark-green: #50822E;
+$blue: #4F6AF4;
+$blue-secondary: #3E54C2;
+$dark-blue: #2D3C89;
+$red: #F44F4F;
+
+@function toRem($value) {
+    $remValue: ($value / 16) + rem; 
+    @return $remValue;
+}
+
+@mixin for-phone-only {
+    @media (max-width: 639px) { @content; }
+}
+
+@mixin for-tablet-up {
+    @media (min-width: 640px) { @content; }
+}
+
+@mixin for-tablet-down {
+    @media (max-width: 1023px) { @content; }
+}
+
+@mixin for-desktop-up {
+    @media (min-width: 1024px) { @content; }
+}
+
+@mixin for-big-desktop-up {
+    @media (min-width: 1440px) { @content; }
+}

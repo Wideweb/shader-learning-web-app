@@ -64,4 +64,30 @@ function toUTCDateTimeString(dateTime: Date): string {
   return formatted;
 }
 
-export { hasAny, hasAll, moveArrayItem, createGUID, groupBy, isNumber }
+function getRem(): number {
+  // Get the computed font-size of the body element
+  // const bodyFontSize = window.getComputedStyle(document.body).getPropertyValue('font-size');
+
+  // Convert the font-size to a number (remove "px" at the end)
+  // const bodyFontSizeNum = parseFloat(bodyFontSize);
+
+  // Get the root font-size (default is usually 16px)
+  const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+  // Calculate the rem value
+  // const remValue = bodyFontSizeNum / rootFontSize;
+  const remValue = rootFontSize / 16.0;
+
+  return remValue;
+}
+
+function toRem(value: number): string {
+  const remValue = (value / 16) + 'rem'; 
+  return remValue;
+}
+
+function isEqual(a: number, b: number) {
+  return Math.abs(a - b) < 0.00001;
+}
+
+export { hasAny, hasAll, moveArrayItem, createGUID, groupBy, isNumber, getRem, toRem, isEqual }

@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GlScene } from 'src/app/features/common/gl-scene/models';
 import { Vec3 } from 'src/app/features/common/gl-scene/models';
 import { GlGeometry } from 'src/app/features/common/gl-scene/models';
+import { ComponentSize } from '../../../constants';
 
 @Component({
   selector: 'landing-contact-us',
   templateUrl: './contact-us.component.html',
-  styleUrls: ['./contact-us.component.css']
+  styleUrls: ['./contact-us.component.scss']
 })
 export class LandingContactUsComponent {
+  @Input()
+  public size: ComponentSize = ComponentSize.Big;
+
   public cubeGlScene: GlScene;
 
   public cube1Vertex = `
@@ -126,6 +130,18 @@ export class LandingContactUsComponent {
       gl_FragColor = vec4(vec3(0.521, 0.851, 0.298) * (diffuse * 0.5 + 0.5), 1.0);
     }
   `;
+
+  get isSmall() {
+    return this.size === ComponentSize.Small;
+  }
+
+  get isMedium() {
+    return this.size === ComponentSize.Medium;
+  }
+
+  get isBig() {
+    return this.size === ComponentSize.Big;
+  }
 
   constructor() {
     this.cubeGlScene = new GlScene();

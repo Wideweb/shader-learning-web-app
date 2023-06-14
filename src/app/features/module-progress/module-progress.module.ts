@@ -19,7 +19,6 @@ import { ModuleProgressService } from "./services/module-progress.service";
 import { UserTaskService } from "./services/user-task.service";
 import { ModuleProgressState } from "./state/module-progress.state";
 import { ModuleNavigationComponent } from "./components/module-navigation/module-navigation.component";
-import { ModuleNavigationTaskStatusComponent } from "./components/module-navigation/task-status/task-status.component";
 import { FeedbackComponent } from "./components/feedback-dialog/feedback-dialog.component";
 import { TaskSubmissionsComponent } from "./components/task/submissions/submissions.component";
 
@@ -29,7 +28,6 @@ import { TaskSubmissionsComponent } from "./components/task/submissions/submissi
 
     ModuleNavigationComponent,
     ModuleNavigationTaskComponent,
-    ModuleNavigationTaskStatusComponent,
 
     ModuleTrainingComponent,
     ModuleViewComponent,

@@ -20,6 +20,7 @@ import { ModuleService } from "./services/module.service";
 import { TaskService } from "./services/task.service";
 import { ModuleState } from "./state/module.state";
 import { TaskState } from "./state/task.state";
+import { ModuleCoverComponent } from "./components/module-cover/module-cover.component";
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { TaskState } from "./state/task.state";
     SceneObjectFormComponent,
     CameraFormComponent,
     VectorFormComponent,
+    ModuleCoverComponent,
   ],
   imports: [
     AppCommonModule.forChild(),

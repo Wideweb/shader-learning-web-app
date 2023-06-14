@@ -31,6 +31,10 @@
                                 <mat-error *ngIf="form.get('description')?.hasError('required')">Description is <strong>required</strong></mat-error>
                             </mat-form-field>
                         </div>
+
+                        <div class="form-row">
+                            <module-cover matInput label="" formControlName="cover" label="Cover"></module-cover>
+                        </div>
     
                         <div class="form-section">
                             <div class="form-row">

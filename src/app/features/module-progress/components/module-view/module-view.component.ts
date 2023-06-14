@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { ModuleProgressState } from '../../state/module-progress.state';
 import { ModuleProgressDto } from '../../models/module-progress.model';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
@@ -8,7 +8,7 @@ import { PageMetaService } from 'src/app/features/common/services/page-meta.serv
 @Component({
   selector: 'module-view',
   templateUrl: './module-view.component.html',
-  styleUrls: ['./module-view.component.css'],
+  styleUrls: ['./module-view.component.scss'],
 })
 export class ModuleViewComponent implements OnInit, OnDestroy {
 

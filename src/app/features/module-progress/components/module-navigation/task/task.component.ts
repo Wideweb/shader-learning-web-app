@@ -4,7 +4,7 @@ import { TaskProgressDto } from 'src/app/features/module-progress/models/task-pr
 @Component({
   selector: 'module-navigation-task',
   templateUrl: './task.component.html',
-  styleUrls: ['./task.component.css'],
+  styleUrls: ['./task.component.scss'],
 })
 export class ModuleNavigationTaskComponent {
   @Input()

@@ -28,7 +28,7 @@ export class AppInitService implements OnDestroy {
   }
 
   public async init(): Promise<any> {
-    return Promise.resolve();
+    // return Promise.resolve();
 
     zip(this.refreshToken.update$, this.accessToken.update$)
       .pipe(

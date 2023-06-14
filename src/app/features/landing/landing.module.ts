@@ -39,6 +39,7 @@ import { FeedbackCardPlaceholderComponent } from "./components/landing/feedback/
   providers: [
     ModulesService,
   ],
-  exports: [RouterModule],
+  exports: [],
 })
 export class LandingModule { }
+

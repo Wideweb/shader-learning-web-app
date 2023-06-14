@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="animation-box-1">
+<div class="container" [ngClass]="{ 'medium': isMedium, 'small': isSmall }">
+  <div class="animation-box-1" *ngIf="isBig">
     <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube1Fragment" [dencity]="2"></app-gl-scene>
   </div>
 
@@ -8,7 +8,15 @@
   </div>
 
   <div class="main">
-    <h1 class="contact-us-message">You can contact us <br> and discuss the project <br> and ask any questions you <br> may have</h1>
+
+    <ng-container *ngIf="!isSmall">
+      <h1 class="contact-us-message">You can contact us <br> and discuss the project <br> and ask any questions you <br> may have</h1>
+    </ng-container>
+
+    <ng-container *ngIf="isSmall">
+      <h1 class="contact-us-message">You can contact <br> us and discuss <br> the project <br> and ask any <br> questions you <br> may have</h1>
+    </ng-container>
+    
     <div>
       <a class="btn-link btn-link-ico-addon darker" href="mailto:learningshader@gmail.com">Contact Us<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
     </div>
@@ -18,7 +26,7 @@
     <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube2Vertex" [fragmentShader]="cube3Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
   </div>
 
-  <div class="animation-box-4">
+  <div class="animation-box-4" *ngIf="!isMedium">
     <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube4Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
   </div>
 </div>

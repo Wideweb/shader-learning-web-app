@@ -1,0 +1,51 @@
+<div class="container max-width">
+
+  <ng-container *ngIf="isBig">
+    <div class="animation-box-1" *ngIf="!isSmall">
+      <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube1Fragment" [dencity]="2"></app-gl-scene>
+    </div>
+
+    <div class="animation-box-2" *ngIf="isBig">
+      <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube2Vertex" [fragmentShader]="cube2Fragment" [dencity]="2"></app-gl-scene>
+    </div>
+
+    <div class="animation-box-3" *ngIf="!isSmall">
+      <app-gl-scene [sceneData]="cubeGlScene" [vertexShader]="cube1Vertex" [fragmentShader]="cube3Fragment" [dencity]="2" [timeOffset]="1000"></app-gl-scene>
+    </div>
+  </ng-container>
+
+  <h2 class="header">About</h2>
+
+  <div class="message-container">
+    <span class="quotes">
+      <i class="quote-filled-ico"></i>
+      <i class="quote-blank-ico"></i>
+    </span>
+
+    <h3 class="message">Welcome to Shader Learning, a website dedicated to teaching you how to program shaders using math and physics. Our site is designed to help beginners and experts alike learn the ins and outs of shader programming through a series of tasksand challenges</h3>
+  </div>
+
+  <div class="contacts">
+    <div class="group">
+      <div class="contact">
+        <app-svg-icon class="ico" name="linkedin"></app-svg-icon>
+        <a class="p2 link">Alexander Alckevich</a>
+      </div>
+      <div class="contact">
+        <app-svg-icon class="ico" name="mail"></app-svg-icon>
+        <a class="p2 link">alckevich@live.com</a>
+      </div>
+    </div>
+    <div class="group">
+      <div class="contact">
+        <app-svg-icon class="ico" name="linkedin"></app-svg-icon>
+        <a class="p2 link">Ulyana Khatkevich</a>
+      </div>
+      <div class="contact">
+        <app-svg-icon class="ico" name="behance"></app-svg-icon>
+        <a class="p2 link">Ulya Khatkevich</a>
+      </div>
+    </div>
+  </div>
+
+</div>

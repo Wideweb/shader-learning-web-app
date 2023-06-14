@@ -1,6 +1,5 @@
 <div class="container">
     <ng-container *ngFor="let task of tasks; last as isLast" >
         <module-navigation-task [moduleId]="moduleId" [task]="task" [selected]="isCurrentTask(task)"></module-navigation-task>
-        <div *ngIf="!isLast" class="vertical-line"></div>
     </ng-container>
 </div>

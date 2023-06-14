@@ -18,6 +18,7 @@
                         [isDescriptionEditActive]="(descriptionEdit$ | async) == true"
                         (onModuleNameSave)="saveModuleName($event)"
                         (onModuleDescriptionSave)="saveModuleDescription($event)"
+                        (onModuleCoverSave)="saveModuleCover($event)"
                         (onToggleLock)="toggleLock()"
                         (onEditTask)="editTask($event)"
                         (onReorderTasks)="reorderTasks($event)"

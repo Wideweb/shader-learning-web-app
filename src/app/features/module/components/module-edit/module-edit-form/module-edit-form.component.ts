@@ -38,6 +38,9 @@ export class ModuleEditFormComponent implements OnChanges {
   public onModuleDescriptionSave = new EventEmitter<string>();
 
   @Output()
+  public onModuleCoverSave = new EventEmitter<File>();
+
+  @Output()
   public onToggleLock = new EventEmitter<void>();
 
   @Output()
@@ -60,6 +63,7 @@ export class ModuleEditFormComponent implements OnChanges {
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
       locked: false,
+      cover: null,
     });
   }
 
@@ -69,6 +73,7 @@ export class ModuleEditFormComponent implements OnChanges {
         name: this.module?.name,
         description: this.module?.description,
         locked: this.module?.locked,
+        cover: this.module?.cover
       });
     }
 
@@ -121,5 +126,9 @@ export class ModuleEditFormComponent implements OnChanges {
 
   toggleTaskVisibility(taskId: number) {
     this.onToggleTaskVisibility.emit(taskId);
+  }
+
+  hanldeCoverChange() {
+    this.onModuleCoverSave.emit(this.form.get('cover')?.value);
   }
 }

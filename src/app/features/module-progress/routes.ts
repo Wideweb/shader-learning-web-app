@@ -18,7 +18,7 @@ export const routes: Routes = [
     children: [
       { 
         path: 'view',
-        component: ModuleViewComponent
+        component: ModuleViewComponent,
       },
 
       { 

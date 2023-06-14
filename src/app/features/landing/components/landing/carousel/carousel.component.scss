@@ -1,24 +1,37 @@
+@import 'common.scss';
+
 :host {
-    display: block;
+    position: relative;
+    display: flex;
+    justify-content: center;
     width: 100%;
-    height: 350px;
-    box-sizing: border-box;
-    padding: 0 50px;
 }
 
 .container {
     position: relative;
     width: 100%;
     height: 100%;
+
+    @include for-phone-only {    
+        max-width: toRem(280);
+    }
+
+    @include for-tablet-up {    
+        max-width: toRem(600);
+    }
+
+    @include for-desktop-up {    
+        max-width: toRem(920);
+    }
 }
 
 .table {
-    position: relative;
+    position: absolute;
     box-sizing: border-box;
     display: block;
     overflow: hidden;
-    left: -230px;
-    width: 280px;
+    left: toRem(-320);
+    width: toRem(280);
     height: 100%;
     
     /* -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%); */
@@ -35,8 +48,8 @@
 .gradient-left {
     position: absolute;
     top: 0;
-    left: -230px;
-    width: 280px;
+    // left: toRem(-230);
+    width: toRem(280);
     height: 100%;
     background: linear-gradient(to left, #FAFAFA00, #FAFAFA 100%);
     background-repeat: no-repeat;
@@ -45,8 +58,8 @@
 .gradient-right {
     position: absolute;
     top: 0;
-    right: -230px;
-    width: 280px;
+    // right: toRem(-230);
+    width: toRem(280);
     height: 100%;
     background: linear-gradient(to right, #FAFAFA00, #FAFAFA 100%);
     background-repeat: no-repeat;
@@ -54,12 +67,35 @@
 
 .left-ctrl {
     position: absolute;
-    top: 110px;
-    left: 0;
+    top: toRem(110);
+    padding: 0 toRem(50);
+    left: toRem(0);
 }
 
 .right-ctrl {
     position: absolute;
-    top: 110px;
-    right: 0;
+    top: toRem(110);
+    padding: 0 toRem(50);
+    right: toRem(0);
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    gap: toRem(5);
+}
+
+.progress-bar .circle {
+    width: toRem(5);
+    height: toRem(5);
+    border-radius: 100%;
+    background-color: #BCBCBC;
+}
+
+.progress-bar .circle.active {
+    background-color: #4F6AF4;
 }

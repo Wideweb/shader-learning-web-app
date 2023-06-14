@@ -4,7 +4,8 @@ import { HomeComponent } from './components/home/home.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
 import { routes as userProfileRoutes } from '../user-profile/routes';
 import { routes as authRoutes } from '../auth/routes';
-import { LandingComponent } from '../landing/components/landing/landing.component';
+import { routes as landingRoutes } from '../landing/routes';
+import { AboutComponent } from './components/about/about.component';
 
 export const routes: Routes = [
 
@@ -15,6 +16,8 @@ export const routes: Routes = [
     component: AppLayoutComponent,
     children: [
       { path: 'donate', component: DonateComponent },
+
+      { path: 'about', component: AboutComponent },
 
       ...userProfileRoutes,
 
@@ -51,7 +54,7 @@ export const routes: Routes = [
 
       { 
         path: '**', 
-        component: LandingComponent 
+        loadChildren: () => import('../landing/landing.module').then(m => m.LandingModule)
       },
     ]
   },

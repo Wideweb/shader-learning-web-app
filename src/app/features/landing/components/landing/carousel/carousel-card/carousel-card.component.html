@@ -1,5 +1,6 @@
-<div class="container">
-  <div class="image">
+<div class="container" [ngClass]="{'last': last}">
+  <div class="base">
+    <img [src]="model.imageSrc">
     <div class="p3 label">{{model.label}}</div>
     <div class="btn-container">
       <a class="btn-circle secondary" [routerLink]="model.link"><i class="ico arrow-up-right-ico"></i></a>
@@ -10,3 +11,5 @@
 
   <p class="p2">{{model.body}}</p>
 </div>
+
+<a class="btn-link btn-view-all" routerLink="/explore" *ngIf="last">View all</a>

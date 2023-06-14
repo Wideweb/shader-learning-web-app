@@ -1,26 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Router} from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleListState } from '../../state/module-list.state';
 import { ModuleListDto } from '../../models/module-list.model';
 import { ModuleListLoad } from '../../state/module-list.actions';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
+import { API } from 'src/environments/environment';
+import { ModuleListCardModel } from '../module-list-card/module-list-card.component';
 
 @Component({
   selector: 'module-list',
   templateUrl: './module-list.component.html',
-  styleUrls: ['./module-list.component.css']
+  styleUrls: ['./module-list.component.scss']
 })
 export class ModuleListComponent implements OnInit {
 
-  @Select(ModuleListState.list)
-  public modules$!: Observable<ModuleListDto[]>;
+  public modules$: Observable<ModuleListCardModel[]>;
 
   @Select(ModuleListState.loaded)
   public loaded$!: Observable<ModuleListDto[]>;
 
-  constructor(private store: Store, private router: Router, private pageMeta: PageMetaService) { }
+  constructor(private store: Store, private router: Router, private pageMeta: PageMetaService) {
+    this.modules$ = this.store.select(ModuleListState.list).pipe(map(data => data.map(module=> ({
+      title: module.name,
+      body: module.description,
+      label: module.tasks + (module.tasks == 1 ? ' task' : ' tasks'),
+      link: `/module-progress/${module.id}/view`,
+      imageSrc: `${API}/modules/${module.id}/cover`,
+    }))));
+  }
 
   ngOnInit(): void {
     this.store.dispatch(new ModuleListLoad());

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container big" *ngIf="isBig">
   <div class="column">
     <ng-container *ngIf="isPrimaryVisible && loaded">
       <feedback-card [model]="data[visibleIndex]" [isPrimary]="true" [style.opacity]="opacity"></feedback-card>
@@ -20,5 +20,32 @@
     <ng-container *ngIf="!loaded">
       <feedback-card-placeholder></feedback-card-placeholder>
     </ng-container>
+  </div>
+</div>
+
+<div class="container medium small" *ngIf="isMedium || isSmall">
+  <div class="row">
+    <ng-container *ngIf="isPrimaryVisible && loaded">
+      <feedback-card [model]="data[visibleIndex]" [isPrimary]="true" [style.opacity]="opacity"></feedback-card>
+    </ng-container>
+    <ng-container *ngIf="!loaded">
+      <feedback-card-placeholder></feedback-card-placeholder>
+    </ng-container>
+  </div>
+
+  <div class="row secondary-card-row" *ngIf="isMedium">
+    <ng-container *ngIf="isSecondaryVisible && loaded">
+      <feedback-card [model]="data[visibleIndex + 1]" [isPrimary]="false" [style.opacity]="opacity"></feedback-card>
+    </ng-container>
+    <ng-container *ngIf="!loaded">
+      <feedback-card-placeholder></feedback-card-placeholder>
+    </ng-container>
+  </div>
+
+  <div class="row">
+    <div class="ctrls">
+      <a class="btn-circle" [attr.disabled]="prevDisabled" (click)="prev()"><i class="ico chevron-left-ico"></i></a>
+      <a class="btn-circle" [attr.disabled]="nextDisabled" (click)="next()"><i class="ico chevron-right-ico"></i></a>
+    </div>
   </div>
 </div>
