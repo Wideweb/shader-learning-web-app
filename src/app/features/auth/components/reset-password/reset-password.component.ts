@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, Validators, FormBuilder, FormGroup, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
@@ -14,10 +14,19 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
+const checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => { 
+  let passCtrl = group.get('password');
+  let confirmPassCtrl = group.get('passwordRepeat');
+  if (passCtrl?.value !== confirmPassCtrl?.value && !confirmPassCtrl?.hasError('required')) {
+    confirmPassCtrl?.setErrors({'notSame': true});
+  }
+  return null;
+}
+
 @Component({
   selector: 'reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
   public form: FormGroup;
@@ -37,7 +46,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   ) {
     this.form = this.fb.group({
       password: new FormControl('', [Validators.required]),
-    });
+      passwordRepeat: new FormControl('', [Validators.required]),
+    }, { validators: checkPasswords });
   }
 
   ngOnInit(): void {

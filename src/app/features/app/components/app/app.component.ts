@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private destroy$: Subject<boolean> = new Subject<boolean>();
   
   constructor(
-    private spinner: SpinnerService,
+    public spinner: SpinnerService,
     private store: Store,
     private title: Title,
     private meta: Meta,
@@ -55,9 +55,5 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-  }
-
-  isSpinnerShown(): boolean {
-    return this.spinner.isShown();
   }
 }

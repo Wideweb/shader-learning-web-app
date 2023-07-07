@@ -1,0 +1,5 @@
+<label class="container" [ngClass]="{'checked': checked, 'disabled': disabled}" (click)="toggle()">
+  <input type="checkbox" [attr.disabled]="disabled" [attr.checked]="checked">
+  <div class="checkmark"><i class="checked-ico"></i></div>
+  <p class="p2"><ng-content></ng-content></p>
+</label>

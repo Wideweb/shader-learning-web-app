@@ -1,16 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import 'common.scss';
+
 @font-face {
-    font-family: "Avenir Next LT Pro Regular";
+    font-family: $font-regular;
     src: url("/assets/AvenirNextLTPro-Regular.otf") format("opentype") ;
 }
 
 @font-face {
-    font-family: "Avenir Next LT Pro Bold";
+    font-family: $font-bold;
     src: url("/assets/AvenirNextLTPro-Bold.otf") format("opentype") ;
 }
 
-@import 'common.scss';
+@font-face {
+    font-family: $font-code;
+    src: url("/assets/CutiveMono-Regular.ttf") format("truetype") ;
+}
 
 @import '/node_modules/codemirror/lib/codemirror.css';
 @import '/node_modules/codemirror/addon/hint/show-hint.css';
@@ -49,58 +54,67 @@ body,
     -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-    font-family: "Avenir Next LT Pro Regular", -apple-system, Roboto, sans-serif;
-}
+// * {
+//     font-family: "Avenir Next LT Pro Regular", -apple-system, Roboto, sans-serif;
+// }
 
 .description-markdown-compiled code {
-    font-family: monospace;
+    font-family: $font-code;
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: keep-all;
-    padding: 2px 4px;
-    color: #1f1e24;
-    background-color: #ececef;
-    border-radius: 4px;
-    display: inline-block;
-    font-family: var(--default-mono-font, "Menlo"), "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
+    color: $grey;
+
+    // padding: 2px 4px;
+    // background-color: #ececef;
+    // border-radius: 4px;
+    // display: inline-block;
 }
 
 .description-markdown-compiled *:first-child {
     margin-top: 0;
 }
 
+.description-markdown-compiled pre + pre {
+    margin-top: toRem(10);
+}
+
 .description-markdown-compiled pre>code {
-    display: block;
-    padding: 12px;
-    background-color: #fff;
-    color: #333238;
-    margin-bottom: 16px;
-    line-height: 1.6em;
-    overflow-x: auto;
-    border-radius: 4px;
-    border: 1px solid #e3e3e3
+    // display: block;
+
+    font-size: toRem(16);
+    font-family: $font-code;
+    font-style: normal;
+    font-weight: 400;
+    line-height: toRem(24);
+    color: $grey;
+
+    // margin-bottom: toRem(16);
+    // padding: toRem(12);
+    // overflow-x: auto;
+    // border-radius: toRem(4);
+    // border: toRem(1) solid $light-grey;
 }
 
-.description-markdown-compiled pre {
-    font-family: monospace;
-    white-space: pre;
-}
+// .description-markdown-compiled pre {
+//     font-family: monospace;
+//     white-space: pre;
+// }
 
-.description-markdown-compiled h1 {
-    margin: 24px 0 16px;
-    border-bottom: 1px solid #e6e6ea;
-}
+// .description-markdown-compiled h1 {
+//     margin: 24px 0 16px;
+//     border-bottom: 1px solid #e6e6ea;
+// }
 
-.description-markdown-compiled h2 {
-    margin: 24px 0 16px;
-    border-bottom: 1px solid #e6e6ea;
-}
+// .description-markdown-compiled h2 {
+//     margin: 24px 0 16px;
+//     border-bottom: 1px solid #e6e6ea;
+// }
 
-.description-markdown-compiled h3 {
-    margin: 24px 0 16px;
-}
+// .description-markdown-compiled h3 {
+//     margin: 24px 0 16px;
+// }
 
 p {
     margin: 0;
@@ -232,15 +246,30 @@ ul {
 }
 
 .mat-mdc-dialog-container .mdc-dialog__surface {
-    border-radius: 0 !important;
+    border-radius: toRem(16) !important;
+    background-color: $white !important;
 }
 
-mat-tab-group.bordered-header mat-tab-header {
-    border-bottom: 1px solid #e3e3e3;
+.CodeMirror {
+    background-color: $white;
+    font-family: monospace;
+    color: $black;
+
+    font-family: Source Code Pro, monospace;
+    font-size: toRem(15);
+    line-height: toRem(24);
 }
 
-.mat-mdc-tab.error .mdc-tab__text-label {
-    color: brown !important;
+.CodeMirror-gutters {
+    width: toRem(40);
+    background-color: $light-blue;
+    border: none;
+}
+
+.CodeMirror-linenumber {
+    width: toRem(40) !important;
+    box-sizing: border-box;
+    padding-right: toRem(8);
 }
 
 .CodeMirror-hints {
@@ -251,9 +280,35 @@ mat-tab-group.bordered-header mat-tab-header {
 }
 
 .CodeMirror-hint {
-    padding: 4px 8px;
+    box-sizing: border-box;
+    padding: 4px 8px !important;
     color: #555;
     border-radius: 0;
+}
+
+.CodeMirror pre.CodeMirror-line, .CodeMirror pre.CodeMirror-line-like {
+    padding: 0 toRem(8);
+}
+
+.CodeMirror-activeline-background {
+    background: transparent !important;
+}
+
+.CodeMirror-activeline-background {
+    box-shadow: inset 0px 1px 0px #0000000e, inset 0px -1px 0px #0000000e;
+}
+
+.CodeMirror-activeline-gutter .CodeMirror-linenumber {
+    color: $white;
+}
+
+.CodeMirror-line-error .CodeMirror-linenumber {
+    color: $red;
+}
+
+.backdropBackground {
+    background-color: #1F1F1F52;
+    backdrop-filter: blur(toRem(1));
 }
 
 /*************************************************/
@@ -279,7 +334,7 @@ mat-tab-group.bordered-header mat-tab-header {
 }
 
 h1 {
-    font-family: "Avenir Next LT Pro Bold";
+    font-family: $font-bold;
     font-size: toRem(40);
     line-height: toRem(50);
     color: $black;
@@ -287,7 +342,7 @@ h1 {
 }
 
 h2 {
-    font-family: "Avenir Next LT Pro Bold";
+    font-family: $font-bold;
     font-size: toRem(36);
     line-height: toRem(40);
     margin: 0;
@@ -307,7 +362,7 @@ h2 {
 }
 
 h3 {
-    font-family: "Avenir Next LT Pro Bold";
+    font-family: $font-bold;
     font-size: toRem(18);
     line-height: toRem(24);
     margin: 0;
@@ -315,31 +370,39 @@ h3 {
 }
 
 .p1 {
-    font-family: "Avenir Next LT Pro Regular";
+    font-family: $font-regular;
     line-height: toRem(24);
     font-size: toRem(18);
     color: $black;
 }
 
 .p2 {
-    font-family: "Avenir Next LT Pro Regular";
+    font-family: $font-regular;
     line-height: toRem(20);
     font-size: toRem(16);
     color: $black;
 }
 
+.p2-bold {
+    font-family: $font-regular;
+    line-height: toRem(20);
+    font-size: toRem(16);
+    font-weight: 700;
+    color: $black;
+}
+
 .p3 {
-    font-family: "Avenir Next LT Pro Regular";
+    font-family: $font-regular;
     line-height: toRem(20);
     font-size: toRem(14);
     font-weight: 400;
     color: $black;
 }
 
-* {
-    font-family: "Avenir Next LT Pro Regular";
-    color: $black;
-}
+// * {
+//     font-family: "Avenir Next LT Pro Regular";
+//     color: $black;
+// }
 
 .quote-filled-ico {
     display: inline-block;
@@ -452,6 +515,40 @@ h3 {
     mask-size: toRem(24);
 }
 
+.chevrons-left-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevrons-left.svg);
+    mask-image: url(/assets/chevrons-left.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.chevrons-right-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevrons-right.svg);
+    mask-image: url(/assets/chevrons-right.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
 .menu-ico {
     position: absolute;
     display: inline-block;
@@ -554,6 +651,149 @@ h3 {
     mask-size: toRem(40);
 }
 
+.eye-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/eye.svg);
+    mask-image: url(/assets/eye.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.eye-off-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/eye-off.svg);
+    mask-image: url(/assets/eye-off.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-down-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-down.svg);
+    mask-image: url(/assets/thumbs-down.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-up-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-up.svg);
+    mask-image: url(/assets/thumbs-up.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.reset-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/reset.svg);
+    mask-image: url(/assets/reset.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.check-circle-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/check-circle.svg);
+    mask-image: url(/assets/check-circle.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.alert-circle-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/alert-circle.svg);
+    mask-image: url(/assets/alert-circle.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.clock-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/clock.svg);
+    mask-image: url(/assets/.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.ico-container {
+    display: inline-block;
+    position: relative;
+    width: toRem(24);
+    height: toRem(24);
+}
+
 .btn-ico {
     position: relative;
     display: flex;
@@ -585,6 +825,11 @@ a.link {
     text-decoration: none;
     color: inherit;
 
+    &.link-standout {
+        text-decoration: underline;
+        color: $blue;
+    }
+
     &:hover {
         color: $blue-secondary;
     }
@@ -602,11 +847,13 @@ a.link {
     width: toRem(40);
     height: toRem(40);
     border-radius: 100%;
+    color: $white;
     background-color: $blue;
     cursor: pointer;
 }
 
 .btn-circle .ico {
+    color: $white;
     background-color: $white;
 }
 
@@ -615,6 +862,7 @@ a.link {
 }
 
 .btn-circle.secondary .ico {
+    color: $blue;
     background-color: $blue;
 }
 
@@ -623,6 +871,7 @@ a.link {
 }
 
 .btn-circle.secondary:hover .ico {
+    color: $white;
     background-color: $white;
 }
 
@@ -631,6 +880,7 @@ a.link {
 }
 
 .btn-circle.secondary:active .ico {
+    color: $white;
     background-color: $white;
 }
 
@@ -649,11 +899,35 @@ a.link {
 }
 
 .btn-circle[disabled=true] .ico, .btn-circle.secondary[disabled=true] .ico {
+    color: $light-grey;
     background-color: $light-grey;
 }
 
+.btn-side-bar {
+    display: inline-block;
+    position: relative;
+    width: toRem(28);
+    height: toRem(28);
+    background-color: $dark-blue;
+    border-radius: toRem(4);
+    cursor: pointer;
+
+    .ico {
+        background-color: $white;
+    }
+
+    &:hover {
+        background-color: $grey;
+    }
+
+    &:active {
+        background-color: $black;
+    }
+}
+
 .btn-link {
-    font-family: "Avenir Next LT Pro Regular";
+    font-family: $font-regular;
+    text-align: center;
     text-decoration: none;
     display: inline-block;
     background-color: $blue;
@@ -663,6 +937,8 @@ a.link {
     line-height: toRem(16);
     border-radius: toRem(48);
     user-select: none;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-link:hover {
@@ -690,6 +966,17 @@ a.link {
     top: toRem(4);
 }
 
+.btn-link-ico-addon.left {
+    padding-right: toRem(24);
+    padding-left: toRem(45);
+}
+
+.btn-link-ico-addon.left .ico-container {
+    right: unset;
+    left: toRem(4);
+    top: toRem(4);
+}
+
 .btn-link.btn-link-ico-addon:hover .ico {
     background-color: $grey;
 }
@@ -714,9 +1001,136 @@ a.link {
     background-color: $black;
 }
 
-.ph-animation {
+.btn-link.white {
+    background-color: $white;
+    color: $blue;
+    box-shadow: inset 0 0 0 toRem(1) $blue;
+}
+
+.btn-link.white:hover {
+    background-color: $grey;
+    color: $white;
+    box-shadow: unset;
+}
+
+.btn-link.white:active {
+    background-color: $black;
+    color: $white;
+    box-shadow: unset;
+}
+
+.back-link-wrapper {
     width: 100%;
-    height: 100%;
+    margin-top: toRem(20);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-link {
+    font-family: $font-regular;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: toRem(8);
+    cursor: pointer;
+    & > span {
+        color: $blue;
+        font-weight: bolder;
+    }
+}
+
+.back-link .ico-container  > i {
+    background-color: $blue;
+}
+
+.btn-text {
+    display: inline-block;
+    font-family: $font-regular;
+    position: relative;
+    cursor: pointer;
+    line-height: toRem(24);
+    -webkit-text-stroke-width: toRem(0.3);
+
+    color: $blue;
+    .ico {
+        background-color: $blue;
+    }
+
+    &:hover {
+        color: $blue-secondary;
+        .ico {
+            background-color: $blue-secondary;
+        }
+    }
+
+    &:active {
+        color: $dark-blue;
+        .ico {
+            background-color: $dark-blue;
+        }
+    }
+
+    .ico {
+        float: left;
+        transform: unset;
+        left: unset;
+        right: unset;
+        top: unset;
+        position: relative;
+        margin-right: toRem(8);
+    }
+}
+
+.btn-like {
+    display: inline-flex;
+    align-items: center;
+    font-family: $font-regular;
+    position: relative;
+    cursor: pointer;
+    line-height: toRem(24);
+    -webkit-text-stroke-width: toRem(0.3);
+    box-sizing: border-box;
+    padding: toRem(2) toRem(10);
+    border-radius: toRem(24);
+
+    color: $blue;
+    .ico {
+        background-color: $blue;
+    }
+
+    &:hover {
+        background-color: $blue;
+        color: $white;
+        .ico {
+            background-color: $white;
+        }
+    }
+
+    &:active {
+        background-color: $blue-secondary;
+        color: $white;
+        .ico {
+            background-color: $white;
+        }
+    }
+
+    .ico {
+        float: left;
+        transform: unset;
+        left: unset;
+        right: unset;
+        top: unset;
+        position: relative;
+        margin-right: toRem(4);
+    }
+
+    & > span {
+        margin-bottom: toRem(-2);
+    }
+}
+
+.ph-animation {
     position: relative;
     overflow: hidden;
 

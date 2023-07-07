@@ -1,0 +1,367 @@
+@import 'common.scss';
+
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.task {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+
+.body-left {
+    width: 43%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: toRem(20);
+
+    box-sizing: border-box;
+    padding: toRem(30) 0 toRem(30) toRem(55);
+
+    .heading {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: toRem(8);
+        box-sizing: border-box;
+        padding-right: toRem(24);
+        padding-bottom: toRem(10);    
+        
+        .name {
+            flex: 1;
+        }
+    
+        .tools {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+    
+            .btn-text {
+                width: toRem(40);
+                height: toRem(40);
+            }
+        }
+    }
+
+    .tabs {
+        display: flex;
+        flex-direction: row;
+        gap: toRem(8);
+    
+        .tab {
+            box-sizing: border-box;
+            padding: toRem(4) toRem(12);
+            cursor: pointer;
+    
+            &.active {
+                box-shadow: 0 0 0 toRem(1) $blue;
+                border-radius: toRem(16);
+                color: $blue;
+            }
+        }
+    }
+
+    .tab-content {
+        flex: 1;
+        overflow-x: hidden;
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding-right: toRem(24);
+    }
+
+    .acitions {
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        gap: toRem(12);
+        box-sizing: border-box;
+        padding-right: toRem(24);
+    }
+
+    .channels {
+        margin-top: toRem(20);
+
+        .list {
+            margin-top: toRem(15);
+            display: flex;
+            flex-direction: row;
+            gap: toRem(17);
+        }
+    }
+}
+
+.body-right {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    flex: 1;
+    background-color: $light-blue;
+} 
+
+.editor-section {
+    flex: 1;
+    overflow: hidden;
+
+    .container {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .toast {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 toRem(55) 0 toRem(44 + 8);
+        position: absolute;
+        bottom: toRem(10);
+
+        .container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: toRem(12);
+            background: $white;
+
+            border: toRem(1) solid $black;
+            border-radius: toRem(8);
+            box-sizing: border-box;
+            padding: toRem(12) toRem(16);
+        }
+
+        .message {
+            flex: 1
+        }
+
+        .close-ctrl {
+            cursor: pointer;
+            color: $black;
+        }
+
+        &.success {
+            .container {
+                border-color: $green-secondary;
+            }
+
+            .check-circle-ico {
+                background-color: $green-secondary;
+            }
+
+            .message {
+                color: $green-secondary;
+            }
+        }
+
+        &.error {
+            .container {
+                border-color: $red;
+            }
+
+            .alert-circle-ico {
+                background-color: $red;
+            }
+
+            .message {
+                color: $red;
+            }
+        }
+    }
+}
+
+.output-section {
+    box-sizing: border-box;
+    padding: toRem(20) toRem(55) toRem(0) toRem(44);
+
+    .container {
+        height: toRem(260);
+        display: flex;
+        flex-direction: row;
+        gap: toRem(16);
+        overflow: hidden;
+        background-color: $white;
+        box-sizing: border-box;
+        padding: toRem(16) toRem(16) toRem(20) toRem(16);
+        border-radius: toRem(8);
+    }
+
+    .output {
+        height: 100%;
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        gap: toRem(10);
+
+        .render-img {
+            flex: 1;
+            overflow: hidden;
+        }
+    }
+}
+
+.toolbar-section {
+    box-sizing: border-box;
+    padding: toRem(20) toRem(55) toRem(30) toRem(44);
+
+    .container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        // margin-bottom: toRem(20);
+        box-sizing: border-box;
+    
+        .btn-link + .btn-link {
+            margin-left: toRem(12);
+        }
+    
+        .btn-text + .btn-text {
+            margin-left: toRem(20);
+        }
+    
+        .spacer {
+            flex: 1;
+        }
+    }
+}
+
+/* .actions-container {
+    margin-top: 15px;
+}
+
+.heading {
+    width: 100%;
+    border-bottom: 1px solid #e3e3e3;
+    box-sizing: border-box;
+    padding: 15px 15px 0 15px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+}
+
+.header .action-link {
+    margin-left: 10px;
+}
+
+.header-tools {
+    display: flex;
+    width: 100%;
+    text-align: start;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4.5px;
+}
+
+.like-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #999;
+    padding: 5px 8px;
+}
+
+.like-btn:hover {
+    border-radius: 5px;
+    background-color: #eee;
+}
+
+mat-icon.like-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #bbb;
+    margin-right: 5px;
+}
+
+.like-btn.selected mat-icon.like-icon {
+    color: darkcyan;
+}
+
+.like-btn .counter {
+    font-size: 13px;
+}
+
+.created-by {
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.row {
+    flex: 1;
+    display: flex;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.body {
+    flex: 1;
+    max-width: 50%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.body.body-left {
+    border-right: 1px solid #e3e3e3;
+}
+
+.body-scroll {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.body.body-right .body-content {
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+mat-tab-group {
+    height: 100%;
+}
+
+.tab-content {
+    box-sizing: border-box;
+}
+
+.tab-content.tab-content-description {
+    padding: 15px 15px 200px 15px;
+}
+
+.section {
+    width: 100%;
+}
+
+.section+.section {
+    margin-top: 20px;
+}
+
+.channels {
+    display: flex;
+    flex-direction: row;
+}
+
+task-channel+task-channel {
+    margin-left: 15px;
+} */
+
+// .description-markdown-compiled {
+//     overflow-y: auto;
+//     width: 100%;
+// }
+
+// .code-editor-section {
+//     .tooltip {
+//         box-sizing: border-box;
+//         padding: 10px;
+//     }
+// }

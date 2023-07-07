@@ -1,0 +1,11 @@
+<ng-container *ngIf="(module$ | async) != null && (loaded$ | async) then moduleEl else placeholderEl"></ng-container>
+
+<ng-template #moduleEl>
+    <module-view
+        [module]="(module$ | async)!"
+    ></module-view>
+</ng-template>
+
+<ng-template #placeholderEl>
+    <module-view-placeholder></module-view-placeholder>
+</ng-template>

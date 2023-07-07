@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import { filter, map, Observable, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, Subject, takeUntil } from 'rxjs';
 import { UserDto } from 'src/app/features/auth/models/user.model';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { AppEventService } from 'src/app/features/common/services/event.service';
@@ -32,9 +32,11 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
   
   public userEmail$: Observable<string | null>;
 
-  public hidePageOverflow$ = new Subject<boolean>();
+  public userSymbol$: Observable<string | null>;
 
-  public showFooterScrollCtrl$ = new Subject<boolean>();
+  public hidePageOverflow$ = new BehaviorSubject<boolean>(false);
+
+  public showFooterScrollCtrl$ = new BehaviorSubject<boolean>(false);
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -56,6 +58,7 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
     this.userId$ = this.user$.pipe(map(u => u?.id || null));
     this.userName$ = this.user$.pipe(map(u => u?.name || ''));
     this.userEmail$ = this.user$.pipe(map(u => u?.email || ''));
+    this.userSymbol$ = this.user$.pipe(map(u => u?.email[0].toUpperCase() || ''));
   }
 
   @HostListener('window:resize', ['$event'])
@@ -75,6 +78,7 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
         filter((event) => event instanceof NavigationEnd),
         takeUntil(this.destroy$)
       ).subscribe(() => {
+        this.scrollTop(true);
         this.updatePageOverflow();
         this.updateFooterScrollCtrlVisibility();
       });
@@ -99,11 +103,11 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
     this.isNavbarMenuCollapsed = true;
   }
 
-  scrollTop() :void {
+  scrollTop(instant: boolean = false) :void {
     document.querySelector('.page-scroll')?.scroll({ 
       top: 0, 
       left: 0, 
-      behavior: 'smooth' 
+      behavior: (instant === true ? 'instant' : 'smooth') as ScrollBehavior
     });
   }
 

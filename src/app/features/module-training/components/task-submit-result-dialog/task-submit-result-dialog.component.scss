@@ -1,0 +1,37 @@
+
+@import 'common.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding: toRem(40) 0;
+    width: toRem(380);
+}
+
+.ico {
+    margin-bottom: toRem(30);
+}
+
+.ico.rejected {
+    box-sizing: border-box;
+    padding: toRem(20) 0 toRem(22) 0;
+}
+
+.title {
+    margin-bottom: toRem(20);
+}
+
+.message {
+    margin-bottom: toRem(30);
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(10);
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 toRem(40);
+}

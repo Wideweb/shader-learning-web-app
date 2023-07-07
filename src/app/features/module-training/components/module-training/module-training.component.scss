@@ -1,0 +1,115 @@
+@import 'common.scss';
+
+:host {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: toRem(12);
+    position: absolute;
+    right: toRem(0);
+    z-index: 100;
+    box-sizing: border-box;
+    padding: toRem(30) toRem(40);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .module-tasks {
+        box-sizing: border-box;
+        padding: toRem(28) 0 toRem(18) toRem(28);
+        height: 100%;
+        width: toRem(300);
+        border-radius: toRem(12);
+        background: $white;
+        overflow: hidden;
+    }
+
+    .scroll {
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        padding-right: toRem(24);
+        overflow-y: auto;
+    }
+
+    .toggle {
+        position: absolute;
+        top: 0;
+        right: toRem(-14);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: toRem(28);
+        height: toRem(28);
+        border-radius: toRem(4);
+        cursor: pointer;
+
+        .ico {
+            background-color: $white;
+        }
+
+        background-color: $dark-blue;
+        &:hover {
+            background-color: $grey;
+        }
+        
+        &:active {
+            background-color: $black;
+        }
+
+        &.in {
+            display: none;
+        }
+    }
+}
+
+.header {
+    width: 100%;
+    height: toRem(90);
+    box-sizing: border-box;
+    padding: 0 toRem(55);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: toRem(1) solid $light-blue;
+}
+
+.current-task {
+    flex: 1;
+    overflow: hidden;
+}
+
+
+// .ending {
+//     margin-top: 50px;
+//     text-align: center;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+// }
+
+// .ending h2 {
+//     font-size: 25px;
+//     margin-bottom: 20px;
+// }
+
+// .ending h3 {
+//     font-size: 20px;
+// }
+
+// .ending mat-icon {
+//     margin-top: 30px;
+//     font-size: 100px;
+//     width: 100px;
+//     height: 100px;
+//     color: darkcyan;
+// }

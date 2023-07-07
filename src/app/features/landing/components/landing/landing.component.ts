@@ -48,7 +48,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
       title: module.name,
       body: module.description,
       label: module.tasks + (module.tasks == 1 ? ' task' : ' tasks'),
-      link: `/module-progress/${module.id}/view`,
+      link: `/module-view/${module.id}`,
       imageSrc: `${API}/modules/${module.id}/cover`,
     }))));
   }

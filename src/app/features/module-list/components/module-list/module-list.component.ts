@@ -3,7 +3,6 @@ import { Observable, map } from 'rxjs';
 import { Router} from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleListState } from '../../state/module-list.state';
-import { ModuleListDto } from '../../models/module-list.model';
 import { ModuleListLoad } from '../../state/module-list.actions';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { API } from 'src/environments/environment';
@@ -19,14 +18,16 @@ export class ModuleListComponent implements OnInit {
   public modules$: Observable<ModuleListCardModel[]>;
 
   @Select(ModuleListState.loaded)
-  public loaded$!: Observable<ModuleListDto[]>;
+  public loaded$!: Observable<boolean>;
+
+  public placeholders = [...Array(30).keys()];
 
   constructor(private store: Store, private router: Router, private pageMeta: PageMetaService) {
     this.modules$ = this.store.select(ModuleListState.list).pipe(map(data => data.map(module=> ({
       title: module.name,
       body: module.description,
       label: module.tasks + (module.tasks == 1 ? ' task' : ' tasks'),
-      link: `/module-progress/${module.id}/view`,
+      link: `/module-view/${module.id}`,
       imageSrc: `${API}/modules/${module.id}/cover`,
     }))));
   }

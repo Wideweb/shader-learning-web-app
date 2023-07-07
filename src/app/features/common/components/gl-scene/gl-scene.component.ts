@@ -199,6 +199,8 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       return [];
     }
 
+    console.log(summary)
+
     const errorPattern = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
     const matches = [...summary.matchAll(errorPattern)];
     return matches.map(match => {

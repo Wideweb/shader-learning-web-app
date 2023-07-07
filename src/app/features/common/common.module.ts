@@ -33,6 +33,9 @@ import { MatSelectModule } from "@angular/material/select";
 import { ToRemPipe } from "./pipes/to-rem.pipe";
 import { AppStickyComponent } from "./components/sticky/sticky.component";
 import { AppSvgIconComponent } from "./components/svg-icon/svg-icon.component";
+import { CodeEditor2Component } from "./components/code-editor-2/code-editor-2.component";
+import { FileEditorComponent } from "./components/code-editor-2/file-editor/file-editor.component";
+import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { AppSvgIconComponent } from "./components/svg-icon/svg-icon.component";
     ConfirmDialogComponent,
     AppStickyComponent,
     AppSvgIconComponent,
+    FileEditorComponent,
+    CodeEditor2Component,
+    AppCheckboxComponent,
   ],
   imports: [
     CommonModule,
@@ -100,6 +106,9 @@ import { AppSvgIconComponent } from "./components/svg-icon/svg-icon.component";
     ConfirmDialogComponent,
     AppStickyComponent,
     AppSvgIconComponent,
+    FileEditorComponent,
+    CodeEditor2Component,
+    AppCheckboxComponent,
   ],
 })
 export class AppCommonModule {

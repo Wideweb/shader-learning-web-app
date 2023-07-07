@@ -1,8 +1,9 @@
 <div class="navbar-menu-collapsible" *ngIf="!isNavbarMenuCollapsed">
   <a class="collapse" (click)="hideNavbarMenu()"><i class="close-ico"></i></a>
   <a class="nav-link" routerLink="/explore" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Explore</h2></a>
+  <a class="nav-link" routerLink="/users-rating" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Rating</h2></a>
   <a class="nav-link" routerLink="/donate" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Donate</h2></a>
-  <a class="nav-link" routerLink="/users-rating" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>About</h2></a>
+  <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>About</h2></a>
 </div>
 
 <div class="page-container">
@@ -21,6 +22,7 @@
         <div class="nav-group">
           <div class="nav-menu">
             <a class="nav-link p2" routerLink="/explore" routerLinkActive="active">Explore</a>
+            <a class="nav-link p2" routerLink="/users-rating" routerLinkActive="active">Rating</a>
             <a class="nav-link p2" routerLink="/donate" routerLinkActive="active">Donate</a>
             <a class="nav-link p2" routerLink="/about" routerLinkActive="active">About</a>
           </div>
@@ -28,7 +30,12 @@
 
         <div class="nav-group nav-group-right">
           <div class="nav-menu">
-            <a class="btn-link" routerLink="/sign-up">Sign in</a>
+            <ng-container *ngIf="(isAuthenticated$ | async) === false">
+              <a class="btn-link" routerLink="/login">Sign in</a>
+            </ng-container>
+            <ng-container *ngIf="isAuthenticated$ | async">
+              <a class="p2-bold btn-circle">{{ userSymbol$ | async }}</a>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -60,9 +67,10 @@
         <div class="container max-width">
           <div class="copyright p3">Alkevich Entertainment</div>
           <div class="nav-menu">
-            <a class="nav-link p2" routerLink="/explore" routerLinkActive="active" (click)="scrollTop()">Explore</a>
-            <a class="nav-link p2" routerLink="/donate" routerLinkActive="active" (click)="scrollTop()">Donate</a>
-            <a class="nav-link p2" routerLink="/about" routerLinkActive="active" (click)="scrollTop()">About</a>
+            <a class="nav-link p2" routerLink="/explore" routerLinkActive="active">Explore</a>
+            <a class="nav-link p2" routerLink="/users-rating" routerLinkActive="active">Rating</a>
+            <a class="nav-link p2" routerLink="/donate" routerLinkActive="active">Donate</a>
+            <a class="nav-link p2" routerLink="/about" routerLinkActive="active">About</a>
           </div>
           <div class="scroll-ctrl">
             <a class="btn-circle" (click)="scrollTop()"><i class="ico arrow-up-ico"></i></a>

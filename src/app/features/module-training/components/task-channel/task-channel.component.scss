@@ -1,0 +1,23 @@
+@import 'common.scss';
+
+.preview {
+    height: toRem(64);
+    width: toRem(64);
+    box-sizing: border-box;
+    border: toRem(1) solid $light-grey;
+    border-radius: toRem(8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: toRem(8);
+}
+
+.preview img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.name {
+    text-align: left;
+    color: $grey;
+}

@@ -18,7 +18,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public form: FormGroup;
@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   @Select(AuthState.isAuthenticated)
   public isAuthenticated$!: Observable<boolean>;
+
+  public passwordHidden = true;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -38,7 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private pageMeta: PageMetaService,
   ) {
     this.form = this.fb.group({
-      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
     });
 
@@ -73,8 +75,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe({
         error: (e) => {
-          if (e.error.code == 'USER_NAME_NOT_FOUND') {
-            this.form.controls['name'].setErrors({'USER_NAME_NOT_FOUND': true});
+          if (e.error.code == 'EMAIL_NOT_FOUND') {
+            this.form.controls['email'].setErrors({'EMAIL_NOT_FOUND': true});
           }
 
           if (e.error.code == 'PASSWORD_NOT_MATCH') {
@@ -93,5 +95,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   navigate() {
     const returnUrl = this.route.snapshot.params['returnUrl'];
     this.router.navigate([returnUrl || '/explore']);
+  }
+
+  public togglePasswordVisibility(): void {
+    this.passwordHidden = !this.passwordHidden;
   }
 }

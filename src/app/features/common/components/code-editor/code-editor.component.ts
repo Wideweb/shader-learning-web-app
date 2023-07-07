@@ -1,11 +1,13 @@
 import { AfterViewInit, ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewContainerRef, } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import * as CodeMirror from 'codemirror';
 import { groupBy } from '../../services/utils';
 import { CodeEditorAutocomplete } from './code-editor-autocomplete';
 import { CodeEditorOutput, CodeEditorPrompt, CodeEditorFile, CodeEditorPrompts } from './declarations';
 import { CodeEditorLinePromptComponent } from './line-prompt/line-prompt.component';
+import activeLineSelection from './code-editor-active-line-selection';
+
+activeLineSelection();
 
 const EMPTY_FILE: CodeEditorFile = {
   name: '',
@@ -17,7 +19,7 @@ const EMPTY_FILE: CodeEditorFile = {
 @Component({
   selector: 'code-editor',
   templateUrl: './code-editor.component.html',
-  styleUrls: ['./code-editor.component.css']
+  styleUrls: ['./code-editor.component.scss']
 })
 export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy, OnChanges {
 
@@ -103,9 +105,13 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy,
     }
   }
 
-  public selectFile(event: MatTabChangeEvent) {
-    this.currentFile = this.files[event.index];
+  public selectFile(file: CodeEditorFile) {
+    this.currentFile = file;
     setTimeout(() => this.updatePrompts(), 100);
+  }
+
+  public isSelected(file: CodeEditorFile) {
+    return this.currentFile === file;
   }
 
   updateFilesStatus(): void {
@@ -140,6 +146,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy,
     wrapperRef.instance.prompts = prompts;
 
     const widget = this.codemirror.codeMirror!.addLineWidget(line, wrapperContainer);
+    this.codemirror.codeMirror?.addLineClass(line, 'wrap', 'CodeMirror-line-error');
 
     this.promptedLines.push({line, widget, wrapperRef});
   }
@@ -149,6 +156,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy,
       this.codemirror.codeMirror?.removeLineWidget(item.widget);
       this.appRef.detachView(item.wrapperRef.hostView);
       item.wrapperRef.destroy();
+      this.codemirror.codeMirror?.removeLineClass(item.line, 'wrap', 'CodeMirror-line-error');
     });
     this.promptedLines = [];
   }
@@ -157,6 +165,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges, OnDestroy,
     const projectableNodes = [Array.prototype.slice.call(container.childNodes)];
     const factory = this.resolver.resolveComponentFactory(CodeEditorLinePromptComponent);
     const wrapperRef = factory.create(this.injector, projectableNodes, container);
+    wrapperRef.onDestroy(() => wrapperRef.instance.ngOnDestroy());
     this.appRef.attachView(wrapperRef.hostView);
     return wrapperRef;
   }

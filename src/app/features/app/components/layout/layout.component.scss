@@ -6,6 +6,12 @@
   overflow: hidden;
 }
 
+.route-container-no-layout {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 .route-container {
   flex: 1;
   width: 100%;
@@ -17,7 +23,7 @@
 
 .navbar {
   position: relative;
-  margin: toRem(40) 0;
+  margin: toRem(30) 0;
   width: 100%;
   display: flex;
   z-index: 2;

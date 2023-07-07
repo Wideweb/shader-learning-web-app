@@ -1,10 +1,13 @@
 @import 'common.scss';
 
+:host {
+    display: inline-block;
+    width: fit-content;
+}
+
 .container {
     position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
+    display: inline-block;
 
     &.loading {
         background-color: #D9D9D9;

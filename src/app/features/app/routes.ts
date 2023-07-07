@@ -4,12 +4,22 @@ import { HomeComponent } from './components/home/home.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
 import { routes as userProfileRoutes } from '../user-profile/routes';
 import { routes as authRoutes } from '../auth/routes';
-import { routes as landingRoutes } from '../landing/routes';
 import { AboutComponent } from './components/about/about.component';
 
 export const routes: Routes = [
 
   ...authRoutes,
+
+  {
+    path: 'module-training',
+    redirectTo: 'explore',
+    pathMatch: 'full',
+  },
+  
+  {
+    path: 'module-training',
+    loadChildren: () => import('../module-training/module-training.module').then(m => m.ModuleTrainingModule),
+  },
 
   {
     path: '',
@@ -32,19 +42,13 @@ export const routes: Routes = [
       },
 
       {
-        path: 'module-progress',
-        redirectTo: 'explore',
-        pathMatch: 'full',
-      },
-
-      {
-        path: 'module-progress',
-        loadChildren: () => import('../module-progress/module-progress.module').then(m => m.ModuleProgressModule),
-      },
-
-      {
         path: 'users-rating',
         loadChildren: () => import('../user-rank-list/user-rank-list.module').then(m => m.UserRankListModule)
+      },
+
+      {
+        path: 'module-view',
+        loadChildren: () => import('../module-training-view/module-view.module').then(m => m.ModuleViewModule)
       },
 
       { 

@@ -8,11 +8,13 @@ import { routes } from "./routes";
 import { ModuleListService } from "./services/module-list.service";
 import { ModuleListState } from "./state/module-list.state";
 import { ModuleListCardComponent } from "./components/module-list-card/module-list-card.component";
+import { ModuleListCardPlaceholderComponent } from "./components/module-list-card-placeholder/module-list-card-placeholder.component";
 
 @NgModule({
   declarations: [
     ModuleListComponent,
     ModuleListCardComponent,
+    ModuleListCardPlaceholderComponent,
   ],
   imports: [
     AppCommonModule.forChild(),

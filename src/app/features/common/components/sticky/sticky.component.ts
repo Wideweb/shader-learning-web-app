@@ -33,8 +33,6 @@ export class AppStickyComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    console.log(this.stickable.nativeElement.clientHeight);
-
     if (this.sticked) {
       if ((this.stickOffset + top) > 0) {
         this.stickable.nativeElement.classList.remove("sticky");

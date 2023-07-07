@@ -1,0 +1,66 @@
+@import 'common.scss';
+
+:host {
+    display: inline-block;
+    position: relative;
+    width: toRem(280);
+    min-width: toRem(280);
+    box-sizing: border-box;
+    padding-top: toRem(10);
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+.base {
+    position: relative;
+    width: 100%;
+    height: toRem(220);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.img {
+    border-radius: toRem(16);
+    background-color: #D9D9D9;
+    width: 100%;
+    height: 100%;
+}
+
+.btn-container {
+    cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    right: toRem(16);
+    bottom: toRem(16);
+}
+
+.label {
+    display: inline-block;
+    position: absolute;
+    top: toRem(16);
+    left: toRem(16);
+    background-color: darken(#D9D9D9, 5%);
+    border-radius: toRem(24);
+    width: toRem(60);
+    height: toRem(28);
+    box-sizing: border-box;
+    padding: toRem(4) toRem(8);
+}
+
+.circle {
+    width: toRem(40);
+    height: toRem(40);
+    border-radius: 100%;
+    background-color: darken(#D9D9D9, 5%);
+}
+
+.title {
+    border-radius: toRem(10);
+    margin: toRem(16) 0;
+    background-color: #D9D9D9;
+    height: toRem(24);
+    width: 60%;
+}

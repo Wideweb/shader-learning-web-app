@@ -1,0 +1,22 @@
+@import 'common.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: toRem(40);
+}
+
+.header {
+    margin-bottom: toRem(28);
+}
+
+.body {
+    margin-bottom: toRem(50);
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: toRem(12);
+}

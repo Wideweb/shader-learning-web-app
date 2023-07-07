@@ -1,0 +1,105 @@
+@import 'common.scss';
+
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-field {
+    position: relative;
+    width: 100%;
+    margin-bottom: toRem(10);
+
+    & + .form-field {
+        margin-top: toRem(10);
+    }
+
+    label {
+        display: block;
+        width: 100%;
+        margin-bottom: toRem(5);
+        font-weight: bold;
+    }
+
+    input {
+        display: block;
+        width: 100%;
+        height: toRem(40);
+        box-sizing: border-box;
+        border-radius: toRem(24);
+        padding: toRem(10) toRem(24) toRem(10) toRem(24);
+        margin-bottom: toRem(5);
+        border: toRem(1) solid $black;
+        background-color: $white;
+        outline: none;
+
+        font-family: "Avenir Next LT Pro Regular";
+        line-height: toRem(20);
+        font-size: toRem(16);
+        color: $black;
+
+        &::placeholder {
+            font-family: "Avenir Next LT Pro Regular";
+            line-height: toRem(20);
+            font-size: toRem(16);
+            color: $light-grey;
+        }
+
+        &:focus {
+            border-color: $blue;
+        }
+
+        &[type=password] {
+            padding-top: 14px
+        }
+    }
+
+    .errors {
+        display: none;
+        width: 100%;
+    }
+
+    .error {
+        box-sizing: border-box;
+        color: $red;
+    }
+
+    &.invalid {
+        margin-bottom: toRem(0);
+
+        input {
+            border-color: $red;
+
+            &:focus {
+                border-color: $blue;
+            }
+        }
+
+        .errors {
+            display: block;
+        }
+    }
+
+    .input-group {
+        position: relative;
+
+        &.input-group-inner-addon-right {
+            input {
+                padding-right: toRem(45);
+            }
+        }
+
+        .inner-addon-right {
+            position: absolute;
+            top: toRem(0);
+            right: toRem(12);
+            cursor: pointer;
+        }
+    }
+}
+
+.btn-submit {
+    margin-top: toRem(15);
+}
