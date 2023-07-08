@@ -3,7 +3,7 @@
 
     <ng-template #acceptedEl>
         <app-svg-icon class="ico accepted" name="accepted"></app-svg-icon>
-        <h2 class="title">Accepted</h2>
+        <h2 class="title accepted">Accepted</h2>
         <p class="p2 message">The task is successfully completed</p>
         <div class="actions">
             <a class="btn-link" (click)="next()">Next</a>
@@ -13,7 +13,7 @@
 
     <ng-template #rejectedEl>
         <app-svg-icon class="ico rejected" name="rejected"></app-svg-icon>
-        <h2 class="title">Rejected</h2>
+        <h2 class="title rejected">Rejected</h2>
         <p class="p2 message">The task is not completed. Please, try again</p>
         <div class="actions">
             <a class="btn-link" (click)="retry()">Retry</a>

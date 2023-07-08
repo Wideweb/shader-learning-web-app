@@ -14,25 +14,9 @@
     margin-bottom: toRem(30);
 }
 
-.ico.rejected {
-    box-sizing: border-box;
-    padding: toRem(20) 0 toRem(22) 0;
-}
-
 .title {
-    margin-bottom: toRem(20);
-    
-    &.accepted {
-        color: $blue;
-    }
-
-    &.rejected {
-        color: $red;
-    }
-}
-
-.message {
-    margin-bottom: toRem(30);
+    color: $blue;
+    margin-bottom: toRem(36);
 }
 
 .actions {

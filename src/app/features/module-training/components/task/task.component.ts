@@ -35,6 +35,12 @@ export class TaskComponent implements OnChanges, OnDestroy {
   @Input()
   public canEdit: boolean = false;
 
+  @Input()
+  public isFirstTask: boolean = false;
+
+  @Input()
+  public isNextTaskAvailable: boolean = false;
+
   @Output()
   public onEdit = new EventEmitter<void>();
 
@@ -58,6 +64,12 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   @Output()
   public onSubmissionSelect = new EventEmitter<UserTaskSubmissionDto>();
+
+  @Output()
+  public onSwitchToNext = new EventEmitter<void>();
+
+  @Output()
+  public onSwitchToPrev = new EventEmitter<void>();
 
   public visibleHints: TaskHintDto[] = [];
 
@@ -237,6 +249,18 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   hideCompilationStatus() {
     this.showCompilationStatus = false;
+  }
+
+  switchToNextTask() {
+    if (this.isNextTaskAvailable) {
+      this.onSwitchToNext.emit();
+    }
+  }
+
+  switchToPrevTask() {
+    if (!this.isFirstTask) {
+      this.onSwitchToPrev.emit();
+    }
   }
 
   ngOnDestroy(): void {

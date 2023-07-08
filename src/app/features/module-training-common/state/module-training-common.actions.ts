@@ -14,6 +14,14 @@ export class ModuleProgressLoadNextTask {
     static readonly type = '[ModuleProgress] Load Next Task';
 }
 
+export class ModuleProgressSwitchToPrevTask {
+    static readonly type = '[ModuleProgress] Switch To Prev Task';
+}
+
+export class ModuleProgressSwitchToNextTask {
+    static readonly type = '[ModuleProgress] Switch To Next Task';
+}
+
 export class ModuleProgressToggleTaskLike {
     static readonly type = '[ModuleProgress] Toogle Task Like';
 }

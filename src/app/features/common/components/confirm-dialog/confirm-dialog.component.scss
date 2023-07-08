@@ -1,6 +1,7 @@
 @import 'common.scss';
 
 .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -19,4 +20,17 @@
     display: flex;
     justify-content: flex-end;
     gap: toRem(12);
+}
+
+.close-ctrl {
+    position: absolute;
+    color: $black;
+    cursor: pointer;
+    top: toRem(32);
+    right: toRem(40);
+
+    .ico-container {
+        width: toRem(40);
+        height: toRem(40);
+    }
 }

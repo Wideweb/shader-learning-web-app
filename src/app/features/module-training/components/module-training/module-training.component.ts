@@ -9,7 +9,7 @@ import { TaskProgressDto } from '../../models/task-progress.model';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { Location } from '@angular/common';
 import { ModuleProgressState, UserShaderProgram } from 'src/app/features/module-training-common/state/module-training-common.state';
-import { ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressUnselectCurrentTask } from 'src/app/features/module-training-common/state/module-training-common.actions';
+import { ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressSwitchToNextTask, ModuleProgressSwitchToPrevTask, ModuleProgressUnselectCurrentTask } from 'src/app/features/module-training-common/state/module-training-common.actions';
 
 @Component({
   selector: 'module-training',
@@ -50,6 +50,12 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
 
   @Select(ModuleProgressState.finished)
   public finished$!: Observable<boolean>;
+
+  @Select(ModuleProgressState.isFirstTask)
+  public isFirstTask$!: Observable<boolean>;
+
+  @Select(ModuleProgressState.isNextTaskAvailable)
+  public isNextTaskAvailable$!: Observable<boolean>;
 
   public showCongratualtions$!: Observable<boolean>;
 
@@ -112,6 +118,7 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
         if (!task || task.locked) {
           const finished = this.store.selectSnapshot(ModuleProgressState.finished);
           if (finished) {
+            this.router.navigate([`module-training/${this.module!.id}/end`]);
             return;
           }
 
@@ -133,20 +140,33 @@ export class ModuleTrainingComponent implements OnInit, OnDestroy {
         this.router.navigate([url]);
       });
 
-    combineLatest([this.module$, this.showCongratualtions$])
-      .pipe(
-        filter(([module, showCongratualtions]) => !!module && showCongratualtions),
-        takeUntil(this.destroy$),
-      )
-      .subscribe(([module]) => {
-        const url = `module-training/${module!.id}/task`;
-        this.location.replaceState(url);
-        this.router.navigate([url]);
-      });
+    // combineLatest([this.module$, this.showCongratualtions$])
+    //   .pipe(
+    //     filter(([module, showCongratualtions]) => !!module && showCongratualtions),
+    //     takeUntil(this.destroy$),
+    //   )
+    //   .subscribe(([module]) => {
+    //     const url = `module-training/${module!.id}/task`;
+    //     this.location.replaceState(url);
+    //     this.router.navigate([url]);
+    //   });
   }
 
   nextTask() {
-    this.store.dispatch(new ModuleProgressLoadNextTask());
+    const finished = this.store.selectSnapshot(ModuleProgressState.finished);
+    if (finished) {
+      this.router.navigate([`module-training/${this.module!.id}/end`]);
+    } else {
+      this.store.dispatch(new ModuleProgressLoadNextTask());
+    }
+  }
+
+  switchToNextTask() {
+    this.store.dispatch(new ModuleProgressSwitchToNextTask());
+  }
+
+  switchToPrevTask() {
+    this.store.dispatch(new ModuleProgressSwitchToPrevTask());
   }
 
   selectedTaskId() {

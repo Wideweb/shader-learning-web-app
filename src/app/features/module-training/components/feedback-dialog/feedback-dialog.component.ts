@@ -14,8 +14,6 @@ export class FeedbackComponent {
 
   public disabled$: Observable<boolean>;
 
-  public submitClass$: Observable<string>;
-
   constructor(private fb: FormBuilder, public dialogRef: MatDialogRef<FeedbackComponent>) {
     this.form = this.fb.group({
       unclearDescription: false,
@@ -28,10 +26,6 @@ export class FeedbackComponent {
       startWith(this.form.value),
       map(() => !this.isFormValid())
     );
-
-    this.submitClass$ = this.disabled$.pipe(
-      map(disabled => disabled ? 'disabled' : ''),
-    )
   }
 
   cancel() {

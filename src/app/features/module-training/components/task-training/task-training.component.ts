@@ -11,6 +11,7 @@ import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component'
 import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/common/components/confirm-dialog/confirm-dialog.component';
 import { ModuleProgressState, UserShaderProgram } from 'src/app/features/module-training-common/state/module-training-common.state';
 import { ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserProgramCode } from 'src/app/features/module-training-common/state/module-training-common.actions';
+import { LikeDialogComponent } from '../like-dialog/like-dialog.component';
 
 @Component({
   selector: 'task-training',
@@ -30,8 +31,20 @@ export class TaskTrainingComponent implements OnDestroy {
   @Input()
   public canEdit!: boolean;
 
+  @Input()
+  public isFirstTask!: boolean;
+
+  @Input()
+  public isNextTaskAvailable!: boolean;
+
   @Output()
   public onNext = new EventEmitter<void>();
+
+  @Output()
+  public onSwitchToNext = new EventEmitter<void>();
+
+  @Output()
+  public onSwitchToPrev = new EventEmitter<void>();
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -73,8 +86,11 @@ export class TaskTrainingComponent implements OnDestroy {
     this.router.navigate([`module/${task.moduleId}/task/${task.id}/edit`]);
   }
 
-  like() {
-    this.store.dispatch(new ModuleProgressToggleTaskLike());
+  async like() {
+    await firstValueFrom(this.store.dispatch(new ModuleProgressToggleTaskLike()));
+    if (this.store.selectSnapshot(ModuleProgressState.userTask)?.liked) {
+      this.dialog.open<LikeDialogComponent>(LikeDialogComponent, { disableClose: false })
+    }
   }
 
   dislike() {
@@ -149,6 +165,14 @@ export class TaskTrainingComponent implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(_ => this.store.dispatch(new ModuleProgressReplaceCode(submission.vertexShader, submission.fragmentShader)));
+  }
+
+  switchToNextTask() {
+    this.onSwitchToNext.emit();
+  }
+
+  switchToPrevTask() {
+    this.onSwitchToPrev.emit();
   }
 
   ngOnDestroy() {

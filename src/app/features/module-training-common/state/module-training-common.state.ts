@@ -10,7 +10,7 @@ import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
 import { UserTaskDto, UserTaskSubmissionDto } from "../models/user-task.model";
 import { ModuleProgressService } from "../services/module-progress.service";
 import { UserTaskService } from "../services/user-task.service";
-import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUnselectCurrentTask, ModuleProgressUpdateUserProgramCode } from "./module-training-common.actions";
+import { ModuleProgressLoad, ModuleProgressLoadNextTask, ModuleProgressLoadTask, ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressSwitchToNextTask, ModuleProgressSwitchToPrevTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUnselectCurrentTask, ModuleProgressUpdateUserProgramCode } from "./module-training-common.actions";
 
 export interface UserShaderProgram {
   vertex: string,
@@ -89,6 +89,35 @@ export class ModuleProgressState {
   @Selector()
   static finished(state: ModuleProgressStateModel): boolean {
     return state.finished;
+  }
+
+  @Selector()
+  static isNextTaskAvailable(state: ModuleProgressStateModel): boolean {
+    if (!state.userTask || !state.module) {
+      return false;
+    }
+
+    const currentTaskId = state.userTask.task.id;
+    const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
+
+    if (currentTaskIndex < 0 || currentTaskIndex >= state.module.tasks.length)
+    {
+      return false;
+    }
+
+    const currentTask = state.module.tasks[currentTaskIndex + 1];
+    return currentTask.accepted;
+  }
+
+  @Selector()
+  static isFirstTask(state: ModuleProgressStateModel): boolean {
+    if (!state.userTask || !state.module) {
+      return false;
+    }
+
+    const currentTaskId = state.userTask?.task.id;
+    const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
+    return currentTaskIndex === 0;
   }
 
   @Selector()
@@ -288,6 +317,116 @@ export class ModuleProgressState {
     return nextTask ? nextTask.id : null;
   }
 
+  @Action(ModuleProgressSwitchToNextTask)
+  async switchToNextTask(ctx: StateContext<ModuleProgressStateModel>) {
+    if (ctx.getState().userTaskLoading) {
+      return;
+    }
+
+    ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: false, userTaskLoading: true }));
+
+    const module = ctx.getState().module;
+    if (!module) {
+      throw "App Error: no module";
+    }
+
+    try 
+    {
+      const currentTaskId = ctx.getState().userTask?.task.id;
+      const currentTaskIndex = module.tasks.findIndex(task => task.id === currentTaskId);
+      if (currentTaskIndex < 0 || currentTaskIndex >= module.tasks.length || !module.tasks[currentTaskIndex]?.accepted)
+      {
+        ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
+        return ctx.getState().userTask;
+      }
+
+      const nextTask = module.tasks[currentTaskIndex + 1];
+
+      let userTask = ctx.getState().userTasks.find(userTask => userTask.task.id == nextTask.id);
+      if (!userTask) {
+        userTask = await this.userTaskService.get(nextTask.id);
+      }
+
+      ctx.setState(patch<ModuleProgressStateModel>({ 
+        userTasks: insertItem(userTask),
+        userTask,
+        userShaderProgram: {
+          vertex: userTask.vertexShader,
+          fragment: userTask.fragmentShader,
+          compile: true,
+        },
+        error: null,
+        userTaskLoaded: true,
+      }));
+
+      return userTask;
+    } 
+    catch (error)
+    {
+      ctx.setState(patch<ModuleProgressStateModel>({ error }));
+      throw error;
+    }
+    finally
+    {
+      ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoading: false }));
+    }
+  }
+
+  @Action(ModuleProgressSwitchToPrevTask)
+  async switchToPrevTask(ctx: StateContext<ModuleProgressStateModel>) {
+    if (ctx.getState().userTaskLoading) {
+      return;
+    }
+
+    ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: false, userTaskLoading: true }));
+
+    const module = ctx.getState().module;
+    if (!module) {
+      throw "App Error: no module";
+    }
+
+    try 
+    {
+      const currentTaskId = ctx.getState().userTask?.task.id;
+      const currentTaskIndex = module.tasks.findIndex(task => task.id === currentTaskId);
+      if (currentTaskIndex <= 0)
+      {
+        ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
+        return ctx.getState().userTask;
+      }
+
+      const prevTask = module.tasks[currentTaskIndex - 1];
+
+      let userTask = ctx.getState().userTasks.find(userTask => userTask.task.id == prevTask.id);
+      if (!userTask) {
+        userTask = await this.userTaskService.get(prevTask.id);
+      }
+
+      ctx.setState(patch<ModuleProgressStateModel>({ 
+        userTasks: insertItem(userTask),
+        userTask,
+        userShaderProgram: {
+          vertex: userTask.vertexShader,
+          fragment: userTask.fragmentShader,
+          compile: true,
+        },
+        error: null,
+        userTaskLoaded: true,
+      }));
+
+      return userTask;
+    } 
+    catch (error)
+    {
+      ctx.setState(patch<ModuleProgressStateModel>({ error }));
+      throw error;
+    }
+    finally
+    {
+      ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoading: false }));
+    }
+  }
+
   @Action(ModuleProgressSubmitTask)
   async submit(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressSubmitTask) {
     ctx.setState(patch<ModuleProgressStateModel>({ taskSubmitResult: null }));
@@ -355,7 +494,9 @@ export class ModuleProgressState {
               }))
             }),
           }));
-        }
+        } else {
+          ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
+      }
     }
 
       return taskSubmitResult;
@@ -374,7 +515,7 @@ export class ModuleProgressState {
       throw "no task";
     }
 
-    this.toggleLikeOrDislike(ctx, true, !userTask.liked);
+    return await this.toggleLikeOrDislike(ctx, true, !userTask.liked);
   }
 
   @Action(ModuleProgressToggleTaskDislike)

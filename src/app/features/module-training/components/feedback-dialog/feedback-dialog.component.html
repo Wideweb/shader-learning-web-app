@@ -1,5 +1,8 @@
 <div class="container">
+    <a (click)="cancel()" class="close-ctrl"><span class="ico-container"><i class="ico close-ico"></i></span></a>
+
     <h3 class="title">Dislike</h3>
+
     <p class="p2 message">
         Your answer will help us create a better product. Could you tell us why you gave a dislike to this task?
     </p>
@@ -22,6 +25,6 @@
 
     <div class="actions">
         <a class="btn-link white" (click)="cancel()">Cancel</a>
-        <a class="btn-link" (click)="submit()" [ngClass]="submitClass$ | async">Confirm</a>
+        <a class="btn-link" (click)="submit()" [attr.disabled]="disabled$ | async">Confirm</a>
     </div>
 </div>

@@ -15,11 +15,14 @@ import { UserTaskService } from "./services/user-task.service";
 import { FeedbackComponent } from "./components/feedback-dialog/feedback-dialog.component";
 import { TaskSubmissionsComponent } from "./components/task/submissions/submissions.component";
 import { ModuleTrainingCommonModule } from "../module-training-common/module-training-common.module";
+import { LikeDialogComponent } from "./components/like-dialog/like-dialog.component";
+import { ModuleFinishComponent } from "./components/module-finish/module-finish.component";
 
 @NgModule({
   declarations: [
     ModuleComponent,
     ModuleTrainingComponent,
+    ModuleFinishComponent,
     TaskComponent,
     TaskSubmissionsComponent,
     TaskSubmitDialogComponent,
@@ -27,6 +30,7 @@ import { ModuleTrainingCommonModule } from "../module-training-common/module-tra
     TaskTrainingComponent,
     TaskChannelComponent,
     FeedbackComponent,
+    LikeDialogComponent,
   ],
   imports: [
     AppCommonModule.forChild(),

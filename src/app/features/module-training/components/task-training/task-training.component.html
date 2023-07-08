@@ -6,6 +6,8 @@
     [liked]="userTask.liked"
     [disliked]="userTask.disliked"
     [canEdit]="canEdit"
+    [isFirstTask]="isFirstTask"
+    [isNextTaskAvailable]="isNextTaskAvailable"
     (onEdit)="edit()"
     (onLike)="like()"
     (onDislike)="dislike()"
@@ -13,6 +15,9 @@
     (onResetToLastSubmettedCode)="resetToLastSubmettedCode()"
     (onResetToDefaultCode)="resetToDefaultCode()"
     (onSubmissionSelect)="selectSubmission($event)"
-    (onSubmit)="submit($event)">
+    (onSubmit)="submit($event)"
+    (onSwitchToPrev)="switchToPrevTask()"
+    (onSwitchToNext)="switchToNextTask()"
+    >
   </task>
 </ng-container>

@@ -586,8 +586,8 @@ h3 {
 .checked-ico {
     position: absolute;
     display: inline-block;
-    width: toRem(10);
-    height: toRem(7);
+    width: toRem(12);
+    height: toRem(8);
     top: 50%;
     right: 50%;
     transform: translate(50%, -50%);
@@ -596,8 +596,8 @@ h3 {
     mask-image: url(/assets/checked.svg);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-    -webkit-mask-size: toRem(10);
-    mask-size: toRem(10);
+    -webkit-mask-size: toRem(12);
+    mask-size: toRem(12);
 }
 
 .linkedin-ico {
@@ -949,6 +949,17 @@ a.link {
     background-color: $black;
 }
 
+.btn-link[disabled=true] {
+    background-color: $white;
+    color: $light-grey;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+    cursor: not-allowed;
+
+    .ico {
+        background-color: $light-grey;
+    }
+}
+
 .btn-link-ico-addon {
     position: relative;
     padding-right: toRem(45);
@@ -985,6 +996,10 @@ a.link {
     background-color: $black;
 }
 
+.btn-link.btn-link-ico-addon[disabled=true] .ico {
+    background-color: $light-grey;
+}
+
 .btn-link.darker {
     background-color: $dark-blue;
 }
@@ -999,6 +1014,16 @@ a.link {
 
 .btn-link.darker:active {
     background-color: $black;
+}
+
+.btn-link.darker[disabled=true] {
+    background-color: $white;
+    color: $light-grey;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+
+    .ico {
+        background-color: $light-grey;
+    }
 }
 
 .btn-link.white {
@@ -1017,6 +1042,16 @@ a.link {
     background-color: $black;
     color: $white;
     box-shadow: unset;
+}
+
+.btn-link.white[disabled=true] {
+    background-color: $white;
+    color: $light-grey;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+
+    .ico {
+        background-color: $light-grey;
+    }
 }
 
 .back-link-wrapper {
