@@ -1,57 +1,101 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dialog.component';
-import { filter, firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { UserTaskDto, UserTaskSubmissionDto } from '../../models/user-task.model';
-import { TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../../models/task.model';
+import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../../models/task.model';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
 import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/common/components/confirm-dialog/confirm-dialog.component';
 import { ModuleProgressState, UserShaderProgram } from 'src/app/features/module-training-common/state/module-training-common.state';
-import { ModuleProgressReplaceCode, ModuleProgressResetToDefaultCode, ModuleProgressResetToLastSubmettedCode, ModuleProgressSubmitTask, ModuleProgressToggleTaskDislike, ModuleProgressToggleTaskLike, ModuleProgressUpdateUserProgramCode } from 'src/app/features/module-training-common/state/module-training-common.actions';
+import { 
+  ModuleProgressLoadNextTask,
+  ModuleProgressReplaceCode,
+  ModuleProgressResetToDefaultCode,
+  ModuleProgressResetToLastSubmettedCode,
+  ModuleProgressSubmitTask,
+  ModuleProgressToggleTaskDislike,
+  ModuleProgressToggleTaskLike,
+  ModuleProgressUpdateUserProgramCode,
+  ModuleProgressSwitchToNextTask,
+  ModuleProgressSwitchToPrevTask,
+} from 'src/app/features/module-training-common/state/module-training-common.actions';
 import { LikeDialogComponent } from '../like-dialog/like-dialog.component';
+import { AuthState } from 'src/app/features/auth/state/auth.state';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 @Component({
   selector: 'task-training',
   templateUrl: './task-training.component.html',
-  styleUrls: ['./task-training.component.css']
+  styleUrls: ['./task-training.component.scss']
 })
-export class TaskTrainingComponent implements OnDestroy {
-  @Input()
-  public userTask!: UserTaskDto | null;
+export class TaskTrainingComponent implements OnInit, OnDestroy {
+  @Select(ModuleProgressState.moduleName)
+  public moduleName$!: Observable<string>;
 
-  @Input()
-  public submissions!: UserTaskSubmissionDto[];
+  @Select(ModuleProgressState.userTask)
+  public userTask$!: Observable<UserTaskDto>;
 
-  @Input()
-  public userShaderProgram!: UserShaderProgram;
+  @Select(ModuleProgressState.userTaskLiked)
+  public liked$!: Observable<boolean>;
 
-  @Input()
-  public canEdit!: boolean;
+  @Select(ModuleProgressState.userTaskDisliked)
+  public disliked$!: Observable<boolean>;
 
-  @Input()
-  public isFirstTask!: boolean;
+  @Select(ModuleProgressState.task)
+  public task$!: Observable<TaskDto>;
 
-  @Input()
-  public isNextTaskAvailable!: boolean;
+  @Select(ModuleProgressState.userTaskSubmissions)
+  public submissions$!: Observable<UserTaskSubmissionDto[]>;
 
-  @Output()
-  public onNext = new EventEmitter<void>();
+  @Select(ModuleProgressState.userShaderProgram)
+  public userShaderProgram$!: Observable<UserShaderProgram>;
 
-  @Output()
-  public onSwitchToNext = new EventEmitter<void>();
+  @Select(ModuleProgressState.isFirstTask)
+  public isFirstTask$!: Observable<boolean>;
 
-  @Output()
-  public onSwitchToPrev = new EventEmitter<void>();
+  @Select(ModuleProgressState.isNextTaskAvailable)
+  public isNextTaskAvailable$!: Observable<boolean>;
+
+  @Select(ModuleProgressState.userTaskLoaded)
+  public loaded$!: Observable<boolean>;
+
+  public canEdit$: Observable<boolean>;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private store: Store,
     private dialog: MatDialog,
-    private router: Router) {  }
+    private router: Router,
+    private pageMeta: PageMetaService,
+    ) {
+
+    const hasEditTaskPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit']));
+    const hasEditAllTasksPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit_all']));
+
+    const isOwner$ = combineLatest([this.store.select(AuthState.user), this.userTask$])
+      .pipe(
+        map(([user, userTask]) => user?.id == userTask?.task?.createdBy?.id)
+      );
+
+    this.canEdit$ = combineLatest([isOwner$, hasEditTaskPermission$, hasEditAllTasksPermission$])
+      .pipe(
+        map(([isOwner, canEdit, canEditAllTasks]) => (isOwner && canEdit) || canEditAllTasks),
+        startWith(false)
+      );
+
+      combineLatest([this.moduleName$, this.userTask$])
+      .pipe(
+        filter(([moduleName, userTask]) => !!moduleName && !!userTask),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(([moduleName, userTask]) => this.pageMeta.setTitle(`${moduleName} | ${userTask.task.name}`));
+  }
+
+  ngOnInit(): void { }
 
   async submit(taskSubmit: TaskSubmitDto): Promise<void> {
     const submitDialog = this.dialog.open(TaskSubmitDialogComponent, { disableClose: true });
@@ -72,13 +116,11 @@ export class TaskTrainingComponent implements OnDestroy {
       })
       .afterClosed()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(result => result ? this.onNext.emit() : this.retry());
+      .subscribe(result => result ? this.next() : this.retry());
   }
 
-  retry(): void { }
-
   edit() {
-    const task = this.userTask!.task;
+    const task = this.store.selectSnapshot(ModuleProgressState.userTask)?.task;
     if (!task) {
       return;
     }
@@ -94,7 +136,8 @@ export class TaskTrainingComponent implements OnDestroy {
   }
 
   dislike() {
-    if (this.userTask?.disliked)
+    const userTask = this.store.selectSnapshot(ModuleProgressState.userTask);
+    if (userTask?.disliked)
     {
       this.store.dispatch(new ModuleProgressToggleTaskDislike());
       return;
@@ -167,12 +210,24 @@ export class TaskTrainingComponent implements OnDestroy {
       .subscribe(_ => this.store.dispatch(new ModuleProgressReplaceCode(submission.vertexShader, submission.fragmentShader)));
   }
 
-  switchToNextTask() {
-    this.onSwitchToNext.emit();
+  next(): void {
+    const module = this.store.selectSnapshot(ModuleProgressState.module);
+    const finished = this.store.selectSnapshot(ModuleProgressState.finished);
+    if (finished) {
+      this.router.navigate([`module-training/${module!.id}/end`]);
+    } else {
+      this.store.dispatch(new ModuleProgressLoadNextTask());
+    }
   }
 
-  switchToPrevTask() {
-    this.onSwitchToPrev.emit();
+  retry(): void { }
+
+  switchToNext(): void {
+    this.store.dispatch(new ModuleProgressSwitchToNextTask());
+  }
+
+  switchToPrev(): void {
+    this.store.dispatch(new ModuleProgressSwitchToPrevTask());
   }
 
   ngOnDestroy() {

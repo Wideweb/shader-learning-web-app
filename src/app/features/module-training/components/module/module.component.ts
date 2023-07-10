@@ -1,47 +1,89 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, distinctUntilChanged, filter, map, Observable, Subject, takeUntil } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { distinctUntilChanged, filter, map, Observable, Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { ModuleProgressState } from 'src/app/features/module-training-common/state/module-training-common.state';
 import { ModuleProgressDto } from '../../models/module-progress.model';
-import { ModuleProgressLoad } from 'src/app/features/module-training-common/state/module-training-common.actions';
+import { ModuleProgressUnselectCurrentTask } from 'src/app/features/module-training-common/state/module-training-common.actions';
+import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
+import { UserTaskDto } from '../../models/user-task.model';
+import { Location } from '@angular/common';
+import { TaskProgressDto } from '../../models/task-progress.model';
 
 @Component({
   selector: 'module',
   templateUrl: './module.component.html',
-  styleUrls: ['./module.component.css']
+  styleUrls: ['./module.component.scss']
 })
 export class ModuleComponent implements OnInit, OnDestroy {
   
   @Select(ModuleProgressState.module)
   public module$!: Observable<ModuleProgressDto>;
 
+  @Select(ModuleProgressState.moduleName)
+  public moduleName$!: Observable<string>;
+
+  @Select(ModuleProgressState.userTask)
+  public userTask$!: Observable<UserTaskDto>;
+
+  @Select(ModuleProgressState.tasks)
+  public tasks$!: Observable<TaskProgressDto[]>;
+
+  @Select(ModuleProgressState.task)
+  public task$!: Observable<TaskProgressDto>;
+
   @Select(ModuleProgressState.loaded)
   public loaded$!: Observable<boolean>;
 
+  public navigationHidden = true;
+
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private route: ActivatedRoute) { }
+  constructor(
+    private store: Store,
+    private route: ActivatedRoute,
+    private pageMeta: PageMetaService,
+    private router: Router,
+    private location: Location,
+  ) {
+    this.moduleName$
+      .pipe(
+        filter(moduleName => !!moduleName),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(moduleName => this.pageMeta.setTitle(moduleName));
+  }
 
   ngOnInit(): void {
-    const moduleId$ = this.route.params
-      .pipe(
-        map(params => params['moduleId']),
-        distinctUntilChanged(),
-        filter(moduleId => moduleId),
-      );
+      this.userTask$
+        .pipe(
+          distinctUntilChanged((o, n) => o?.task?.id === n?.task?.id),
+          filter(task => !!task),
+          takeUntil(this.destroy$),
+        )
+        .subscribe(userTask => {
+          const module = this.store.selectSnapshot(ModuleProgressState.module);
+          const url = `module-training/${module!.id}/task/${userTask.task.id}`;
+          this.location.replaceState(url);
+          this.router.navigate([url]);
+        });
+  }
 
-    const isAuthenticated$ = this.store.select(AuthState.isAuthenticated)
-      .pipe(distinctUntilChanged());
+  selectedTaskId() {
+    return this.route.snapshot.params['taskId'];
+  }
 
-    combineLatest([moduleId$, isAuthenticated$])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([moduleId, isAuth]) => this.store.dispatch(new ModuleProgressLoad(moduleId, isAuth)));
+  showNavigation() {
+    this.navigationHidden = false;
+  }
+
+  closeNavigation() {
+    this.navigationHidden = true;
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+    this.store.dispatch(new ModuleProgressUnselectCurrentTask());
   }
 }

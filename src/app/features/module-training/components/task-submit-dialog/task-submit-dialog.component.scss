@@ -6,21 +6,19 @@
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    padding: toRem(40) 0;
+    padding: toRem(50) 0 toRem(40) 0;
     width: toRem(380);
 }
 
 .ico {
-    width: toRem(168);
-    min-width: toRem(168);
-    height: toRem(168);
-    min-height: toRem(168);
+    width: toRem(100);
+    height: toRem(100);
+    position: relative;
     margin-bottom: toRem(30);
 }
 
-.title {
-    color: $blue;
-    margin-bottom: toRem(36);
+.message {
+    margin-bottom: toRem(24);
 }
 
 .actions {

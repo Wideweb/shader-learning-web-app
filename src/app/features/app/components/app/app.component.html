@@ -1,6 +1,5 @@
 <router-outlet></router-outlet>
 
-<div class="spinner" *ngIf="spinner.shown$ | async">
-  <div class="spinner-overlay"></div>
-  <mat-spinner></mat-spinner>
-</div>
+<ng-container *ngIf="spinner.shown$ | async">
+  <app-spinner></app-spinner>
+</ng-container>

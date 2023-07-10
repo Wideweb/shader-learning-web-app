@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { CodeEditorLinterRule, FileEditorInstance, FileError } from '../declarations';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { EditorView } from '@codemirror/view';
-import { lineError } from '../configs/line-error';
+import { Decoration, EditorView } from '@codemirror/view';
+import { LineErrorWidget } from '../configs/line-error';
+import { Range } from '@codemirror/state';
+import { addDecoration, filterDecoration } from '../configs/line-decorations';
 
 @Component({
   selector: 'file-editor',
@@ -58,11 +60,27 @@ export class FileEditorComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   displayLineErrors(errors: FileError[]) {
-    if (!this.file) {
+    if (!this.file || !this.editorView) {
       return;
     }
+
+    const widgets: Range<Decoration>[] = [];
+    for (let i = 0; i < errors.length; i++) {
+      const error = errors[i];
+      const widget = Decoration.widget({
+          widget: new LineErrorWidget(error.message, error.line),
+          side: -1,
+          block: true,
+      });
+
+      widgets.push(widget.range(this.editorView.state.doc.line(error.line + 2).from));
+    }
+
     this.editorView?.dispatch({
-      effects: this.file.configs.errors.reconfigure(lineError(errors.map(e => ({...e, line: e.line + 2}))))
+      annotations: [
+        filterDecoration.of(() => false),
+        ...(widgets.length > 0 ? [addDecoration.of(widgets)] : []),
+      ]
     });
   }
 

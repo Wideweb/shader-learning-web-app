@@ -126,6 +126,21 @@ export class ModuleProgressState {
   }
 
   @Selector()
+  static userTaskLiked(state: ModuleProgressStateModel): boolean {
+    return state.userTask?.liked === true;
+  }
+
+  @Selector()
+  static userTaskDisliked(state: ModuleProgressStateModel): boolean {
+    return state.userTask?.disliked === true;
+  }
+
+  @Selector()
+  static task(state: ModuleProgressStateModel): TaskDto | null {
+    return state.userTask?.task || null;
+  }
+
+  @Selector()
   static userShaderProgram(state: ModuleProgressStateModel): UserShaderProgram {
     return state.userShaderProgram;
   }
@@ -159,6 +174,10 @@ export class ModuleProgressState {
 
   @Action(ModuleProgressLoad)
   async load(ctx: StateContext<ModuleProgressStateModel>, action: ModuleProgressLoad) {
+    if (ctx.getState().module?.id == action.id) {
+      return;
+    }
+
     ctx.setState(patch<ModuleProgressStateModel>({ loaded: false, loading: true }));
 
     try 

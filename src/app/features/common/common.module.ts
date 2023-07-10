@@ -36,6 +36,7 @@ import { AppSvgIconComponent } from "./components/svg-icon/svg-icon.component";
 import { CodeEditor2Component } from "./components/code-editor-2/code-editor-2.component";
 import { FileEditorComponent } from "./components/code-editor-2/file-editor/file-editor.component";
 import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
+import { AppSpinnerComponent } from "./components/spinner/spinner.component";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
     FileEditorComponent,
     CodeEditor2Component,
     AppCheckboxComponent,
+    AppSpinnerComponent,
   ],
   imports: [
     CommonModule,
@@ -109,6 +111,7 @@ import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
     FileEditorComponent,
     CodeEditor2Component,
     AppCheckboxComponent,
+    AppSpinnerComponent,
   ],
 })
 export class AppCommonModule {

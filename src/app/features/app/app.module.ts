@@ -11,7 +11,6 @@ import { AuthInterceptor } from '../auth/interceptors/auth.interceptor';
 import { ServerErrorInterceptor } from '../common/interceptors/server-error.interceptor';
 import { SpinnerInterceptor } from '../common/interceptors/spinner.interceptor';
 import { AppComponent } from './components/app/app.component';
-import { HomeComponent } from './components/home/home.component';
 import { AppCommonModule } from '../common/common.module';
 import { DonateComponent } from './components/donate/donate.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
@@ -29,7 +28,6 @@ export function initializeAppFactory(appInitService: AppInitService) {
   declarations: [
     AppComponent,
     AppLayoutComponent,
-    HomeComponent,
     DonateComponent,
     AboutComponent,
   ],

@@ -3,6 +3,7 @@ $font-bold: "Avenir Next LT Pro Bold";
 $font-code: "Cutive Mono Regular";
 
 $white: #FAFAFA;
+$white-2: #F3F5FB;
 $black: #1F1F1F;
 $grey: #575757;
 $light-grey: #BCBCBC;
@@ -14,6 +15,7 @@ $blue-secondary: #3E54C2;
 $light-blue: #E4E8FA;
 $dark-blue: #2D3C89;
 $red: #F44F4F;
+$orange: #FFAA7A;
 
 @function toRem($value) {
     $remValue: ($value / 16) + rem; 

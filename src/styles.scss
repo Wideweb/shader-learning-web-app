@@ -549,6 +549,23 @@ h3 {
     mask-size: toRem(24);
 }
 
+.list-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/list.svg);
+    mask-image: url(/assets/list.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
 .menu-ico {
     position: absolute;
     display: inline-block;

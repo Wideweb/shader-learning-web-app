@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'task-submit-dialog',
   templateUrl: './task-submit-dialog.component.html',
-  styleUrls: ['./task-submit-dialog.component.css']
+  styleUrls: ['./task-submit-dialog.component.scss']
 })
 export class TaskSubmitDialogComponent {
   constructor(

@@ -1,13 +1,13 @@
-<ng-container *ngIf="userTask">
+<ng-container *ngIf="loaded$ | async">
   <task
-    [model]="userTask.task"
-    [shaderProgram]="userShaderProgram"
-    [submissions]="submissions"
-    [liked]="userTask.liked"
-    [disliked]="userTask.disliked"
-    [canEdit]="canEdit"
-    [isFirstTask]="isFirstTask"
-    [isNextTaskAvailable]="isNextTaskAvailable"
+    [model]="(task$ | async)!"
+    [shaderProgram]="(userShaderProgram$ | async)!"
+    [submissions]="(submissions$ | async)!"
+    [liked]="(liked$ | async) === true"
+    [disliked]="(disliked$ | async) === true"
+    [canEdit]="(canEdit$ | async) === true"
+    [isFirstTask]="(isFirstTask$ | async) === true"
+    [isNextTaskAvailable]="(isNextTaskAvailable$ | async) === true"
     (onEdit)="edit()"
     (onLike)="like()"
     (onDislike)="dislike()"
@@ -16,8 +16,8 @@
     (onResetToDefaultCode)="resetToDefaultCode()"
     (onSubmissionSelect)="selectSubmission($event)"
     (onSubmit)="submit($event)"
-    (onSwitchToPrev)="switchToPrevTask()"
-    (onSwitchToNext)="switchToNextTask()"
+    (onSwitchToPrev)="switchToPrev()"
+    (onSwitchToNext)="switchToNext()"
     >
   </task>
 </ng-container>

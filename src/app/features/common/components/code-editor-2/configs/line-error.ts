@@ -1,21 +1,23 @@
 import { EditorState, Range, RangeSet, StateField } from "@codemirror/state";
 import {Decoration, DecorationSet, EditorView, WidgetType} from "@codemirror/view"
 import { FileError } from "../declarations";
+import { toRem } from "../../../services/utils";
 
-class LineErrorWidget extends WidgetType {
-    constructor(private message: string) { super() }
+export class LineErrorWidget extends WidgetType {
+    constructor(private message: string, private line: number) { super() }
   
-    override eq(other: LineErrorWidget) { return other.message === this.message; }
+    override eq(other: LineErrorWidget) { return other.message === this.message && other.line === this.line; }
   
     toDOM() {
-      let wrap = document.createElement("div");
-      wrap.textContent = this.message;
-      wrap.style.backgroundColor = '#F44F4F';
-      wrap.style.color = '#FAFAFA';
-      return wrap;
+        let wrap = document.createElement("div");
+        wrap.textContent = this.message;
+        wrap.style.backgroundColor = '#F44F4F';
+        wrap.style.color = '#FAFAFA';
+        wrap.style.padding = `${toRem(0)} ${toRem(8)}`;
+        return wrap;
     }
   
-    override ignoreEvent() { return false }
+    override ignoreEvent() { return true }
   }
 
 const decorate = (state: EditorState, errors: FileError[]) => {
@@ -23,7 +25,7 @@ const decorate = (state: EditorState, errors: FileError[]) => {
     for (let i = 0; i < errors.length; i++) {
         const error = errors[i];
         const widget = Decoration.widget({
-            widget: new LineErrorWidget(error.message),
+            widget: new LineErrorWidget(error.message, error.line),
             // inclusiveStart: true,
             // inclusiveEnd: true,
             // from: state.doc.line(error.line).from,
@@ -43,12 +45,13 @@ export const lineError = (errors: FileError[]) => StateField.define<DecorationSe
         return decorate(state, errors)
     },
 
-    update(images, transaction) {
-      if (transaction.docChanged) {
-          return decorate(transaction.state, errors);
-      }
+    update(decatations, transaction) {
+        if (transaction.docChanged) {
+            return decorate(transaction.state, errors);
+        }
 
-        return images.map(transaction.changes);
+        return decatations.map(transaction.changes);
+       
     },
 
     provide(field) {

@@ -37,7 +37,7 @@
       </ng-container> -->
     </div>
 
-    <div class="acitions">
+    <div class="actions">
       <a class="btn-link btn-link-ico-addon left"
         [attr.disabled]="isFirstTask"
         (click)="switchToPrevTask()"><span class="ico-container"><i class="ico chevron-left-ico"></i></span>Previous</a>
@@ -141,5 +141,15 @@
       </div>
     </div>
 
+  </div>
+
+  <div class="actions footer-actions">
+    <a class="btn-link btn-link-ico-addon left"
+      [attr.disabled]="isFirstTask"
+      (click)="switchToPrevTask()"><span class="ico-container"><i class="ico chevron-left-ico"></i></span>Previous</a>
+
+    <a class="btn-link btn-link-ico-addon"
+      [attr.disabled]="!isNextTaskAvailable"
+      (click)="switchToNextTask()">Next<span class="ico-container"><i class="ico chevron-right-ico"></i></span></a>
   </div>
 </div>

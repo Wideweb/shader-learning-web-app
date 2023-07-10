@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { DonateComponent } from './components/donate/donate.component';
-import { HomeComponent } from './components/home/home.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
 import { routes as userProfileRoutes } from '../user-profile/routes';
 import { routes as authRoutes } from '../auth/routes';
@@ -49,11 +48,6 @@ export const routes: Routes = [
       {
         path: 'module-view',
         loadChildren: () => import('../module-training-view/module-view.module').then(m => m.ModuleViewModule)
-      },
-
-      { 
-        path: 'home', 
-        component: HomeComponent 
       },
 
       { 

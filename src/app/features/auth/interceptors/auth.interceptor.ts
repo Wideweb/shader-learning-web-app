@@ -65,7 +65,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     catchError((err) => this.store.dispatch(new AuthClear())
                         .pipe(switchMap(() => {
                             console.log('Unauthorized')
-                            this.router.navigate(['/home']);
+                            this.router.navigate(['/explore']);
                             return throwError(() => err);
                         }))),
                     switchMap(() => {

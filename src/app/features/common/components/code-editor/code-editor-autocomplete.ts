@@ -124,8 +124,6 @@ export class CodeEditorAutocomplete {
         const cur = editor.getCursor();
         let token = editor.getTokenAt(cur);
 
-        console.log(token, editor.getTokenAt(CodeMirror.Pos(cur.line, token.start - 1)));
-
         const prevToken = editor.getTokenAt(CodeMirror.Pos(cur.line, token.start - 1));
 
         if (token.string === '.' && prevToken.type === null) {

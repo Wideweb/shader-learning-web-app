@@ -12,7 +12,6 @@ export interface CodeEditorFile {
 
 export interface FileEditorConfigs {
     linter: Compartment,
-    errors: Compartment 
 }
 
 export interface FileError {
@@ -66,6 +65,14 @@ export class FileEditorInstance {
 
     public setLinterDiagnostics(diagnostics: Diagnostic[]): void {
         this.linterDiagnostics = diagnostics;
+    }
+
+    public removeErrors(fromLine: number, toLine: number): void {
+        this.setErrors(this.errors.filter(e => e.line < fromLine || e.line > toLine));
+    }
+
+    public moveErrors(fromLine: number, delta: number): void {
+        this.setErrors(this.errors.map(e => ({...e, line: e.line + (e.line < fromLine ? 0 : delta)})));
     }
 
     public destroy() {

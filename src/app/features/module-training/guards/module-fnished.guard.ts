@@ -9,12 +9,17 @@ export class ModuleFinishedGuard implements CanActivate {
     constructor(private store: Store, private router: Router){};
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        const module = this.store.selectSnapshot(ModuleProgressState.module);
+        if (!module) {
+            return false;
+        }
+
         const isFinished = this.store.selectSnapshot(ModuleProgressState.finished);
         if (isFinished) {
             return true;
         }
 
-        this.router.navigate(['/']);
+        this.router.navigate([`module-training/${module.id}/task/`]);
         return false;
     }
 }
