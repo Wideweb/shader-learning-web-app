@@ -19,7 +19,7 @@
 }
 
 @for $i from 0 through 7 {
-    $angle: (6.28 / 8) * ($i - 1);
+    $angle: math.div(6.28, 8) * ($i - 1);
     $x: math.cos($angle) * 36 + 36;
     $y: math.sin($angle) * 36 + 36;
 
@@ -44,7 +44,7 @@
             overflow: hidden;
 
             animation: circle-animation 1500ms ease-in-out infinite;
-            animation-delay: (1500 / 8) * ($i + 1) + ms;
+            animation-delay: math.div(1500, 8) * ($i + 1) + ms;
         }
     }
 }

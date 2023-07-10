@@ -5,10 +5,10 @@
         </div>
         <h2 class="title">Sign in</h2>
         <div class="form-wrapper">
-            <form class="form" [formGroup]="form">
+            <form class="form" [formGroup]="form" autocomplete="on">
                 <div class="form-field" [ngClass]="{'invalid': form.get('email')?.invalid && form.get('email')?.touched}">
                     <label class="p2">Email</label>
-                    <input type="text" placeholder="Enter your email" formControlName="email">
+                    <input name="email" type="text" placeholder="Enter your email" formControlName="email" autocomplete="email">
 
                     <div class="errors">
                         <div class="error p3" *ngIf="form.get('email')?.hasError('required')">email is required</div>
@@ -21,7 +21,7 @@
                     <label class="p2">Password</label>
 
                     <div class="input-group input-group-inner-addon-right">
-                        <input [type]="passwordHidden ? 'password' : 'text'" placeholder="Enter your password" formControlName="password">
+                        <input name="password" [type]="passwordHidden ? 'password' : 'text'" placeholder="Enter your password" formControlName="password" autocomplete="password">
                         <a class="btn-ico inner-addon-right" (click)="togglePasswordVisibility()">
                             <i class="ico eye-ico" *ngIf="passwordHidden" ></i>
                             <i class="ico eye-off-ico" *ngIf="!passwordHidden"></i>

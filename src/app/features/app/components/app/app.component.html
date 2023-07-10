@@ -1,5 +1,6 @@
 <router-outlet></router-outlet>
 
 <ng-container *ngIf="spinner.shown$ | async">
+  <div class="spinner-overlay"></div>
   <app-spinner></app-spinner>
 </ng-container>

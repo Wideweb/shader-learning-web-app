@@ -21,7 +21,9 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
+              "src/browserconfig.xml",
+              "src/manifest.json",
+              "src/favicons",
               "src/assets",
               "src/sitemap.xml",
               "src/robots.txt"
@@ -97,7 +99,9 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
+              "src/browserconfig.xml",
+              "src/manifest.json",
+              "src/favicons",
               "src/assets",
               "src/sitemap.xml",
               "src/robots.txt"
