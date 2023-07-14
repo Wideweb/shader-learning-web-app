@@ -384,11 +384,19 @@ h3 {
 }
 
 .p2-bold {
-    font-family: $font-regular;
+    font-family: $font-bold;
     line-height: toRem(20);
     font-size: toRem(16);
     font-weight: 700;
     color: $black;
+}
+
+.p2-task {
+    font-family: $font-regular;
+    font-size: toRem(16);
+    font-style: normal;
+    font-weight: 400;
+    line-height: toRem(24);
 }
 
 .p3 {
@@ -719,6 +727,23 @@ h3 {
     mask-size: toRem(24);
 }
 
+.thumbs-down-filled-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-down-filled.svg);
+    mask-image: url(/assets/thumbs-down-filled.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
 .thumbs-up-ico {
     position: absolute;
     display: inline-block;
@@ -730,6 +755,23 @@ h3 {
     background-color: $blue;
     -webkit-mask-image: url(/assets/thumbs-up.svg);
     mask-image: url(/assets/thumbs-up.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-up-filled-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-up-filled.svg);
+    mask-image: url(/assets/thumbs-up-filled.svg);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-size: toRem(24);
@@ -834,6 +876,7 @@ h3 {
     
     &[disabled=true] .ico {
         background-color: $light-grey;
+        cursor: not-allowed;
     }
 }
 
@@ -1180,6 +1223,13 @@ a.link {
     & > span {
         margin-bottom: toRem(-2);
     }
+}
+
+.cut-text { 
+    width: 100%;
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .ph-animation {

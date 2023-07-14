@@ -7,13 +7,15 @@ import * as marked from 'marked';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { SpinnerService } from 'src/app/features/common/services/spinner.service';
 import { Store } from '@ngxs/store';
-import { TaskDto } from '../../../models/task.model';
+import { TaskDto, TaskLinterRuleDto } from '../../../models/task.model';
 import { TaskCreate, TaskUpdate } from '../../../state/task.actions';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { CodeEditorFile, CodeEditorPrompt, CodeEditorPrompts } from 'src/app/features/common/components/code-editor/declarations';
 import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
 import { GlProgramChannel, GlScene } from 'src/app/features/common/gl-scene/models';
 import { SceneSettingsFormComponent } from '../scene-settings-form/scene-settings-form.component';
+import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor-2/declarations';
+import { createFileEditorInstance } from 'src/app/features/common/components/code-editor-2/file-editor/file-editor-factory';
+import { RuleFormComponent } from '../rule-form/rule-form.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -25,7 +27,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'task-create-form',
   templateUrl: './task-create-form.component.html',
-  styleUrls: ['./task-create-form.component.css']
+  styleUrls: ['./task-create-form.component.scss']
 })
 export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -38,20 +40,12 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public glSceneSettings: GlScene = new GlScene();
 
-  public taskProgramPrompts: CodeEditorPrompts = {};
 
-  public taskProgram: CodeEditorFile[] = [
-    { 
-      name: 'vertex.glsl',
-      data: DEFAULT_VERTEX_SHADER,
-      mode: 'x-shader/x-vertex'
-    },
-    {
-      name: 'fragment.glsl',
-      data: DEFAULT_FRAGMENT_SHADER,
-      mode: 'x-shader/x-fragment'
-    }
-  ];
+  private taskVertexFile: FileEditorInstance | null = null;
+
+  private taskFragmentFile: FileEditorInstance | null = null;
+
+  public taskProgramFiles: FileEditorInstance[] = [];
 
   public taskVertexShaderApplied: string = DEFAULT_VERTEX_SHADER;
 
@@ -60,26 +54,18 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   public taskCompileTrigger = 0;
 
 
+  private defaultVertexFile: FileEditorInstance | null = null;
+
+  private defaultFragmentFile: FileEditorInstance | null = null;
+
+  public defaultProgramFiles: FileEditorInstance[] = [];
+
   public defaultVertexShaderApplied: string = DEFAULT_VERTEX_SHADER;
 
   public defaultFragmentShaderApplied: string = DEFAULT_FRAGMENT_SHADER;
 
   public defaultCompileTrigger = 0;
-
-  public defaultProgramPrompts: CodeEditorPrompts = {};
-
-  public defaultProgram: CodeEditorFile[] = [
-    { 
-      name: 'vertex.glsl',
-      data: DEFAULT_VERTEX_SHADER,
-      mode: 'x-shader/x-vertex'
-    },
-    {
-      name: 'fragment.glsl',
-      data: DEFAULT_FRAGMENT_SHADER,
-      mode: 'x-shader/x-fragment'
-    }
-  ];
+  
 
   public form: FormGroup;
 
@@ -100,6 +86,7 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       animationSteps: new FormControl('', []),
       animationStepTime: new FormControl('', []),
       channels: this.fb.array([]),
+      rules: this.fb.array([]),
       sceneSettings: SceneSettingsFormComponent.createForm(fb, this.destroy$),
       vertexCodeEditable: true,
       fragmentCodeEditable: true,
@@ -135,6 +122,19 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     this.form.get('channels')?.valueChanges.pipe(
       takeUntil(this.destroy$),
     ).subscribe((channels) => (this.glProgramChannels = [...channels]));
+
+    this.form.get('rules')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+    ).subscribe((newRules: TaskLinterRuleDto[]) => {
+      const rules: CodeEditorLinterRule[] = newRules.map((rule) => ({
+        keyword: rule.keyword,
+        message: rule.message,
+        severity: rule.severity == 0 ? 'info' : (rule.severity == 1 ? 'warning' : 'error')
+      }));
+
+      this.taskVertexFile?.setLinterRules(rules);
+      this.taskFragmentFile?.setLinterRules(rules);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -142,27 +142,39 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       if (this.task) {
         this.channels.clear();
         this.task.channels.forEach(c => this.addChannel(c.file as File));
+        
+        this.rulesForms.clear();
+        this.task.rules.forEach(rule => this.addRule(rule));
 
         this.form.patchValue({...this.task});
 
+        const rules: CodeEditorLinterRule[] = this.task.rules.map((rule) => ({
+          keyword: rule.keyword,
+          message: rule.message,
+          severity: rule.severity == 0 ? 'info' : (rule.severity == 1 ? 'warning' : 'error')
+        }));
+
         const taskVertexShader = this.task.vertexShader || DEFAULT_VERTEX_SHADER;
-        this.taskProgram.find(it => it.name == 'vertex.glsl')!.data = taskVertexShader;
+        this.taskVertexFile = createFileEditorInstance('vertex.glsl', 'x-shader/x-vertex', taskVertexShader, rules);
         this.taskVertexShaderApplied = taskVertexShader;
 
         const taskFragmentShader = this.task.fragmentShader || DEFAULT_FRAGMENT_SHADER;
-        this.taskProgram.find(it => it.name == 'fragment.glsl')!.data = taskFragmentShader;
+        this.taskFragmentFile = createFileEditorInstance('fragment.glsl', 'x-shader/x-fragment', taskFragmentShader, rules);
         this.taskFragmentShaderApplied = taskFragmentShader;
-
+        
+        this.taskProgramFiles = [this.taskVertexFile, this.taskFragmentFile];
         this.taskCompileTrigger++;
 
+
         const defaultVertexShader = this.task.defaultVertexShader || DEFAULT_VERTEX_SHADER;
-        this.defaultProgram.find(it => it.name == 'vertex.glsl')!.data = defaultVertexShader;
+        this.defaultVertexFile = createFileEditorInstance('vertex.glsl', 'x-shader/x-vertex', defaultVertexShader, []);
         this.defaultVertexShaderApplied = defaultVertexShader;
 
         const defaultFragmentShader = this.task.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER;
-        this.defaultProgram.find(it => it.name == 'fragment.glsl')!.data = defaultFragmentShader;
+        this.defaultFragmentFile = createFileEditorInstance('fragment.glsl', 'x-shader/x-fragment', defaultFragmentShader, []);
         this.defaultFragmentShaderApplied = defaultFragmentShader;
 
+        this.defaultProgramFiles = [this.defaultVertexFile, this.defaultFragmentFile];
         this.defaultCompileTrigger++;
       }
     }
@@ -193,10 +205,12 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     this.runDefault();
     setTimeout(() => {
       this.spinner.hide();
-      if ([
-        ...Object.values(this.taskProgramPrompts).flat(),
-        ...Object.values(this.defaultProgramPrompts).flat(),
-      ].some(p => p.type == 'error')) {
+
+      if (this.taskVertexFile?.hasError || this.taskFragmentFile?.hasError) {
+        return;
+      }
+
+      if (this.defaultVertexFile?.hasError || this.defaultFragmentFile?.hasError) {
         return;
       }
 
@@ -226,10 +240,10 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       restrictions: [],
       cost: Number.parseInt(this.form.value.cost),
       threshold: Number.parseInt(this.form.value.threshold),
-      vertexShader: this.taskProgram.find(it => it.name === 'vertex.glsl')!.data,
-      fragmentShader: this.taskProgram.find(it => it.name === 'fragment.glsl')!.data,
-      defaultVertexShader: this.defaultProgram.find(it => it.name === 'vertex.glsl')!.data,
-      defaultFragmentShader: this.defaultProgram.find(it => it.name === 'fragment.glsl')!.data,
+      vertexShader: this.taskVertexFile?.state.doc.toString() || '',
+      fragmentShader: this.taskFragmentFile?.state.doc.toString() || '',
+      defaultVertexShader: this.defaultVertexFile?.state.doc.toString() || '',
+      defaultFragmentShader: this.defaultFragmentFile?.state.doc.toString() || '',
       vertexCodeEditable: this.form.value.vertexCodeEditable,
       fragmentCodeEditable: this.form.value.fragmentCodeEditable,
       description: this.form.value.description as string,
@@ -240,6 +254,13 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
       animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
       sceneSettings: this.form.value.sceneSettings,
+      rules: this.rulesForms.controls.map(c => ({
+        id: c.value.id as number,
+        default: false,
+        keyword: c.value.keyword as string,
+        message: c.value.message as string,
+        severity: c.value.severity as number,
+      }))
     }));
   }
 
@@ -251,10 +272,10 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       restrictions: this.task!.restrictions,
       cost: Number.parseInt(this.form.value.cost),
       threshold: Number.parseInt(this.form.value.threshold),
-      vertexShader: this.taskProgram.find(it => it.name === 'vertex.glsl')!.data,
-      fragmentShader: this.taskProgram.find(it => it.name === 'fragment.glsl')!.data,
-      defaultVertexShader: this.defaultProgram.find(it => it.name === 'vertex.glsl')!.data,
-      defaultFragmentShader: this.defaultProgram.find(it => it.name === 'fragment.glsl')!.data,
+      vertexShader: this.taskVertexFile?.state.doc.toString() || '',
+      fragmentShader: this.taskFragmentFile?.state.doc.toString() || '',
+      defaultVertexShader: this.defaultVertexFile?.state.doc.toString() || '',
+      defaultFragmentShader: this.defaultFragmentFile?.state.doc.toString() || '',
       vertexCodeEditable: this.form.value.vertexCodeEditable,
       fragmentCodeEditable: this.form.value.fragmentCodeEditable,
       description: this.form.value.description as string,
@@ -265,6 +286,13 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
       animationSteps: this.form.value.animated ? Number.parseInt(this.form.value.animationSteps) : null,
       animationStepTime: this.form.value.animated ? Number.parseInt(this.form.value.animationStepTime) : null,
       sceneSettings: this.form.value.sceneSettings,
+      rules: this.rulesForms.controls.map(c => ({
+        id: c.value.id as number,
+        default: false,
+        keyword: c.value.keyword as string,
+        message: c.value.message as string,
+        severity: c.value.severity as number,
+      }))
     }));
   }
 
@@ -277,6 +305,15 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
     if (event.index == 1) {
       this.compiledMarkdown = marked.Parser.parse(marked.Lexer.lex(this.form.value.description));
     }
+  }
+
+  get rulesForms() {
+    return this.form.controls["rules"] as FormArray<FormGroup>;
+  }
+
+  addRule(rule: TaskLinterRuleDto | null = null) {
+    this.rulesForms.push(RuleFormComponent.createForm(this.fb, rule?.id, rule?.keyword, rule?.message, rule?.severity));
+    this.hanldeChannelChange();
   }
 
   get channels() {
@@ -306,27 +343,42 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   ////////////////////////////////////////////////////////////////////////////////
 
   runTask(): void {
-    this.taskFragmentShaderApplied = this.taskProgram.find(it => it.name === 'fragment.glsl')!.data;
-    this.taskVertexShaderApplied = this.taskProgram.find(it => it.name === 'vertex.glsl')!.data;
+    if (this.handleTaskLinterErrors()) {
+      return;
+    }
+
+    this.taskVertexShaderApplied = this.taskVertexFile?.state.doc.toString() || '';
+    this.taskFragmentShaderApplied = this.taskFragmentFile?.state.doc.toString() || '';
     this.taskCompileTrigger++;
   }
 
-  handleTaskProgramCompilationError(errors: GlProgramErrors): void {
-    this.taskProgramPrompts = {
-      ['vertex.glsl']: errors.vertex.map(error => ({ ...error, type: 'error' } as CodeEditorPrompt)),
-      ['fragment.glsl']: errors.fragment.map(error => ({ ...error, type: 'error' } as CodeEditorPrompt)),
+  handleTaskLinterErrors(): boolean {
+    const vertexErrors = this.taskVertexFile?.linterDiagnostics.filter(d => d.severity === 'error') || [];
+    const fragmentErrors = this.taskFragmentFile?.linterDiagnostics.filter(d => d.severity === 'error') || [];
+
+    if (this.taskVertexFile && vertexErrors.length > 0) {
+      this.taskVertexFile?.setErrors(vertexErrors.map(e => ({ message: e.message, line: this.taskVertexFile!.state.doc.lineAt(e.from).number - 1 })))
     }
+
+    if (this.taskFragmentFile && fragmentErrors.length > 0) {
+      this.taskFragmentFile?.setErrors(fragmentErrors.map(e => ({ message: e.message, line: this.taskFragmentFile!.state.doc.lineAt(e.from).number - 1 })))
+    }
+
+    if (vertexErrors.length > 0 || fragmentErrors.length > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  handleTaskProgramCompilationError(errors: GlProgramErrors): void {
+    this.taskVertexFile?.setErrors(errors.vertex.map(error => ({ ...error, type: 'error' } as FileError)));
+    this.taskFragmentFile?.setErrors(errors.fragment.map(error => ({ ...error, type: 'error' } as FileError)));
   }
 
   handleTaskProgramCompilationSuccess(): void {
-    this.taskProgramPrompts = {};
-  }
-
-  handleTaskProgramFileChange(file: CodeEditorFile) {
-    const fileToUpdate = this.taskProgram.find(it => it.name === file.name);
-    if (fileToUpdate) {
-      fileToUpdate.data = file.data
-    }
+    this.taskVertexFile?.setErrors([]);
+    this.taskFragmentFile?.setErrors([]);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -334,26 +386,41 @@ export class TaskCreateFormComponent implements OnInit, OnChanges, OnDestroy {
   ////////////////////////////////////////////////////////////////////////////////
 
   runDefault(): void {
-    this.defaultFragmentShaderApplied = this.defaultProgram.find(it => it.name === 'fragment.glsl')!.data;
-    this.defaultVertexShaderApplied = this.defaultProgram.find(it => it.name === 'vertex.glsl')!.data;
+    if (this.handleTaskLinterErrors()) {
+      return;
+    }
+
+    this.defaultVertexShaderApplied = this.defaultVertexFile?.state.doc.toString() || '';
+    this.defaultFragmentShaderApplied= this.defaultFragmentFile?.state.doc.toString() || '';
     this.defaultCompileTrigger++;
   }
 
-  handleDefaultProgramCompilationError(errors: GlProgramErrors): void {
-    this.defaultProgramPrompts = {
-      ['vertex.glsl']: errors.vertex.map(error => ({ ...error, type: 'error' } as CodeEditorPrompt)),
-      ['fragment.glsl']: errors.fragment.map(error => ({ ...error, type: 'error' } as CodeEditorPrompt)),
+  handleDefaultLinterErrors(): boolean {
+    const vertexErrors = this.defaultVertexFile?.linterDiagnostics.filter(d => d.severity === 'error') || [];
+    const fragmentErrors = this.taskFragmentFile?.linterDiagnostics.filter(d => d.severity === 'error') || [];
+
+    if (this.defaultVertexFile && vertexErrors.length > 0) {
+      this.defaultVertexFile?.setErrors(vertexErrors.map(e => ({ message: e.message, line: this.defaultVertexFile!.state.doc.lineAt(e.from).number - 1 })))
     }
+
+    if (this.defaultFragmentFile && fragmentErrors.length > 0) {
+      this.defaultFragmentFile?.setErrors(fragmentErrors.map(e => ({ message: e.message, line: this.defaultFragmentFile!.state.doc.lineAt(e.from).number - 1 })))
+    }
+
+    if (vertexErrors.length > 0 || fragmentErrors.length > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  handleDefaultProgramCompilationError(errors: GlProgramErrors): void {
+    this.defaultVertexFile?.setErrors(errors.vertex.map(error => ({ ...error, type: 'error' } as FileError)));
+    this.defaultFragmentFile?.setErrors(errors.fragment.map(error => ({ ...error, type: 'error' } as FileError)));
   }
 
   handleDefaultSProgramCompilationSuccess(): void {
-    this.defaultProgramPrompts = {};
-  }
-
-  handleDefaultProgramFileChange(file: CodeEditorFile) {
-    const fileToUpdate = this.defaultProgram.find(it => it.name === file.name);
-    if (fileToUpdate) {
-      fileToUpdate.data = file.data
-    }
+    this.defaultVertexFile?.setErrors([]);
+    this.defaultFragmentFile?.setErrors([]);
   }
 }

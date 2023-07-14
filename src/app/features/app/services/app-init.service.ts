@@ -5,6 +5,7 @@ import { AuthToken } from '../../auth/services/auth.token';
 import { IsTokenExpired, LoadMe, UpdateToken } from '../../auth/state/auth.actions';
 import { AuthState } from '../../auth/state/auth.state';
 import { LocalService } from '../../common/services/local-storage.service';
+import { LocationHistoryService } from '../../common/services/location-history.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class AppInitService implements OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private storage: LocalService) {
+  constructor(private store: Store, private storage: LocalService, private locationHistory: LocationHistoryService) {
     this.accessToken = new AuthToken('accessToken', 'accessTokenExpiresAt', this.storage);
     this.refreshToken = new AuthToken('refreshToken', 'refreshTokenExpiresAt', this.storage);
   }
@@ -28,7 +29,7 @@ export class AppInitService implements OnDestroy {
   }
 
   public async init(): Promise<any> {
-    // return Promise.resolve();
+    this.locationHistory.init();
 
     zip(this.refreshToken.update$, this.accessToken.update$)
       .pipe(
@@ -55,7 +56,7 @@ export class AppInitService implements OnDestroy {
 
     const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
     if (isAuthenticated) {
-      await lastValueFrom(this.store.dispatch(new LoadMe()));
+      setTimeout(() => lastValueFrom(this.store.dispatch(new LoadMe())), 10000);
     }
   }
 }

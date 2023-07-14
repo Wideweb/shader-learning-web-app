@@ -28,6 +28,7 @@ export class TaskService {
 
       task.vertexShader = task.vertexShader || DEFAULT_VERTEX_SHADER;
       task.fragmentShader = task.fragmentShader || DEFAULT_FRAGMENT_SHADER;
+      task.rules = task.rules.filter(r => !r.default);
 
       return {...task, channels, sceneSettings};
     }

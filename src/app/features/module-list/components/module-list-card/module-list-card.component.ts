@@ -6,6 +6,7 @@ export interface ModuleListCardModel {
   label: string;
   link: string;
   imageSrc: string;
+  locked: boolean;
 }
 
 @Component({

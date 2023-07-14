@@ -1,4 +1,5 @@
 @import 'common.scss';
+@import 'form.scss';
 
 .container {
     position: relative;
@@ -42,30 +43,6 @@
     display: flex;
     flex-direction: column;
     gap: toRem(16);
-}
-
-textarea {
-    display: block;
-    max-width: 100%;
-    width: 100%;
-    height: toRem(80);
-    background-color: $white;
-    border: none;
-    resize: vertical;
-    box-sizing: border-box;
-    padding: toRem(10) toRem(16);
-    border-radius: toRem(8);
-    box-shadow: inset 0 0 0 toRem(1) $black;
-    color: $black;
-    resize: none;
-
-    &::placeholder {
-        color: $light-grey;
-    }
-
-    &:focus {
-        outline-width: 0;
-    }
 }
 
 .actions {

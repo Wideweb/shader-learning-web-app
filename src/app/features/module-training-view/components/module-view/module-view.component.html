@@ -6,15 +6,17 @@
 
         <a class="back-link" routerLink="/explore"><span class="ico-container"><i class="arrow-left-ico"></i></span><span class="p3">Back To Explore</span></a>
 
-        <div class="title"><h2 class="module-name">{{module!.name}}</h2><span class="p3 capacity">{{module!.tasks.length}}&nbsp;tasks</span></div>
-        
-        <!-- <span class="p3 tasks">{{module.tasks.length}}&nbsp;tasks</span>&nbsp;<a *hasPermission="['module_edit']" class="action-link" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a></h2> -->
+        <div class="title">
+          <h2 class="module-name">{{module!.name}}</h2>
+          <span class="p3 capacity">{{module!.tasks.length}}&nbsp;tasks</span>
+          <a class="btn-ico" *hasPermission="['module_edit']" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a>
+        </div>
         
         <div class="description p2">
           {{ module!.description }}
         </div>
 
-        <a class="btn-link btn-link-ico-addon darker" routerLink="/module-training/{{ module!.id }}/task">Start<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+        <a class="btn-link btn-link-ico-addon darker" routerLink="/module-training/{{ module!.id }}/task">{{started ? 'Continue' : 'Start'}}<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
         <!-- <div class="created-by">
           <span>Author:</span>&nbsp;<a class="name" routerLink="/user-profile/{{module.createdBy.id}}">{{ module.createdBy.name }}</a>
         </div> -->

@@ -18,9 +18,6 @@ export class CodeEditor2Component implements OnChanges {
   @Input()
   public errors: FileError[] = [];
 
-  @Input()
-  public rules: CodeEditorLinterRule[] = [];
-
   @ViewChild('editor') editorEl!: ElementRef;
 
   public currentFile: FileEditorInstance | null = null;
@@ -31,7 +28,6 @@ export class CodeEditor2Component implements OnChanges {
       if (!this.files || this.files.length === 0)
       {
         this.currentFile = null;
-        
       } else {
         this.currentFile = this.files[0];
       }

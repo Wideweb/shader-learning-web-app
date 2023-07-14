@@ -21,6 +21,16 @@ export interface TaskDto {
     animationSteps: number | null;
     animationStepTime: number | null;
     sceneSettings: GlScene;
+    rules: TaskLinterRuleDto[];
+}
+
+export interface TaskLinterRuleDto {
+    id: number;
+    default: boolean;
+    keyword: string;
+    message: string;
+    // 0 - info | 1 - warning | 2 - error;
+    severity: number;
 }
 
 export interface TaskHintDto {

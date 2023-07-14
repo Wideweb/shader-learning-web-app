@@ -5,6 +5,42 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    textarea {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+        height: toRem(80);
+        background-color: $white;
+        border: none;
+        resize: vertical;
+        box-sizing: border-box;
+        padding: toRem(10) toRem(16);
+        border-radius: toRem(8);
+        box-shadow: inset 0 0 0 toRem(1) $black;
+        color: $black;
+        resize: none;
+    
+        &::placeholder {
+            color: $light-grey;
+        }
+
+        &.ng-invalid {
+            outline-width: 0;
+            box-shadow: inset 0 0 0 toRem(1) $red;
+        }
+
+        &:focus {
+            outline-width: 0;
+            box-shadow: inset 0 0 0 toRem(1) $blue;
+        }
+
+        &[disabled] {
+            outline-width: 0;
+            color: $light-grey;
+            box-shadow: inset 0 0 0 toRem(1) $light-grey;
+        }
+    }
 }
 
 .form-field {

@@ -47,10 +47,19 @@ img {
     top: toRem(16);
     left: toRem(16);
     padding: toRem(4) toRem(8);
-    background-color: #FAFAFA;
+    background-color: $white;
     border-radius: toRem(24);
 }
 
 .p2 {
-    color: #575757;
+    color: $grey;
+}
+
+.locker {
+    display: inline-block;
+    position: absolute;
+    top: toRem(16);
+    right: toRem(16);
+    padding: toRem(4) toRem(8);
+    color: $white;
 }

@@ -4,8 +4,6 @@ import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dia
 import { combineLatest, filter, firstValueFrom, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { UserTaskDto, UserTaskSubmissionDto } from '../../models/user-task.model';
-import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from '../../models/task.model';
 import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
 import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/common/components/confirm-dialog/confirm-dialog.component';
@@ -25,6 +23,8 @@ import {
 import { LikeDialogComponent } from '../like-dialog/like-dialog.component';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
+import { UserTaskDto, UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
+import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from 'src/app/features/module-training-common/models/task.model';
 
 @Component({
   selector: 'task-training',

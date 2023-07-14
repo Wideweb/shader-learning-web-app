@@ -1,7 +1,8 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpContext } from "@angular/common/http";
 import { Component, Input, OnChanges } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { BehaviorSubject, Subject, shareReplay, takeUntil } from "rxjs";
+import { CANCEL_SPINNER_TOKEN } from "../../interceptors/spinner.interceptor";
 
 @Component({
   selector: 'app-svg-icon',
@@ -28,7 +29,7 @@ export class AppSvgIconComponent implements OnChanges {
     }
 
     this.httpClient
-      .get(`assets/${this.name}.svg`, { responseType: 'text' })
+      .get(`assets/${this.name}.svg`, { responseType: 'text', context: new HttpContext().set(CANCEL_SPINNER_TOKEN, true) })
       .pipe(
         shareReplay(1),
         takeUntil(this.destroy$)

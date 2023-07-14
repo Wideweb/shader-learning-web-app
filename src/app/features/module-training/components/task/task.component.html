@@ -4,8 +4,8 @@
       <h2 class="name">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h2>
   
       <div class="tools">
-        <a class="btn-like" (click)="like()"><i class="ico thumbs-up-ico"></i><span>{{ model.likes }}</span></a>
-        <a class="btn-like" (click)="dislike()"><i class="ico thumbs-down-ico"></i><span>{{ model.dislikes }}</span></a>
+        <a class="btn-like like" [ngClass]="{active: liked}" (click)="like()"><i class="ico thumbs-up-ico"></i><span>{{ model.likes }}</span></a>
+        <a class="btn-like dislike" [ngClass]="{active: disliked}" (click)="dislike()"><i class="ico thumbs-down-ico"></i><span>{{ model.dislikes }}</span></a>
       </div>
     </div>
 
@@ -52,10 +52,7 @@
   <div class="body body-right">
     <div class="editor-section">
       <div class="container">
-        <code-editor-2
-          [files]="programFiles"
-          (onRun)="run()">
-        </code-editor-2>
+        <code-editor-2 [files]="programFiles"></code-editor-2>
 
         <ng-container *ngIf="showCompilationStatus">
           <div *ngIf="!hasCompilationError" class="toast success">

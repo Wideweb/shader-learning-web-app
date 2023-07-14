@@ -36,6 +36,8 @@ export class FileEditorInstance {
 
     public documentChanged$: Observable<EditorView>;
 
+    public rules: CodeEditorLinterRule[] = [];
+
     private setErrors$ = new BehaviorSubject<FileError[]>([]);
 
     private changeDocument$ = new Subject<EditorView>();
@@ -56,6 +58,10 @@ export class FileEditorInstance {
     public changeDocument(view: EditorView) {
         this.state = view.state;
         this.changeDocument$.next(view);
+    }
+
+    public setLinterRules(rules: CodeEditorLinterRule[]) {
+        this.rules = rules;
     }
     
     public setErrors(errors: FileError[]): void {

@@ -2,6 +2,7 @@
   <div class="base">
     <img [src]="model.imageSrc">
     <div class="p3 label">{{model.label}}</div>
+    <div class="p2 locker" *ngIf="model.locked">locked</div>
     <div class="btn-container">
       <a class="btn-circle secondary" [routerLink]="model.link"><i class="ico arrow-up-right-ico"></i></a>
     </div>

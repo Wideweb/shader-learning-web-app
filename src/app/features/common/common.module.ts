@@ -37,6 +37,7 @@ import { CodeEditor2Component } from "./components/code-editor-2/code-editor-2.c
 import { FileEditorComponent } from "./components/code-editor-2/file-editor/file-editor.component";
 import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
 import { AppSpinnerComponent } from "./components/spinner/spinner.component";
+import { LocationHistoryService } from "./services/location-history.service";
 
 @NgModule({
   declarations: [
@@ -123,6 +124,7 @@ export class AppCommonModule {
         SpinnerService,
         LocalService,
         FileService,
+        LocationHistoryService,
       ]
     };
   }

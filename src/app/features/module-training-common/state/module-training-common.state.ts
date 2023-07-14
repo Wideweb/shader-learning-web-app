@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { insertItem, patch, updateItem } from '@ngxs/store/operators';
 import { firstValueFrom } from "rxjs";
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from "../../app/app.constants";
-import { Logout } from "../../auth/state/auth.actions";
+import { Login, Logout } from "../../auth/state/auth.actions";
 import { ModuleProgressDto } from "../models/module-progress.model";
 import { TaskProgressDto } from "../models/task-progress.model";
 import { TaskDto, TaskSubmitResultDto } from "../models/task.model";
@@ -668,7 +668,7 @@ export class ModuleProgressState {
     }));
   }
 
-  @Action(Logout)
+  @Action([Logout, Login])
   clear(ctx: StateContext<ModuleProgressStateModel>) {
     ctx.patchState(defaults());
   }

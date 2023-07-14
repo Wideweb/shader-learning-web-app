@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserTaskSubmissionDto } from '../../../models/user-task.model';
+import { UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
 
 @Component({
   selector: 'task-submissions',

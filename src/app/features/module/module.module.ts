@@ -21,6 +21,7 @@ import { TaskService } from "./services/task.service";
 import { ModuleState } from "./state/module.state";
 import { TaskState } from "./state/task.state";
 import { ModuleCoverComponent } from "./components/module-cover/module-cover.component";
+import { RuleFormComponent } from "./components/task-create/rule-form/rule-form.component";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ModuleCoverComponent } from "./components/module-cover/module-cover.com
     SceneObjectFormComponent,
     CameraFormComponent,
     VectorFormComponent,
+    RuleFormComponent,
     ModuleCoverComponent,
   ],
   imports: [

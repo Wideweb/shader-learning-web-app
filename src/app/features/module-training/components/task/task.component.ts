@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, OnDestroy} from '@angular/core';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features/app/app.constants';
 import * as marked from 'marked';
-import { TaskDto, TaskHintDto, TaskSubmitDto } from '../../models/task.model';
-import { UserTaskSubmissionDto } from '../../models/user-task.model';
-import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
 import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor-2/declarations';
 import { createFileEditorInstance } from 'src/app/features/common/components/code-editor-2/file-editor/file-editor-factory';
 import { UserShaderProgram } from 'src/app/features/module-training-common/state/module-training-common.state';
+import { TaskDto, TaskHintDto, TaskSubmitDto } from 'src/app/features/module-training-common/models/task.model';
+import { UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
+import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
 
 @Component({
   selector: 'task',
@@ -124,13 +124,19 @@ export class TaskComponent implements OnChanges, OnDestroy {
       return;
     }
 
+    const rules: CodeEditorLinterRule[]  = this.model.rules.map((rule) => ({
+      keyword: rule.keyword,
+      message: rule.message,
+      severity: rule.severity == 0 ? 'info' : (rule.severity == 1 ? 'warning' : 'error')
+    }));
+
     if (this.model.vertexCodeEditable) {
-      this.vertexFile = createFileEditorInstance('vertex.glsl', 'x-shader/x-vertex', this.shaderProgram.vertex, []);
+      this.vertexFile = createFileEditorInstance('vertex.glsl', 'x-shader/x-vertex', this.shaderProgram.vertex, rules);
       this.programFiles.push(this.vertexFile);
     }
 
     if (this.model.fragmentCodeEditable) {
-      this.fragmentFile = createFileEditorInstance('fragment.glsl', 'x-shader/x-fragment', this.shaderProgram.fragment, []);
+      this.fragmentFile = createFileEditorInstance('fragment.glsl', 'x-shader/x-fragment', this.shaderProgram.fragment, rules);
       this.programFiles.push(this.fragmentFile);
     }
   }
@@ -141,7 +147,7 @@ export class TaskComponent implements OnChanges, OnDestroy {
     }
 
     this.vertexShaderApplied = this.getVertexCode();
-    this.fragmentShaderApplied = this.getFragmentCode();;
+    this.fragmentShaderApplied = this.getFragmentCode();
     this.compileTrigger++;
   }
 

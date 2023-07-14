@@ -84,6 +84,6 @@ export class UserTaskService {
     }
 
     public saveFeedback(taskId: number, feedback: TaskFeedbackDto): Observable<void> {
-        return this.http.post<void>(`${API}/tasks/${taskId}/feedback`, feedback).pipe(shareReplay(1));
+        return this.http.post<void>(`${API}/tasks/${taskId}/feedback`, {...feedback, message: feedback.other ? feedback.message : ''}).pipe(shareReplay(1));
     }
 }

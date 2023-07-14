@@ -3,9 +3,9 @@ import { combineLatest, distinctUntilChanged, filter, map, Observable, Subject, 
 import { ActivatedRoute } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
-import { ModuleProgressDto } from 'src/app/features/module-training/models/module-progress.model';
 import { ModuleProgressLoad } from 'src/app/features/module-training-common/state/module-training-common.actions';
 import { ModuleProgressState } from 'src/app/features/module-training-common/state/module-training-common.state';
+import { ModuleProgressDto } from 'src/app/features/module-training-common/models/module-progress.model';
 
 @Component({
   selector: 'module',

@@ -1,0 +1,19 @@
+<div [formGroup]="form" class="container">
+    <mat-form-field class="keyword">
+        <mat-label>Keyword</mat-label>
+        <input type="text" matInput formControlName="keyword" [errorStateMatcher]="matcher" autocomplete="off">
+        <mat-error *ngIf="form.get('keyword')?.hasError('required')">required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="message">
+        <mat-label>Message</mat-label>
+        <input type="text" matInput formControlName="message" [errorStateMatcher]="matcher" autocomplete="off">
+        <mat-error *ngIf="form.get('message')?.hasError('required')">required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="severity">
+        <mat-label>Severity</mat-label>
+        <input type="number" matInput formControlName="severity" [errorStateMatcher]="matcher" autocomplete="off">
+        <mat-error *ngIf="form.get('severity')?.hasError('required')">required</mat-error>
+    </mat-form-field>
+</div>

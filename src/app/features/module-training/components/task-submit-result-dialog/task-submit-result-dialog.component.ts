@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TaskSubmitResultDto } from '../../models/task.model';
+import { TaskSubmitResultDto } from 'src/app/features/module-training-common/models/task.model';
 
 @Component({
   selector: 'task-submit-result-dialog',

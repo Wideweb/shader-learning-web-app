@@ -25,6 +25,7 @@ export interface TaskDto {
     animationSteps: number | null;
     animationStepTime: number | null;
     sceneSettings: GlScene;
+    rules: TaskLinterRuleDto[];
 }
 
 export interface TaskSaveDto {
@@ -48,6 +49,7 @@ export interface TaskSaveDto {
     animationSteps: number | null;
     animationStepTime: number | null;
     sceneSettings: GlScene;
+    rules: TaskLinterRuleDto[];
 }
 
 export interface TaskChannelDto {
@@ -64,4 +66,13 @@ export interface TaskHintDto {
 export interface TaskRestrictionDto {
     cost: number;
     instruction: string;
+}
+
+export interface TaskLinterRuleDto {
+    id: number | null;
+    default: boolean | null;
+    keyword: string;
+    message: string;
+    // 0 - info | 1 - warning | 2 - error;
+    severity: number;
 }

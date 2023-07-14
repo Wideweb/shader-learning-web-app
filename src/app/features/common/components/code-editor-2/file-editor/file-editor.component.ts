@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
-import { CodeEditorLinterRule, FileEditorInstance, FileError } from '../declarations';
+import { FileEditorInstance, FileError } from '../declarations';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { Decoration, EditorView } from '@codemirror/view';
 import { LineErrorWidget } from '../configs/line-error';
@@ -14,9 +14,6 @@ import { addDecoration, filterDecoration } from '../configs/line-decorations';
 export class FileEditorComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input()
   public file: FileEditorInstance | null = null;
-
-  @Input()
-  public rules: CodeEditorLinterRule[] = [];
 
   @ViewChild('editor') editorEl!: ElementRef;
 

@@ -43,12 +43,13 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         if (error.status === 403) {
-            this.snackBar.open('Unauthorized', '', {
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
-                duration: 5000,
-                panelClass: 'snack-bar-item-server-error'
-            });
+            // this.snackBar.open('Unauthorized', '', {
+            //     horizontalPosition: 'right',
+            //     verticalPosition: 'top',
+            //     duration: 5000,
+            //     panelClass: 'snack-bar-item-server-error'
+            // });
+            this.router.navigate(['/explore']);
         }
 
         return throwError(() => error);

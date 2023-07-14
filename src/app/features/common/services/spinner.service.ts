@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, debounceTime, delay, interval, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +15,8 @@ export class SpinnerService implements OnDestroy {
     public hidden$: Observable<boolean>;
 
     constructor() {
-        this.shown$ = this.show$.asObservable();
-        this.hidden$ = this.show$.asObservable().pipe(map(shown => !shown));
+        this.shown$ = this.show$.asObservable().pipe(delay(0));
+        this.hidden$ = this.show$.asObservable().pipe(delay(0), map(shown => !shown));
     }
 
     show(): void {

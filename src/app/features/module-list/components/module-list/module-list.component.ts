@@ -29,6 +29,7 @@ export class ModuleListComponent implements OnInit {
       label: module.tasks + (module.tasks == 1 ? ' task' : ' tasks'),
       link: `/module-view/${module.id}`,
       imageSrc: `${API}/modules/${module.id}/cover`,
+      locked: module.locked,
     }))));
   }
 

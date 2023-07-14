@@ -2,13 +2,18 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
 import { Store } from '@ngxs/store';
 import { AuthState } from '../state/auth.state';
+import { filter, firstValueFrom } from 'rxjs';
+import { LoadMe } from '../state/auth.actions';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   
     constructor(private store: Store, private router: Router){};
 
-    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        await firstValueFrom(this.store.dispatch(new LoadMe()));
+        await firstValueFrom(this.store.select(AuthState.loaded).pipe(filter(v => v)));
+
         const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
         if (!isAuthenticated) {
             this.router.navigate(['/login', {returnUrl: state.url}]);

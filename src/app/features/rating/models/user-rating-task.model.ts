@@ -1,4 +1,4 @@
-export interface TaskProgressDto {
+export interface UserRatingTaskDto {
     id: number;
     moduleId: number;
     name: string;

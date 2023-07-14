@@ -47,12 +47,12 @@ img {
     top: toRem(16);
     left: toRem(16);
     padding: toRem(4) toRem(8);
-    background-color: #FAFAFA;
+    background-color: $white;
     border-radius: toRem(24);
 }
 
 .p2 {
-    color: #575757;
+    color: $grey;
 }
 
 .last {

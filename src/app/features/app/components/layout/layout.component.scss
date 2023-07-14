@@ -21,6 +21,12 @@
   }
 }
 
+.user-symbol {
+  display: inline-block;
+  box-sizing: border-box;
+  padding-top: toRem(2);
+}
+
 .navbar {
   position: relative;
   margin: toRem(30) 0;
@@ -128,7 +134,7 @@
   .nav-link {
 
     h2 {
-      color: #FAFAFA;
+      color: $white;
     }
 
     &:hover > h2, &:active > h2 {
@@ -148,7 +154,7 @@
     height: toRem(40);
 
     .close-ico {
-      background-color: #FAFAFA;
+      background-color: $white;
     }
   }
 }
@@ -176,7 +182,7 @@
   }
   
   .nav-link {
-    color: #FAFAFA;
+    color: $white;
     margin-right: toRem(32);
 
     &.active {
@@ -192,7 +198,7 @@
     width: toRem(150);
     min-width: toRem(150);
     opacity: 0.6;
-    color: #FAFAFA;
+    color: $white;
   }
 
   .scroll-ctrl {

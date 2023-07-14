@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
-import { ModuleProgressDto } from 'src/app/features/module-training/models/module-progress.model';
+import { ModuleProgressDto } from 'src/app/features/module-training-common/models/module-progress.model';
 
 @Component({
   selector: 'module-view',
@@ -11,6 +11,8 @@ export class ModuleViewComponent implements OnInit, OnChanges {
 
   @Input()
   public module!: ModuleProgressDto;
+
+  public started: boolean = false;
 
   constructor(private pageMeta: PageMetaService) { }
 
@@ -25,6 +27,7 @@ export class ModuleViewComponent implements OnInit, OnChanges {
   }
 
   private updateMetaData(): void {
+    this.started = this.module.tasks.some(t => t.accepted || t.rejected);
     this.pageMeta.setTitle(this.module.name);
     this.pageMeta.setDescription(this.module.description);
   }

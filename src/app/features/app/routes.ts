@@ -4,6 +4,7 @@ import { AppLayoutComponent } from './components/layout/layout.component';
 import { routes as userProfileRoutes } from '../user-profile/routes';
 import { routes as authRoutes } from '../auth/routes';
 import { AboutComponent } from './components/about/about.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
 
@@ -24,6 +25,12 @@ export const routes: Routes = [
     path: '',
     component: AppLayoutComponent,
     children: [
+      { 
+        path: '', 
+        pathMatch: 'full',
+        loadChildren: () => import('../landing/landing.module').then(m => m.LandingModule)
+      },
+
       { path: 'donate', component: DonateComponent },
 
       { path: 'about', component: AboutComponent },
@@ -41,8 +48,8 @@ export const routes: Routes = [
       },
 
       {
-        path: 'users-rating',
-        loadChildren: () => import('../user-rank-list/user-rank-list.module').then(m => m.UserRankListModule)
+        path: 'rating',
+        loadChildren: () => import('../rating/rating.module').then(m => m.RatingModule)
       },
 
       {
@@ -50,10 +57,7 @@ export const routes: Routes = [
         loadChildren: () => import('../module-training-view/module-view.module').then(m => m.ModuleViewModule)
       },
 
-      { 
-        path: '**', 
-        loadChildren: () => import('../landing/landing.module').then(m => m.LandingModule)
-      },
+      { path: '**', component: NotFoundComponent },
     ]
   },
 ];

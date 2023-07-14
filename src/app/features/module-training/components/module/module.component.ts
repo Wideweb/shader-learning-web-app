@@ -3,12 +3,12 @@ import { distinctUntilChanged, filter, map, Observable, Subject, takeUntil } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleProgressState } from 'src/app/features/module-training-common/state/module-training-common.state';
-import { ModuleProgressDto } from '../../models/module-progress.model';
 import { ModuleProgressUnselectCurrentTask } from 'src/app/features/module-training-common/state/module-training-common.actions';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
-import { UserTaskDto } from '../../models/user-task.model';
 import { Location } from '@angular/common';
-import { TaskProgressDto } from '../../models/task-progress.model';
+import { ModuleProgressDto } from 'src/app/features/module-training-common/models/module-progress.model';
+import { UserTaskDto } from 'src/app/features/module-training-common/models/user-task.model';
+import { TaskProgressDto } from 'src/app/features/module-training-common/models/task-progress.model';
 
 @Component({
   selector: 'module',

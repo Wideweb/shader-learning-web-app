@@ -10,6 +10,46 @@
     }
 }
 
+.btn-like.like.active {
+    color: $dark-blue;
+
+    .thumbs-up-ico {
+        -webkit-mask-image: url(/assets/thumbs-up-filled.svg);
+        mask-image: url(/assets/thumbs-up-filled.svg);
+        background-color: $dark-blue;
+    }
+}
+
+.btn-like.like:hover {
+    color: $white;
+
+    .thumbs-up-ico {
+        -webkit-mask-image: url(/assets/thumbs-up.svg);
+        mask-image: url(/assets/thumbs-up.svg);
+        background-color: $white;
+    }
+}
+
+.btn-like.dislike.active {
+    color: $dark-blue;
+
+    .thumbs-down-ico {
+        -webkit-mask-image: url(/assets/thumbs-down-filled.svg);
+        mask-image: url(/assets/thumbs-down-filled.svg);
+        background-color: $dark-blue;
+    }
+}
+
+.btn-like.dislike:hover {
+    color: $white;
+    
+    .thumbs-down-ico {
+        -webkit-mask-image: url(/assets/thumbs-down.svg);
+        mask-image: url(/assets/thumbs-down.svg);
+        background-color: $white;
+    }
+}
+
 .task {
     width: 100%;
     display: flex;

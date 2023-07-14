@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TaskProgressDto } from 'src/app/features/module-training/models/task-progress.model';
+import { TaskProgressDto } from '../../models/task-progress.model';
 
 @Component({
   selector: 'module-navigation',

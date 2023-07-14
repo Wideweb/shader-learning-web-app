@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import { BehaviorSubject, filter, map, Observable, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, delay, filter, map, Observable, Subject, takeUntil } from 'rxjs';
 import { UserDto } from 'src/app/features/auth/models/user.model';
 import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { AppEventService } from 'src/app/features/common/services/event.service';
@@ -34,9 +34,13 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
 
   public userSymbol$: Observable<string | null>;
 
-  public hidePageOverflow$ = new BehaviorSubject<boolean>(false);
+  public hidePageOverflowSubject = new BehaviorSubject<boolean>(false);
 
-  public showFooterScrollCtrl$ = new BehaviorSubject<boolean>(false);
+  public hidePageOverflow$: Observable<boolean>;
+
+  public showFooterScrollCtrlSubject = new BehaviorSubject<boolean>(false);
+
+  public showFooterScrollCtrl$: Observable<boolean>;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -59,6 +63,9 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
     this.userName$ = this.user$.pipe(map(u => u?.name || ''));
     this.userEmail$ = this.user$.pipe(map(u => u?.email || ''));
     this.userSymbol$ = this.user$.pipe(map(u => u?.email[0].toUpperCase() || ''));
+
+    this.hidePageOverflow$ = this.hidePageOverflowSubject.asObservable().pipe(delay(0));
+    this.showFooterScrollCtrl$ = this.showFooterScrollCtrlSubject.asObservable().pipe(delay(0));
   }
 
   @HostListener('window:resize', ['$event'])
@@ -115,24 +122,24 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
     let snapshot: ActivatedRouteSnapshot | null = this.route.snapshot;
     while (snapshot !== null) {
       if (snapshot.data['hidePageOverflow']) {
-        this.hidePageOverflow$.next(true);
+        this.hidePageOverflowSubject.next(true);
         return;
       }
       snapshot = snapshot.firstChild;
     }
-    this.hidePageOverflow$.next(false);
+    this.hidePageOverflowSubject.next(false);
   }
 
   updateFooterScrollCtrlVisibility() :void {
     let snapshot: ActivatedRouteSnapshot | null = this.route.snapshot;
     while (snapshot !== null) {
       if (snapshot.data['showFooterScrollCtrl']) {
-        this.showFooterScrollCtrl$.next(true);
+        this.showFooterScrollCtrlSubject.next(true);
         return;
       }
       snapshot = snapshot.firstChild;
     }
-    this.showFooterScrollCtrl$.next(false);
+    this.showFooterScrollCtrlSubject.next(false);
   }
 
   onScroll(event: Event): void {
@@ -141,8 +148,8 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
   }
 
   ngOnDestroy(): void {
-    this.hidePageOverflow$.unsubscribe();
-    this.showFooterScrollCtrl$.unsubscribe();
+    this.showFooterScrollCtrlSubject.unsubscribe();
+    this.showFooterScrollCtrlSubject.unsubscribe();
 
     this.destroy$.next(true);
     this.destroy$.unsubscribe();

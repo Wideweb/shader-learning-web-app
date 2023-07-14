@@ -23,6 +23,8 @@ export const createFileEditorInstance = (
     const linter = new Compartment;
 
     const instance = new FileEditorInstance(name, mode, null as any, { linter });
+    instance.setLinterRules(rules);
+    
     const state = EditorState.create({
         doc,
         extensions: [
@@ -48,7 +50,7 @@ export const createFileEditorInstance = (
             closeBrackets(),
 
 
-            linter.of(lints(rules || [], { delay: 100 }, (diagnostics: Diagnostic[]) => instance.setLinterDiagnostics(diagnostics))),
+            linter.of(lints(instance, { delay: 100 }, (diagnostics: Diagnostic[]) => instance.setLinterDiagnostics(diagnostics))),
             decorations,
 
             ViewPlugin.fromClass(class {

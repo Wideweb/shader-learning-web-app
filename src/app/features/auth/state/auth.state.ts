@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Action, createSelector, Selector, State, StateContext } from "@ngxs/store";
 import { patch } from '@ngxs/store/operators';
-import { catchError, of, tap, throwError } from "rxjs";
+import { catchError, firstValueFrom, of, tap, throwError } from "rxjs";
 import { hasAll, hasAny } from "../../common/services/utils";
 import { SessionData } from "../models/session-data.model";
 import { UserDto } from "../models/user.model";
@@ -14,6 +14,8 @@ export interface AuthStateModel {
   refreshToken: AuthStateTokenModel;
   loginError: any;
   signUpError: any;
+  loading: boolean;
+  loaded: boolean;
 }
 
 interface AuthStateTokenModel {
@@ -37,6 +39,8 @@ const defaults = (): AuthStateModel => {
     },
     loginError: null,
     signUpError: null,
+    loading: false,
+    loaded: false,
   };
 }
 
@@ -77,6 +81,11 @@ export class AuthState {
     return state.user;
   }
 
+  @Selector()
+  static loaded(state: AuthStateModel): boolean {
+    return state.loaded;
+  }
+
   static hasAllPermissions(permissions: string[]) {
     return createSelector([AuthState.permissions], (userPermissions: string[]) => {
       return hasAll(userPermissions, permissions);
@@ -92,65 +101,83 @@ export class AuthState {
   constructor(private authService: AuthService) {}
 
   @Action(SignUp)
-  signUp(ctx: StateContext<AuthStateModel>, action: SignUp) {
-    return this.authService.signUp(action.payload).pipe(
-      tap((sesionData: SessionData) => {
-        ctx.setState({
-          user: sesionData.user,
-          accessToken: {
-            value: sesionData.tokenData.accessToken,
-            life: sesionData.tokenData.accessTokenLife,
-            expired: false,
-          },
-          refreshToken: {
-            value: sesionData.tokenData.refreshToken,
-            life: sesionData.tokenData.refreshTokenLife,
-            expired: false,
-          },
-          loginError: null,
-          signUpError: null,
-        });
-      }),
-      catchError((err) => {
-        ctx.setState(
-          patch<AuthStateModel>({
-            signUpError: err
-          })
-        );
-        return throwError(() => err);
-      }),
-    );
+  async signUp(ctx: StateContext<AuthStateModel>, action: SignUp) {
+    ctx.patchState({
+      loaded: false,
+      loading: true,
+    });
+
+    try 
+    {
+      const sesionData = await firstValueFrom(this.authService.signUp(action.payload));
+      ctx.setState(patch<AuthStateModel>({ 
+        user: sesionData.user,
+        accessToken: {
+          value: sesionData.tokenData.accessToken,
+          life: sesionData.tokenData.accessTokenLife,
+          expired: false,
+        },
+        refreshToken: {
+          value: sesionData.tokenData.refreshToken,
+          life: sesionData.tokenData.refreshTokenLife,
+          expired: false,
+        },
+        loginError: null,
+        signUpError: null,
+       }));
+    } 
+    catch(signUpError)
+    {
+      ctx.setState(patch<AuthStateModel>({ signUpError  }));
+      throw signUpError;
+    }
+    finally
+    {
+      ctx.patchState({ 
+        loaded: true,
+        loading: false,
+      });
+    }
   }
 
   @Action(Login)
-  login(ctx: StateContext<AuthStateModel>, action: Login) {
-    return this.authService.login(action.payload).pipe(
-      tap((sesionData: SessionData) => {
-        ctx.setState({
-          user: sesionData.user,
-          accessToken: {
-            value: sesionData.tokenData.accessToken,
-            life: sesionData.tokenData.accessTokenLife,
-            expired: false,
-          },
-          refreshToken: {
-            value: sesionData.tokenData.refreshToken,
-            life: sesionData.tokenData.refreshTokenLife,
-            expired: false,
-          },
-          loginError: null,
-          signUpError: null,
-        });
-      }),
-      catchError((err) => {
-        ctx.setState(
-          patch<AuthStateModel>({
-            loginError: err
-          })
-        );
-        return throwError(() => err);
-      }),
-    );
+  async login(ctx: StateContext<AuthStateModel>, action: Login) {
+    ctx.patchState({
+      loaded: false,
+      loading: true,
+    });
+
+    try 
+    {
+      const sesionData = await firstValueFrom(this.authService.login(action.payload));
+      ctx.setState(patch<AuthStateModel>({ 
+        user: sesionData.user,
+        accessToken: {
+          value: sesionData.tokenData.accessToken,
+          life: sesionData.tokenData.accessTokenLife,
+          expired: false,
+        },
+        refreshToken: {
+          value: sesionData.tokenData.refreshToken,
+          life: sesionData.tokenData.refreshTokenLife,
+          expired: false,
+        },
+        loginError: null,
+        signUpError: null,
+       }));
+    } 
+    catch(loginError)
+    {
+      ctx.setState(patch<AuthStateModel>({ loginError  }));
+      throw loginError;
+    }
+    finally
+    {
+      ctx.patchState({ 
+        loaded: true,
+        loading: false,
+      });
+    }
   }
 
   @Action(RequestResetPassword)
@@ -168,34 +195,43 @@ export class AuthState {
   }
 
   @Action(ResetPassword)
-  resetPassword(ctx: StateContext<AuthStateModel>, action: ResetPassword) {
-    return this.authService.resetPassword(action.payload).pipe(
-      tap((sesionData: SessionData) => {
-        ctx.setState({
-          user: sesionData.user,
-          accessToken: {
-            value: sesionData.tokenData.accessToken,
-            life: sesionData.tokenData.accessTokenLife,
-            expired: false,
-          },
-          refreshToken: {
-            value: sesionData.tokenData.refreshToken,
-            life: sesionData.tokenData.refreshTokenLife,
-            expired: false,
-          },
-          loginError: null,
-          signUpError: null,
-        });
-      }),
-      catchError((err) => {
-        ctx.setState(
-          patch<AuthStateModel>({
-            loginError: err
-          })
-        );
-        return throwError(() => err);
-      }),
-    );
+  async resetPassword(ctx: StateContext<AuthStateModel>, action: ResetPassword) {
+    ctx.patchState({
+      loaded: false,
+      loading: true,
+    });
+
+    try 
+    {
+      const sesionData = await firstValueFrom(this.authService.resetPassword(action.payload));
+      ctx.setState(patch<AuthStateModel>({ 
+        user: sesionData.user,
+        accessToken: {
+          value: sesionData.tokenData.accessToken,
+          life: sesionData.tokenData.accessTokenLife,
+          expired: false,
+        },
+        refreshToken: {
+          value: sesionData.tokenData.refreshToken,
+          life: sesionData.tokenData.refreshTokenLife,
+          expired: false,
+        },
+        loginError: null,
+        signUpError: null,
+       }));
+    } 
+    catch(loginError)
+    {
+      ctx.setState(patch<AuthStateModel>({ loginError  }));
+      throw loginError;
+    }
+    finally
+    {
+      ctx.patchState({ 
+        loaded: true,
+        loading: false,
+      });
+    }
   }
 
   @Action(Logout)
@@ -215,22 +251,33 @@ export class AuthState {
   }
 
   @Action(LoadMe)
-  loadMe(ctx: StateContext<AuthStateModel>) {
-    if (ctx.getState().user !== null) {
+  async loadMe(ctx: StateContext<AuthStateModel>) {
+    if (ctx.getState().user !== null || ctx.getState().loading) {
       return;
     }
 
-    return this.authService.loadMe().pipe(
-      tap((user) => {
-        ctx.patchState({
-          user: user,
-        });
-      }),
-      catchError(() => {
-        ctx.patchState(defaults());
-        return of(null);
-      }),
-    );
+    ctx.patchState({
+      loaded: false,
+      loading: true,
+    });
+
+    try 
+    {
+      const user = await firstValueFrom(this.authService.loadMe());
+      ctx.setState(patch<AuthStateModel>({ user }));
+    } 
+    catch(error)
+    {
+      ctx.patchState(defaults());
+      return;
+    }
+    finally
+    {
+      ctx.patchState({ 
+        loaded: true,
+        loading: false,
+      });
+    }
   }
 
   @Action(RefreshAccessToken)
@@ -267,11 +314,12 @@ export class AuthState {
 
   @Action(IsTokenExpired)
   setIsTokenExpired(ctx: StateContext<AuthStateModel>, action: IsTokenExpired) {
-    if (action.accessToken && action.refreshToken) {
-      return ctx.setState(defaults());
+    const state = ctx.getState();
+    if (state.accessToken.expired === action.accessToken && state.refreshToken.expired === action.refreshToken) {
+      return;
     }
 
-    return ctx.setState(
+    ctx.setState(
       patch<AuthStateModel>({
         accessToken: patch<AuthStateTokenModel>({
           expired: action.accessToken,
@@ -281,5 +329,9 @@ export class AuthState {
         })
       })
     );
+
+    if (action.accessToken && action.refreshToken) {
+      ctx.dispatch(new Logout())
+    }
   }
 }
