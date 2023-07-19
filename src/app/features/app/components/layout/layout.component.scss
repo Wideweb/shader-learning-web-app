@@ -57,8 +57,10 @@
         color: $blue;
       }
 
-      &:hover {
-        color: $blue-secondary;
+      @include for-desktop-up {
+        &:hover {
+          color: $blue-secondary;
+        }
       }
     }
   }
@@ -70,7 +72,7 @@
   }
 
   @include for-tablet-up {    
-      .navbar-small .site-brand {
+      .site-brand {
           position: absolute;
           left: 50%;
           transform: translate(-50%, 0);
@@ -137,8 +139,10 @@
       color: $white;
     }
 
-    &:hover > h2, &:active > h2 {
-      color: $green;
+    @include for-desktop-up {
+      &:hover > h2, &:active > h2 {
+        color: $green;
+      }
     }
 
     &.active > h2 {
@@ -189,8 +193,10 @@
       color: $blue;
     }
 
-    &:hover {
-      color: $blue-secondary;
+    @include for-desktop-up {
+      &:hover {
+        color: $blue-secondary;
+      }
     }
   }
   

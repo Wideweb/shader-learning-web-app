@@ -8,7 +8,7 @@
             <form class="form" [formGroup]="form" autocomplete="on">
                 <div class="form-field" [ngClass]="{'invalid': form.get('name')?.invalid && form.get('name')?.touched}">
                     <label class="p2">Name</label>
-                    <input name="name" type="text" placeholder="Enter your name" formControlName="name">
+                    <input name="name" type="text" placeholder="Enter your name" formControlName="name" autocomplete="username">
 
                     <div class="errors">
                         <div class="error p3" *ngIf="form.get('name')?.hasError('required')">name is required</div>
@@ -18,7 +18,7 @@
 
                 <div class="form-field" [ngClass]="{'invalid': form.get('email')?.invalid && form.get('email')?.touched}">
                     <label class="p2">Email</label>
-                    <input name="email" type="text" placeholder="Enter your email" formControlName="email">
+                    <input name="email" type="text" placeholder="Enter your email" formControlName="email" autocomplete="email">
 
                     <div class="errors">
                         <div class="error p3" *ngIf="form.get('email')?.hasError('required')">email is required</div>
@@ -29,7 +29,7 @@
 
                 <div class="form-field" [ngClass]="{'invalid': form.get('password')?.invalid && form.get('password')?.touched}">
                     <label class="p2">Password</label>
-                    <input name="password" type="text" placeholder="Enter your password" formControlName="password">
+                    <input name="password" type="password" placeholder="Enter your password" formControlName="password" autocomplete="new-password">
 
                     <div class="errors">
                         <div class="error p3" *ngIf="form.get('password')?.hasError('required')">password is required</div>

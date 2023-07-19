@@ -42,7 +42,7 @@
     align-items: center;
 
     min-width: toRem(170);
-    width: toRem(170);
+    width: fit-content;
     min-height: toRem(220);
 
     .photo {
@@ -57,17 +57,18 @@
     .name {
         margin-top: toRem(15);
         color: $white;
+        white-space: nowrap;
     }
     
     .title {
         color: $white;
+        white-space: nowrap;
     }
 }
 
 .message {
     margin-top: toRem(30);
     color: $white;
-    max-width: toRem(518);
     text-align: center;
 }
 

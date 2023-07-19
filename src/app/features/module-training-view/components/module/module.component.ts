@@ -6,6 +6,7 @@ import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { ModuleProgressLoad } from 'src/app/features/module-training-common/state/module-training-common.actions';
 import { ModuleProgressState } from 'src/app/features/module-training-common/state/module-training-common.state';
 import { ModuleProgressDto } from 'src/app/features/module-training-common/models/module-progress.model';
+import { API } from 'src/environments/environment';
 
 @Component({
   selector: 'module',
@@ -20,10 +21,12 @@ export class ModuleComponent implements OnInit, OnDestroy {
   @Select(ModuleProgressState.loaded)
   public loaded$!: Observable<boolean>;
 
+  public pageHeaderImageSrc$: Observable<string> | null = null;
+
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store, private route: ActivatedRoute) { }
-
+  
   ngOnInit(): void {
     const moduleId$ = this.route.params
       .pipe(
@@ -31,6 +34,8 @@ export class ModuleComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         filter(moduleId => moduleId),
       );
+
+    this.pageHeaderImageSrc$ = moduleId$.pipe(map(id => `${API}/modules/${id}/pageHeaderImage`));
 
     const isAuthenticated$ = this.store.select(AuthState.isAuthenticated)
       .pipe(distinctUntilChanged());

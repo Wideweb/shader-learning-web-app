@@ -3,10 +3,10 @@ import { Action, createSelector, Selector, State, StateContext } from "@ngxs/sto
 import { patch } from '@ngxs/store/operators';
 import { catchError, firstValueFrom, of, tap, throwError } from "rxjs";
 import { hasAll, hasAny } from "../../common/services/utils";
-import { SessionData } from "../models/session-data.model";
 import { UserDto } from "../models/user.model";
 import { AuthService } from "../services/auth.service";
 import { IsTokenExpired, LoadMe, Login, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
+import { isExpired } from "../services/token.utils";
 
 export interface AuthStateModel {
   user: UserDto | null;
@@ -20,8 +20,7 @@ export interface AuthStateModel {
 
 interface AuthStateTokenModel {
   value: string | '',
-  life: number,
-  expired: boolean,
+  expiresAt: number,
 }
 
 const defaults = (): AuthStateModel => {
@@ -29,13 +28,13 @@ const defaults = (): AuthStateModel => {
     user: null,
     accessToken: {
       value: '',
-      life: Number.NaN,
-      expired: true,
+      expiresAt: Number.NaN,
+      // expired: true,
     },
     refreshToken: {
       value: '',
-      life: Number.NaN,
-      expired: true,
+      expiresAt: Number.NaN,
+      // expired: true,
     },
     loginError: null,
     signUpError: null,
@@ -57,18 +56,18 @@ export class AuthState {
   }
 
   @Selector()
-  static accessToken(state: AuthStateModel): string | null {
-    return state.accessToken.value;
+  static accessToken(state: AuthStateModel): AuthStateTokenModel {
+    return state.accessToken;
   }
 
   @Selector()
-  static refreshToken(state: AuthStateModel): string | null {
-    return state.refreshToken.value;
+  static refreshToken(state: AuthStateModel): AuthStateTokenModel {
+    return state.refreshToken;
   }
 
   @Selector()
   static isAuthenticated(state: AuthStateModel): boolean {
-    return !state.refreshToken.expired;
+    return !!state.refreshToken.value;
   }
 
   @Selector()
@@ -114,13 +113,11 @@ export class AuthState {
         user: sesionData.user,
         accessToken: {
           value: sesionData.tokenData.accessToken,
-          life: sesionData.tokenData.accessTokenLife,
-          expired: false,
+          expiresAt: sesionData.tokenData.accessTokenExpiresAt,
         },
         refreshToken: {
           value: sesionData.tokenData.refreshToken,
-          life: sesionData.tokenData.refreshTokenLife,
-          expired: false,
+          expiresAt: sesionData.tokenData.refreshTokenExpiresAt,
         },
         loginError: null,
         signUpError: null,
@@ -154,13 +151,11 @@ export class AuthState {
         user: sesionData.user,
         accessToken: {
           value: sesionData.tokenData.accessToken,
-          life: sesionData.tokenData.accessTokenLife,
-          expired: false,
+          expiresAt: sesionData.tokenData.accessTokenExpiresAt,
         },
         refreshToken: {
           value: sesionData.tokenData.refreshToken,
-          life: sesionData.tokenData.refreshTokenLife,
-          expired: false,
+          expiresAt: sesionData.tokenData.refreshTokenExpiresAt,
         },
         loginError: null,
         signUpError: null,
@@ -208,13 +203,11 @@ export class AuthState {
         user: sesionData.user,
         accessToken: {
           value: sesionData.tokenData.accessToken,
-          life: sesionData.tokenData.accessTokenLife,
-          expired: false,
+          expiresAt: sesionData.tokenData.accessTokenExpiresAt,
         },
         refreshToken: {
           value: sesionData.tokenData.refreshToken,
-          life: sesionData.tokenData.refreshTokenLife,
-          expired: false,
+          expiresAt: sesionData.tokenData.refreshTokenExpiresAt,
         },
         loginError: null,
         signUpError: null,
@@ -236,7 +229,13 @@ export class AuthState {
 
   @Action(Logout)
   logout(ctx: StateContext<AuthStateModel>) {
-    if (ctx.getState().accessToken.expired && ctx.getState().refreshToken.expired) {
+    const accessToken = ctx.getState().accessToken;
+    const refreshToken = ctx.getState().refreshToken;
+
+    const accessTokenExpired = !accessToken.value || isExpired(accessToken.expiresAt);
+    const refreshTokenExpired = !refreshToken.value || isExpired(refreshToken.expiresAt);
+
+    if (accessTokenExpired && refreshTokenExpired) {
       ctx.setState(defaults());
       return;
     }
@@ -285,12 +284,12 @@ export class AuthState {
     const refreshToken = ctx.getState().refreshToken.value;
 
     return this.authService.refreshAccessToken(refreshToken).pipe(
-      tap(({token, expiresIn}) => {
+      tap(({token, expiresAt}) => {
         ctx.setState(
           patch<AuthStateModel>({
             accessToken: patch<AuthStateTokenModel>({
               value: token,
-              life: expiresIn
+              expiresAt
             })
           })
         )
@@ -300,8 +299,8 @@ export class AuthState {
 
   @Action(UpdateToken)
   updateAccessToken(ctx: StateContext<AuthStateModel>, action: UpdateToken) {
-    if (action.accessToken.expired && action.refreshToken.expired) {
-      return ctx.setState(defaults());
+    if (!action.accessToken.value && !action.refreshToken.value) {
+      return ctx.dispatch(new Logout());
     }
 
     return ctx.setState(
@@ -315,22 +314,18 @@ export class AuthState {
   @Action(IsTokenExpired)
   setIsTokenExpired(ctx: StateContext<AuthStateModel>, action: IsTokenExpired) {
     const state = ctx.getState();
-    if (state.accessToken.expired === action.accessToken && state.refreshToken.expired === action.refreshToken) {
+    if (!state.accessToken.value && action.accessTokenExpired && !state.refreshToken.value && action.refreshTokenExpired) {
       return;
     }
 
     ctx.setState(
       patch<AuthStateModel>({
-        accessToken: patch<AuthStateTokenModel>({
-          expired: action.accessToken,
-        }),
-        refreshToken: patch<AuthStateTokenModel>({
-          expired: action.refreshToken,
-        })
+        ...(state.accessToken.value && action.accessTokenExpired ? {accessToken: patch<AuthStateTokenModel>({value: '',})} : {}),
+        ...(state.refreshToken.value && action.refreshTokenExpired ? {refreshToken: patch<AuthStateTokenModel>({value: '',})} : {}),
       })
     );
 
-    if (action.accessToken && action.refreshToken) {
+    if (action.accessTokenExpired && action.refreshTokenExpired) {
       ctx.dispatch(new Logout())
     }
   }

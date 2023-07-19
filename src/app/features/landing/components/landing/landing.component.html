@@ -28,6 +28,7 @@
     <carousel class="table"
       [loaded]="(modulesLoaded$ | async)!"
       [data]="(modules$ | async)!"
+      [cardsGap]="isSmall ? 220 : 40"
       [size]="size">
     </carousel>
   </div>

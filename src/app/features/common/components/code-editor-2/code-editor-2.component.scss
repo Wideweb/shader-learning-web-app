@@ -21,6 +21,9 @@
     flex-direction: row;
     box-sizing: border-box;
     padding-left: toRem(44);
+    @include for-phone-only {
+        padding-left: toRem(40);
+    }
 }
 
 .file {

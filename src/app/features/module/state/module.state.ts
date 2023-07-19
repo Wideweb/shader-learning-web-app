@@ -6,7 +6,7 @@ import { Logout } from "../../auth/state/auth.actions";
 import { ModuleTaskListDto } from "../models/module-task-list.model";
 import { ModuleDto } from "../models/module.model";
 import { ModuleService } from "../services/module.service";
-import { ModuleCreate, ModuleEditDescriptionBegin, ModuleEditDescriptionCancel, ModuleEditNameBegin, ModuleEditNameCancel, ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleTaskUpdate, ModuleToggleLock, ModuleUpdate, ModuleUpdateCover, ModuleUpdateDescription, ModuleUpdateName } from "./module.actions";
+import { ModuleCreate, ModuleEditDescriptionBegin, ModuleEditDescriptionCancel, ModuleEditNameBegin, ModuleEditNameCancel, ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleTaskUpdate, ModuleToggleLock, ModuleUpdate, ModuleUpdateCover, ModuleUpdateDescription, ModuleUpdateName, ModuleUpdatePageHeaderImage } from "./module.actions";
 
 export interface ModuleStateModel {
   current: ModuleDto | null;
@@ -197,6 +197,29 @@ export class ModuleState {
       return ctx.setState(patch<ModuleStateModel>({
         current: patch<ModuleDto>({
           cover: action.file
+        }),
+      }));
+    } 
+    catch (error)
+    {
+      ctx.setState(patch<ModuleStateModel>({ error }));
+      throw error;
+    }
+  }
+
+  @Action(ModuleUpdatePageHeaderImage)
+  async updatePageHeaderImage(ctx: StateContext<ModuleStateModel>, action: ModuleUpdatePageHeaderImage) {
+    const module = ctx.getState().current;
+    if (!module) {
+      throw 'No module';
+    }
+
+    try 
+    {
+      await this.service.updatePageHeaderImage(module.id, action.file);
+      return ctx.setState(patch<ModuleStateModel>({
+        current: patch<ModuleDto>({
+          pageHeaderImage: action.file
         }),
       }));
     } 

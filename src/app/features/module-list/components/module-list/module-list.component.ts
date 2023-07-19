@@ -20,7 +20,7 @@ export class ModuleListComponent implements OnInit {
   @Select(ModuleListState.loaded)
   public loaded$!: Observable<boolean>;
 
-  public placeholders = [...Array(30).keys()];
+  public placeholders = [...Array(6).keys()];
 
   constructor(private store: Store, private router: Router, private pageMeta: PageMetaService) {
     this.modules$ = this.store.select(ModuleListState.list).pipe(map(data => data.map(module=> ({

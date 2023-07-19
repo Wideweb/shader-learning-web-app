@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { CarouselCardComponent, CarouselCardModel } from './carousel-card/carousel-card.component';
 import { easeOutQuart } from 'src/app/features/common/services/easing';
 import { saturate } from 'src/app/features/common/services/math';
@@ -29,6 +29,9 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
 
   @Input()
   public size: ComponentSize = ComponentSize.Big;
+
+  @ViewChild('table')
+  private tableEl!: ElementRef;
 
   @ViewChildren(CarouselCardComponent, { read: ElementRef })
   private cards!: QueryList<ElementRef>;
@@ -125,7 +128,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
       this.innerData = (this.data || []).slice(0, this.maxCapacity);
     }
 
-    if ('size' in changes) {
+    if (['size', 'cardWdith', 'cardsGap'].some(it => it in changes)) {
       this.position = 0;
       this.targetPosition = 0;
       this.resize();
@@ -136,6 +139,10 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
 
   resize() {
     this.tableWidth = (this.viewCapacity + 2) * this.cardWdith + (this.viewCapacity + 1) * this.cardsGap;
+
+    if (this.tableEl) {
+      this.tableEl.nativeElement.style.setProperty('left', toRem(-(this.cardWdith + this.cardsGap)));
+    }
 
     // const ctrlWidth = 40;
     // const hostPadding = 50;

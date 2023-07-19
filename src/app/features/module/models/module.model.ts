@@ -9,4 +9,5 @@ export interface ModuleDto {
     tasks: ModuleTaskListDto[];
     locked: boolean;
     cover: File | null;
+    pageHeaderImage: File | null;
 }

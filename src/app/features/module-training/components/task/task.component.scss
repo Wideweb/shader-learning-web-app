@@ -20,13 +20,15 @@
     }
 }
 
-.btn-like.like:hover {
-    color: $white;
+@include for-desktop-up {
+    .btn-like.like:hover {
+        color: $white;
 
-    .thumbs-up-ico {
-        -webkit-mask-image: url(/assets/thumbs-up.svg);
-        mask-image: url(/assets/thumbs-up.svg);
-        background-color: $white;
+        .thumbs-up-ico {
+            -webkit-mask-image: url(/assets/thumbs-up.svg);
+            mask-image: url(/assets/thumbs-up.svg);
+            background-color: $white;
+        }
     }
 }
 
@@ -40,13 +42,15 @@
     }
 }
 
-.btn-like.dislike:hover {
-    color: $white;
-    
-    .thumbs-down-ico {
-        -webkit-mask-image: url(/assets/thumbs-down.svg);
-        mask-image: url(/assets/thumbs-down.svg);
-        background-color: $white;
+@include for-desktop-up {
+    .btn-like.dislike:hover {
+        color: $white;
+        
+        .thumbs-down-ico {
+            -webkit-mask-image: url(/assets/thumbs-down.svg);
+            mask-image: url(/assets/thumbs-down.svg);
+            background-color: $white;
+        }
     }
 }
 
@@ -85,6 +89,9 @@
     @include for-tablet-down {
         padding-left: toRem(49);
     }
+    @include for-phone-only {
+        padding-left: toRem(40);
+    }
 
 
     .heading {
@@ -98,6 +105,9 @@
         padding-right: toRem(24);
         @include for-tablet-down {
             padding-right: toRem(49);
+        }
+        @include for-phone-only {
+            padding-right: toRem(40);
         }
         
         .name {
@@ -143,6 +153,9 @@
         padding-right: toRem(24);
         @include for-tablet-down {
             padding-right: toRem(49);
+        }
+        @include for-phone-only {
+            padding-right: toRem(40);
         }
     }
 
@@ -207,7 +220,7 @@
 
     .toast {
         width: 100%;
-        height: toRem(48);
+        // height: fit-content;
         box-sizing: border-box;
         padding: 0 toRem(55) 0 toRem(44 + 8);
         position: absolute;
@@ -264,22 +277,35 @@
             }
         }
     }
+
+    @include for-phone-only {
+        ::ng-deep .ͼo .cm-gutter.cm-gutter-lint {
+            width: toRem(5);
+        }
+    }
 }
 
 .output-section {
     box-sizing: border-box;
     padding: toRem(20) toRem(55) toRem(0) toRem(44);
+    @include for-phone-only {
+        padding: toRem(20) toRem(40) toRem(0) toRem(40);
+    }
 
     .container {
         height: toRem(260);
         display: flex;
-        flex-direction: row;
         gap: toRem(16);
         overflow: hidden;
         background-color: $white;
         box-sizing: border-box;
         padding: toRem(16) toRem(16) toRem(20) toRem(16);
         border-radius: toRem(8);
+
+        @include for-phone-only {
+            height: toRem(500);
+            flex-direction: column;
+        }
     }
 
     .output {
@@ -300,24 +326,55 @@
 .toolbar-section {
     box-sizing: border-box;
     padding: toRem(20) toRem(55) toRem(30) toRem(44);
+    @include for-phone-only {
+        padding: toRem(20) toRem(40) toRem(40) toRem(40);
+    }
 
     .container {
         display: flex;
         flex-direction: row;
         align-items: center;
-        // margin-bottom: toRem(20);
         box-sizing: border-box;
-    
-        .btn-link + .btn-link {
-            margin-left: toRem(12);
+
+        @include for-phone-only {
+            flex-direction: column-reverse;
+
+            .spacer {
+                height: toRem(16);
+            }
         }
-    
+
+        @include for-tablet-up {
+            .btn-link + .btn-link {
+                margin-left: toRem(12);
+            }
+
+            .spacer {
+                flex: 1;
+            }
+        }
+
         .btn-text + .btn-text {
             margin-left: toRem(20);
         }
-    
-        .spacer {
-            flex: 1;
+    }
+
+    .toolbar-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        @include for-phone-only {
+            width: 100%;
+
+            &.actions {
+                flex-direction: column;
+                gap: toRem(10);
+
+                .btn-link {
+                    width: 100%;
+                }
+            }
         }
     }
 }
@@ -332,5 +389,10 @@
 
     @include for-desktop-up {
         display: none;
+    }
+
+    @include for-phone-only {
+        padding: toRem(30) 0;
+        justify-content: center
     }
 }

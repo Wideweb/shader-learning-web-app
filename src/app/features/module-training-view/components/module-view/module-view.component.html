@@ -1,10 +1,18 @@
 <div class="module">
 
-  <app-sticky >
+  <app-sticky>
     <div class="heading">
+      <app-svg-img class="page-header-image" [src]="pageHeaderImageSrc"></app-svg-img>
+      <!-- <img class="img" [src]="pageHeaderImageSrc"> -->
+      <!-- let pageHeaderImage = null;
+        if (module.pageHeaderImage) {
+            const fileBlob = await firstValueFrom(this.http.get(`${API}/modules/${moduleId}/pageHeaderImage`, { responseType: 'blob' }).pipe(shareReplay(1)));
+            pageHeaderImage = new File([fileBlob], `page-header`);
+        } -->
+
       <div class="container max-width">
 
-        <a class="back-link" routerLink="/explore"><span class="ico-container"><i class="arrow-left-ico"></i></span><span class="p3">Back To Explore</span></a>
+        <a class="back-link" routerLink="/explore"><span class="ico-container"><i class="arrow-left-ico"></i></span><span class="p3 text">Back To Explore</span></a>
 
         <div class="title">
           <h2 class="module-name">{{module!.name}}</h2>

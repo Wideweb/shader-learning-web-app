@@ -250,6 +250,11 @@ ul {
     background-color: $white !important;
 }
 
+.cdk-overlay-backdrop {
+    background-color: #1F1F1F52;
+    backdrop-filter: blur(toRem(1));
+}
+
 .CodeMirror {
     background-color: $white;
     font-family: monospace;
@@ -866,8 +871,10 @@ h3 {
         background-color: $black;
     }
     
-    &:hover .ico {
-        background-color: $blue;
+    @include for-desktop-up {
+        &:hover .ico {
+            background-color: $blue;
+        }
     }
     
     &:active .ico {
@@ -890,8 +897,10 @@ a.link {
         color: $blue;
     }
 
-    &:hover {
-        color: $blue-secondary;
+    @include for-desktop-up {
+        &:hover {
+            color: $blue-secondary;
+        }
     }
 
     &:active {
@@ -926,13 +935,16 @@ a.link {
     background-color: $blue;
 }
 
-.btn-circle:hover, .btn-circle.secondary:hover {
-    background-color: $grey;
-}
+@include for-desktop-up {
 
-.btn-circle.secondary:hover .ico {
-    color: $white;
-    background-color: $white;
+    .btn-circle:hover, .btn-circle.secondary:hover {
+        background-color: $grey;
+    }
+
+    .btn-circle.secondary:hover .ico {
+        color: $white;
+        background-color: $white;
+    }
 }
 
 .btn-circle:active, .btn-circle.secondary:active {
@@ -976,8 +988,10 @@ a.link {
         background-color: $white;
     }
 
-    &:hover {
-        background-color: $grey;
+    @include for-desktop-up {
+        &:hover {
+            background-color: $grey;
+        }
     }
 
     &:active {
@@ -992,6 +1006,7 @@ a.link {
     display: inline-block;
     background-color: $blue;
     color: $white;
+    box-sizing: border-box;
     padding: toRem(12) toRem(24);
     font-size: toRem(16);
     line-height: toRem(16);
@@ -1001,8 +1016,10 @@ a.link {
     cursor: pointer;
 }
 
-.btn-link:hover {
-    background-color: $grey;
+@include for-desktop-up {
+    .btn-link:hover {
+        background-color: $grey;
+    }
 }
 
 .btn-link:active {
@@ -1048,8 +1065,10 @@ a.link {
     top: toRem(4);
 }
 
-.btn-link.btn-link-ico-addon:hover .ico {
-    background-color: $grey;
+@include for-desktop-up {
+    .btn-link.btn-link-ico-addon:hover .ico {
+        background-color: $grey;
+    }
 }
 
 .btn-link.btn-link-ico-addon:active .ico {
@@ -1068,8 +1087,10 @@ a.link {
     background-color: $dark-blue;
 }
 
-.btn-link.darker:hover {
-    background-color: $grey;
+@include for-desktop-up {
+    .btn-link.darker:hover {
+        background-color: $grey;
+    }
 }
 
 .btn-link.darker:active {
@@ -1092,10 +1113,12 @@ a.link {
     box-shadow: inset 0 0 0 toRem(1) $blue;
 }
 
-.btn-link.white:hover {
-    background-color: $grey;
-    color: $white;
-    box-shadow: unset;
+@include for-desktop-up {
+    .btn-link.white:hover {
+        background-color: $grey;
+        color: $white;
+        box-shadow: unset;
+    }
 }
 
 .btn-link.white:active {
@@ -1152,10 +1175,12 @@ a.link {
         background-color: $blue;
     }
 
-    &:hover {
-        color: $blue-secondary;
-        .ico {
-            background-color: $blue-secondary;
+    @include for-desktop-up {
+        &:hover {
+            color: $blue-secondary;
+            .ico {
+                background-color: $blue-secondary;
+            }
         }
     }
 
@@ -1194,11 +1219,13 @@ a.link {
         background-color: $blue;
     }
 
-    &:hover {
-        background-color: $blue;
-        color: $white;
-        .ico {
-            background-color: $white;
+    @include for-desktop-up {
+        &:hover {
+            background-color: $blue;
+            color: $white;
+            .ico {
+                background-color: $white;
+            }
         }
     }
 

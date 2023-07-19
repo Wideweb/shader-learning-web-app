@@ -108,12 +108,12 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    //setTimeout(() => {
       this.setCanvasSize();
       this.createRenderer();
       this.createScene();
       this.startRenderingLoop();
-    }, 100);
+    // }, 100);
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -218,6 +218,10 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private startRenderingLoop(): void {
+    if (this.isRunning) {
+      return;
+    }
+
     this.isRunning = true;
 
     let t0 = performance.now();

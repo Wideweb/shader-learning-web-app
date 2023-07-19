@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { ModuleProgressDto } from 'src/app/features/module-training-common/models/module-progress.model';
+import { API } from 'src/environments/environment';
 
 @Component({
   selector: 'module-view',
@@ -14,6 +15,8 @@ export class ModuleViewComponent implements OnInit, OnChanges {
 
   public started: boolean = false;
 
+  public pageHeaderImageSrc = '';
+
   constructor(private pageMeta: PageMetaService) { }
 
   ngOnInit(): void {
@@ -23,6 +26,7 @@ export class ModuleViewComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if ('module' in changes) {
       this.updateMetaData();
+      this.pageHeaderImageSrc = `${API}/modules/${this.module.id}/pageHeaderImage`;
     }
   }
 

@@ -24,7 +24,13 @@ export class ModuleService {
             cover = new File([fileBlob], `cover`);
         }
 
-        return {...module, cover};
+        let pageHeaderImage = null;
+        if (module.pageHeaderImage) {
+            const fileBlob = await firstValueFrom(this.http.get(`${API}/modules/${moduleId}/pageHeaderImage`, { responseType: 'blob' }).pipe(shareReplay(1)));
+            pageHeaderImage = new File([fileBlob], `page-header`);
+        }
+
+        return {...module, cover, pageHeaderImage};
     }
 
     public async create(module: CreateModuleDto): Promise<number> {
@@ -49,6 +55,12 @@ export class ModuleService {
         const file = cover ? await firstValueFrom(this.file.uploadTemp(cover as File)) : null;
 
         return await firstValueFrom(this.http.put<number>(`${API}/modules/${moduleId}/cover`, {file}).pipe(shareReplay(1)));
+    }
+
+    public async updatePageHeaderImage(moduleId: number, pageHeaderImage: File): Promise<number> {
+        const file = pageHeaderImage ? await firstValueFrom(this.file.uploadTemp(pageHeaderImage as File)) : null;
+
+        return await firstValueFrom(this.http.put<number>(`${API}/modules/${moduleId}/pageHeaderImage`, {file}).pipe(shareReplay(1)));
     }
 
     public toggleLock(moduleId: number): Observable<boolean> {

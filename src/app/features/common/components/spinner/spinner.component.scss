@@ -44,7 +44,7 @@
             overflow: hidden;
 
             animation: circle-animation 1500ms ease-in-out infinite;
-            animation-delay: math.div(1500, 8) * ($i + 1) + ms;
+            animation-delay: math.div(1500, 8) * ($i) + ms;
         }
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { distinctUntilChanged, interval, lastValueFrom, Subject, takeUntil, zip } from 'rxjs';
+import { distinctUntilChanged, interval, Subject, takeUntil, zip } from 'rxjs';
 import { AuthToken } from '../../auth/services/auth.token';
 import { IsTokenExpired, LoadMe, UpdateToken } from '../../auth/state/auth.actions';
 import { AuthState } from '../../auth/state/auth.state';
@@ -50,13 +50,18 @@ export class AppInitService implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(auth => {
-        this.accessToken.set(auth.accessToken.value, auth.accessToken.life);
-        this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.life);
+        if (auth.refreshToken.value) {
+          this.accessToken.set(auth.accessToken.value, auth.accessToken.expiresAt);
+          this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.expiresAt);
+        } else {
+          this.accessToken.clear();
+          this.refreshToken.clear();
+        }
       });
 
     const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
     if (isAuthenticated) {
-      setTimeout(() => lastValueFrom(this.store.dispatch(new LoadMe())), 10000);
+      this.store.dispatch(new LoadMe());
     }
   }
 }

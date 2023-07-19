@@ -56,11 +56,11 @@ img {
 }
 
 .last {
-    -webkit-filter: blur(5px);
-    -moz-filter: blur(5px);
-    -o-filter: blur(5px);
-    -ms-filter: blur(5px);
-    filter: blur(5px);
+    -webkit-filter: blur(toRem(5));
+    -moz-filter: blur(toRem(5));
+    -o-filter: blur(toRem(5));
+    -ms-filter: blur(toRem(5));
+    filter: blur(toRem(5));
 }
 
 .btn-view-all {

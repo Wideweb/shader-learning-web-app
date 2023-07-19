@@ -66,6 +66,19 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-field form-field-editable">
+          <label class="label">Page Header Image</label>
+
+          <module-cover
+              label=""
+              formControlName="pageHeaderImage"
+              (select)="hanldePageHeaderImageChange()"
+          ></module-cover>
+
+        </div>
+      </div>
+
       <div class="form-row flex-row-space-between">
           <mat-checkbox formControlName="locked" color="primary" (click)="togglLock()">Locked</mat-checkbox>
 

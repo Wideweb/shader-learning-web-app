@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ModuleState } from '../../state/module.state';
 import { ModuleDto } from '../../models/module.model';
-import { ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleToggleLock, ModuleUpdateCover, ModuleUpdateDescription, ModuleUpdateName } from '../../state/module.actions';
+import { ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleToggleLock, ModuleUpdateCover, ModuleUpdateDescription, ModuleUpdateName, ModuleUpdatePageHeaderImage } from '../../state/module.actions';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 
 @Component({
@@ -62,6 +62,10 @@ export class ModuleEditComponent implements OnInit, OnDestroy {
 
   saveModuleCover(file: File) {
     this.store.dispatch(new ModuleUpdateCover(file));
+  }
+
+  savePageHeaderImageSave(file: File) {
+    this.store.dispatch(new ModuleUpdatePageHeaderImage(file));
   }
 
   toggleLock() {

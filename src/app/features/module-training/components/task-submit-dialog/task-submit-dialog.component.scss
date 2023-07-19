@@ -7,7 +7,13 @@
     align-items: center;
     box-sizing: border-box;
     padding: toRem(50) 0 toRem(40) 0;
-    width: toRem(380);
+    max-width: toRem(380);
+    min-width: toRem(380);
+
+    @include for-phone-only {    
+        min-width: 0;
+        padding: toRem(50) toRem(40) toRem(40) toRem(40);
+    }
 }
 
 .ico {
@@ -27,5 +33,8 @@
     gap: toRem(10);
     width: 100%;
     box-sizing: border-box;
-    padding: 0 toRem(40);
+    
+    @include for-tablet-up {    
+        padding: 0 toRem(40);
+    }
 }

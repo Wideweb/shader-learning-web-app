@@ -305,3 +305,9 @@ mat-paginator {
     width: 0;
     height: 0;
 }
+
+.back-link .btn-text {
+    @include for-phone-only {    
+        display: none;
+    }
+}

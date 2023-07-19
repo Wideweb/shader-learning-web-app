@@ -41,6 +41,9 @@ export class ModuleEditFormComponent implements OnChanges {
   public onModuleCoverSave = new EventEmitter<File>();
 
   @Output()
+  public onModulePageHeaderImageSave = new EventEmitter<File>();
+
+  @Output()
   public onToggleLock = new EventEmitter<void>();
 
   @Output()
@@ -64,6 +67,7 @@ export class ModuleEditFormComponent implements OnChanges {
       description: new FormControl('', [Validators.required]),
       locked: false,
       cover: null,
+      pageHeaderImage: null,
     });
   }
 
@@ -73,7 +77,8 @@ export class ModuleEditFormComponent implements OnChanges {
         name: this.module?.name,
         description: this.module?.description,
         locked: this.module?.locked,
-        cover: this.module?.cover
+        cover: this.module?.cover,
+        pageHeaderImage: this.module?.pageHeaderImage,
       });
     }
 
@@ -130,5 +135,9 @@ export class ModuleEditFormComponent implements OnChanges {
 
   hanldeCoverChange() {
     this.onModuleCoverSave.emit(this.form.get('cover')?.value);
+  }
+
+  hanldePageHeaderImageChange() {
+    this.onModulePageHeaderImageSave.emit(this.form.get('pageHeaderImage')?.value);
   }
 }

@@ -128,13 +128,17 @@
         </ng-template>
 
 
-        <a class="btn-link white" (click)="run()">Run code</a>
-        <a *hasPermission="['task_submit']" class="btn-link" (click)="submit()">Submit</a>
+        <div class="toolbar-group actions">
+          <a class="btn-link white" (click)="run()">Run code</a>
+          <a *hasPermission="['task_submit']" class="btn-link" (click)="submit()">Submit</a>
+        </div>
     
         <div class="spacer"></div>
     
-        <a class="btn-text" (click)="resetToLastSubmettedCode()"><i class="ico clock-ico"></i>Last submit</a>
-        <a class="btn-text" (click)="resetToDefaultCode()"><i class="ico reset-ico"></i>Reset</a>
+        <div class="toolbar-group links">
+          <a class="btn-text" (click)="resetToLastSubmettedCode()"><i class="ico clock-ico"></i>Last submit</a>
+          <a class="btn-text" (click)="resetToDefaultCode()"><i class="ico reset-ico"></i>Reset</a>
+        </div>
       </div>
     </div>
 

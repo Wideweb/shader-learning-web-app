@@ -88,7 +88,16 @@
         }
 
         &[type=password] {
-            padding-top: 14px
+            padding-top: toRem(14);
+
+            &::placeholder {
+                position: relative;
+                top: toRem(-2);
+            }
+
+            &::-ms-reveal {
+                display: none;
+            }
         }
     }
 

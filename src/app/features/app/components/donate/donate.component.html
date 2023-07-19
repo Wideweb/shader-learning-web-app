@@ -10,19 +10,21 @@
 
   <div class="persons">
     <div class="person">
-      <img class="photo" src="assets/alexander.svg">
+      <img class="photo" src="assets/alexander.png">
+      <!-- <app-svg-icon class="photo" name="alexander"></app-svg-icon> -->
       <h3 class="name">Alexander Alkevich</h3>
       <p class="p2 title">Project Creator</p>
     </div>
 
     <div class="person">
-      <img class="photo" src="assets/ulyana.svg">
+      <img class="photo" src="assets/ulyana.png">
       <h3 class="name">Ulyana Khatkevich</h3>
       <p class="p2 title">Project Designer</p>
     </div>
   </div>
 
-  <h1 class="message">We hope you enjoy our work. Your support inspires us to develop the project further!</h1>
+  <h1 *ngIf="!isSmall" class="message">We hope you enjoy our work.<br>Your support inspires us<br>to develop the project<br>even further!</h1>
+  <h1 *ngIf="isSmall" class="message">We hope you enjoy our work. Your support inspires us to develop the project further!</h1>
   <a class="btn-link btn-link-ico-addon darker btn-donate" href="https://www.buymeacoffee.com/alckevich">Donate<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
 
   <div class="animation-box-3" *ngIf="isBig">

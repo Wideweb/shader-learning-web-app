@@ -38,6 +38,7 @@ import { FileEditorComponent } from "./components/code-editor-2/file-editor/file
 import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
 import { AppSpinnerComponent } from "./components/spinner/spinner.component";
 import { LocationHistoryService } from "./services/location-history.service";
+import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { LocationHistoryService } from "./services/location-history.service";
     ConfirmDialogComponent,
     AppStickyComponent,
     AppSvgIconComponent,
+    AppSvgImageComponent,
     FileEditorComponent,
     CodeEditor2Component,
     AppCheckboxComponent,
@@ -109,6 +111,7 @@ import { LocationHistoryService } from "./services/location-history.service";
     ConfirmDialogComponent,
     AppStickyComponent,
     AppSvgIconComponent,
+    AppSvgImageComponent,
     FileEditorComponent,
     CodeEditor2Component,
     AppCheckboxComponent,

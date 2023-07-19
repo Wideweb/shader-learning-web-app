@@ -61,8 +61,11 @@
         }
 
         background-color: $dark-blue;
-        &:hover {
-            background-color: $grey;
+
+        @include for-desktop-up {
+            &:hover {
+                background-color: $grey;
+            }
         }
         
         &:active {
@@ -90,6 +93,10 @@
     @include for-tablet-down {
         padding: 0 toRem(49);
     }
+
+    @include for-phone-only {    
+        padding: 0 toRem(40);
+    }
 }
 
 .current-task {
@@ -97,5 +104,11 @@
         flex: 1;
         height: 100%;
         overflow: hidden;
+    }
+}
+
+.back-link .text {
+    @include for-phone-only {    
+        display: none;
     }
 }

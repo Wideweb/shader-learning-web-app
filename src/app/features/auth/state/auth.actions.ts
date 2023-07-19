@@ -37,8 +37,8 @@ export class RefreshAccessToken {
 export class UpdateToken {
     static readonly type = '[Auth] Update Token';
     constructor(
-        public accessToken: {value: string; life: number; expired: boolean;},
-        public refreshToken: {value: string; life: number; expired: boolean;},
+        public accessToken: {value: string; expiresAt: number;},
+        public refreshToken: {value: string; expiresAt: number;},
         public stored: boolean = false) {}
 }
 
@@ -49,7 +49,7 @@ export class SetTokenStored {
 
 export class IsTokenExpired {
     static readonly type = '[Auth] Is Token Expired';
-    constructor(public accessToken: boolean, public refreshToken: boolean) {}
+    constructor(public accessTokenExpired: boolean, public refreshTokenExpired: boolean) {}
 }
 
 export class AuthClear {

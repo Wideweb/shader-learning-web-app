@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, NgZone, OnInit } from '@angular/core';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { CarouselCardModel } from './carousel/carousel-card/carousel-card.component';
 import { FeedbackCardModel } from './feedback/feedback-card/feedback-card.component';
@@ -43,7 +43,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     return this.size === ComponentSize.Big;
   }
 
-  constructor(private pageMeta: PageMetaService, private store: Store) {
+  constructor(private pageMeta: PageMetaService, private store: Store, private ngZone: NgZone) {
     this.modules$ = this.store.select(ModulesState.list).pipe(map(data => data.map(module=> ({
       title: module.name,
       body: module.description,
@@ -60,7 +60,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.resize();
+    this.ngZone.run(() => this.resize());
   }
 
   ngOnInit(): void {

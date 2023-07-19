@@ -1,6 +1,6 @@
 <div class="container">
 
-  <div class="table" [style.width]="tableWidth | toRem">
+  <div #table class="table" [style.width]="tableWidth | toRem">
     
     <ng-container *ngIf="loaded">
       <ng-container *ngFor="let card of innerData; let i = index; let last = last">

@@ -13,7 +13,7 @@
       <div class="navbar navbar-big max-width">
         <div class="nav-group">
           <div class="site-brand">
-            <img class="ico" src="assets/logo.svg" alt="Shader Learning">
+            <app-svg-icon class="ico" name="logo" alt="Shader Learning"></app-svg-icon>
           </div>
         </div>
 
@@ -30,7 +30,7 @@
 
         <div class="nav-group nav-group-right">
           <div class="nav-menu">
-            <ng-container *ngIf="(isAuthenticated$ | async) === false">
+            <ng-container *ngIf="!(isAuthenticated$ | async)">
               <a class="btn-link" routerLink="/login">Sign in</a>
             </ng-container>
             <ng-container *ngIf="isAuthenticated$ | async">
@@ -45,16 +45,21 @@
 
         <div class="nav-group">
           <div class="site-brand">
-            <img class="ico" src="assets/logo.svg" alt="Shader Learning" *ngIf="!isSmall">
+            <app-svg-icon class="ico" name="logo" alt="Shader Learning" *ngIf="!isSmall"></app-svg-icon>
             <div class="small-logo-wrapper">
-              <img class="small-logo" src="assets/small-logo.svg" alt="Shader Learning" *ngIf="isSmall">
+              <app-svg-icon class="ico" name="small-logo" alt="Shader Learning" *ngIf="isSmall"></app-svg-icon>
             </div>
           </div>
         </div>
 
         <div class="nav-group nav-group-right">
           <div class="nav-menu">
-            <a class="btn-link" routerLink="/sign-up">Sign in</a>
+            <ng-container *ngIf="!(isAuthenticated$ | async)">
+              <a class="btn-link" routerLink="/login">Sign in</a>
+            </ng-container>
+            <ng-container *ngIf="isAuthenticated$ | async">
+              <a class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
+            </ng-container>
           </div>
         </div>
       </div>

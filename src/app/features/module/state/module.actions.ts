@@ -48,6 +48,11 @@ export class ModuleUpdateCover {
     constructor(public file: File) {}
 }
 
+export class ModuleUpdatePageHeaderImage {
+    static readonly type = '[Module] Page Header Image';
+    constructor(public file: File) {}
+}
+
 export class ModuleToggleLock {
     static readonly type = '[Module] Toggle Lock';
 }

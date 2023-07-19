@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpContextToken} from "@angular/common/http";
 import { Observable, tap } from "rxjs";
 import { SpinnerService } from "../services/spinner.service";
@@ -6,21 +6,21 @@ import { SpinnerService } from "../services/spinner.service";
 @Injectable()
 export class SpinnerInterceptor implements HttpInterceptor {
 
-    constructor(private spinner: SpinnerService) {}
+    constructor(private spinner: SpinnerService, private ngZone: NgZone) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (req.context.get(CANCEL_SPINNER_TOKEN)) {
             return next.handle(req);
         }
 
-        this.spinner.show();
+        this.ngZone.run(() => this.spinner.show());
         return next.handle(req).pipe(
             tap({ 
                 complete: () => {
-                    this.spinner.hide();
+                    this.ngZone.run(() => this.spinner.hide());
                 },
                 error: (err) => {
-                    this.spinner.hide();
+                    this.ngZone.run(() => this.spinner.hide());
                     return err;
                 }
             })

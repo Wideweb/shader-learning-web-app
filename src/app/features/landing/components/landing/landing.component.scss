@@ -22,8 +22,9 @@
     top: toRem(80);
     @include for-phone-only {    
         top: toRem(230);
-        &.padded {
-            max-width: 100%;
+        &.max-width {
+            max-width: 150%;
+            width: 150%;
         }
     }
 }
