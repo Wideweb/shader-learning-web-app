@@ -1,0 +1,54 @@
+@import 'common.scss';
+@import 'form.scss';
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: toRem(40);
+    max-width: toRem(570);
+}
+
+.title {
+    margin-bottom: toRem(28);
+}
+
+.close-ctrl {
+    position: absolute;
+    color: $black;
+    cursor: pointer;
+    top: toRem(32);
+    right: toRem(40);
+
+    .ico-container {
+        width: toRem(40);
+        height: toRem(40);
+    }
+}
+
+.message {
+    margin-bottom: toRem(24);
+    color: $grey;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(12);
+    margin-bottom: toRem(30);
+}
+
+.selection {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(16);
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: toRem(12);
+    width: 100%;
+}

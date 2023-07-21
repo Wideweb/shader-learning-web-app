@@ -1,0 +1,35 @@
+<div class="container">
+
+  <div #table class="table" [style.width]="tableWidth | toRem">
+    
+    <ng-container *ngIf="loaded">
+      <ng-container *ngFor="let card of innerData; let i = index; let last = last">
+        <carousel-card class="item" [model]="card" [last]="last && isFull" [style.width]="cardWdith | toRem"></carousel-card>
+      </ng-container>
+    </ng-container>
+  
+    <ng-container *ngIf="!loaded">
+      <ng-container *ngFor="let ph of phs">
+        <carousel-card-placeholder class="item" [style.width]="cardWdith | toRem"></carousel-card-placeholder>
+      </ng-container>
+    </ng-container>
+
+    <div class="gradient-left" [style.left]="gradientLeftPosition | toRem"></div>
+    <div class="gradient-right" [style.left]="gradientRightPosition | toRem"></div>
+  </div>
+
+  <div class="progress-bar" *ngIf="isSmall">
+    <div class="circle" [ngClass]="{'active': targetPosition == 0}"></div>
+    <div class="circle" [ngClass]="{'active': targetPosition == 1}"></div>
+    <div class="circle" [ngClass]="{'active': targetPosition == 2}"></div>
+  </div>
+</div>
+
+<ng-container *ngIf="isBig">
+  <div class="left-ctrl">
+    <a class="btn-circle" (click)="prev()" [attr.disabled]="prevDisabled"><i class="ico chevron-left-ico"></i></a>
+  </div>
+  <div class="right-ctrl">
+    <a class="btn-circle" (click)="next()" [attr.disabled]="nextDisabled"><i class="ico chevron-right-ico"></i></a>
+  </div>
+</ng-container>

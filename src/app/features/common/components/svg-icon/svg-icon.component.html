@@ -1,0 +1,8 @@
+<ng-container *ngIf="loading$ | async">
+    <div class="container loading ph-animation">
+    </div>
+</ng-container>
+
+<ng-container *ngIf="(loading$ | async) === false">
+    <div class="container" [innerHTML]="svgIcon"></div>
+</ng-container>

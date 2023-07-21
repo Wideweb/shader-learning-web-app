@@ -11,12 +11,14 @@ import { AuthInterceptor } from '../auth/interceptors/auth.interceptor';
 import { ServerErrorInterceptor } from '../common/interceptors/server-error.interceptor';
 import { SpinnerInterceptor } from '../common/interceptors/spinner.interceptor';
 import { AppComponent } from './components/app/app.component';
-import { HomeComponent } from './components/home/home.component';
 import { AppCommonModule } from '../common/common.module';
 import { DonateComponent } from './components/donate/donate.component';
 import { AppLayoutComponent } from './components/layout/layout.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AboutComponent } from './components/about/about.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AppUserMenuComponent } from './components/layout/user-menu/user-menu.component';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -28,8 +30,10 @@ export function initializeAppFactory(appInitService: AppInitService) {
   declarations: [
     AppComponent,
     AppLayoutComponent,
-    HomeComponent,
+    AppUserMenuComponent,
     DonateComponent,
+    AboutComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

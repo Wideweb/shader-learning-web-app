@@ -1,0 +1,25 @@
+<div class="header">
+
+    <a class="btn-text back-link" routerLink="/explore"><i class="ico arrow-left-ico"></i><span class="text">Back To Explore</span></a>
+    <a class="btn-side-bar" (click)="showNavigation()"><i class="ico list-ico"></i></a>
+</div>
+
+<ng-container *ngIf="loaded$ | async">
+    <div class="navigation backdropBackground" *ngIf="!navigationHidden">
+        <a class="btn-side-bar close-ctrl" (click)="closeNavigation()"><i class="ico close-ico"></i></a>
+        <div class="module-tasks">
+            <div class="scroll">
+                <module-navigation
+                    [moduleId]="(module$ | async)?.id!"
+                    [tasks]="(tasks$ | async)!"
+                    [selectedId]="(task$ | async)?.id!"
+                    [showStatusName]="false"
+                ></module-navigation>
+            </div>
+        </div>
+    </div>
+    
+    <div class="current-task">
+        <router-outlet></router-outlet>
+    </div>
+</ng-container>

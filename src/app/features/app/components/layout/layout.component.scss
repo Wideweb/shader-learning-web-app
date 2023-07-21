@@ -1,0 +1,268 @@
+@import 'common.scss';
+
+:host {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.route-container-no-layout {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.route-container {
+  flex: 1;
+  width: 100%;
+
+  &.hide-page-overflow {
+    overflow: hidden;
+  }
+}
+
+.user-symbol {
+  display: inline-block;
+  box-sizing: border-box;
+  padding-top: toRem(2);
+}
+
+.navbar {
+  position: relative;
+  margin: toRem(30) 0;
+  width: 100%;
+  display: flex;
+  z-index: 2;
+
+  @include for-phone-only {    
+    margin-bottom: toRem(20);
+  }
+
+  .nav-group-right {
+    margin-left: auto;
+  }
+  
+  .nav-menu {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .nav-link {
+      font-family: "Avenir Next LT Pro Regular";
+      text-decoration: none;
+      color: inherit;
+      margin-right: toRem(32);
+
+      &.active {
+        color: $blue;
+      }
+
+      @include for-desktop-up {
+        &:hover {
+          color: $blue-secondary;
+        }
+      }
+    }
+  }
+}
+
+.navbar-small {
+  @include for-desktop-up {    
+      display: none;
+  }
+
+  @include for-tablet-up {    
+      .site-brand {
+          position: absolute;
+          left: 50%;
+          transform: translate(-50%, 0);
+      }
+  }
+}
+
+.navbar-big {
+  display: none;
+  
+  @include for-desktop-up {    
+      display: flex;
+  }
+}
+
+.site-brand {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  .ico {
+    max-width: toRem(283);
+  }
+
+  .name {
+    font-family: "Avenir Next LT Pro Bold";
+    font-size: toRem(25);
+  }
+  
+  .small-logo-wrapper {
+    width: toRem(40);
+    height: toRem(40);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .small-logo {
+    width: toRem(22);
+    height: toRem(22);
+  }
+}
+
+.navbar-menu-toggle {
+  margin-left: toRem(-8);
+}
+
+.navbar-menu-collapsible {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #4F6AF4;
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  gap: toRem(50);
+  justify-content: center;
+  align-items: center;
+
+  .nav-link {
+
+    h2 {
+      color: $white;
+    }
+
+    @include for-desktop-up {
+      &:hover > h2, &:active > h2 {
+        color: $green;
+      }
+    }
+
+    &.active > h2 {
+      color: $green;
+    }
+  }
+  
+  .collapse {
+    position: absolute;
+    top: toRem(40);
+    right: toRem(40);
+    width: toRem(40);
+    height: toRem(40);
+
+    .close-ico {
+      background-color: $white;
+    }
+  }
+}
+
+.footer {
+  width: 100%;
+  background-color: #1F1F1F;
+  min-height: toRem(140);
+  max-height: toRem(140);
+  box-sizing: border-box;
+
+  .container {
+    position: relative;
+    margin: auto;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-menu {
+    box-sizing: border-box;
+    padding-left: toRem(32);
+    white-space: nowrap
+  }
+  
+  .nav-link {
+    color: $white;
+    margin-right: toRem(32);
+
+    &.active {
+      color: $blue;
+    }
+
+    @include for-desktop-up {
+      &:hover {
+        color: $blue-secondary;
+      }
+    }
+  }
+  
+  .copyright {
+    width: toRem(150);
+    min-width: toRem(150);
+    opacity: 0.6;
+    color: $white;
+  }
+
+  .scroll-ctrl {
+    width: toRem(150);
+    min-width: toRem(150);
+
+    a {
+      margin-left: auto;
+    }
+  }
+
+  &:not(.show-scroll-ctrl) .scroll-ctrl .btn-circle {
+    display: none;
+  }
+
+  @include for-tablet-down {
+    min-height: toRem(190);
+    max-height: toRem(190);
+
+    &:not(.show-scroll-ctrl) .scroll-ctrl {
+      display: none;
+    }
+
+    .nav-menu {
+      margin-top: toRem(60);
+    }
+  
+    &.show-scroll-ctrl {
+      min-height: toRem(240);
+      max-height: toRem(240);
+
+      .nav-menu {
+        margin-top: 0;
+      }
+    }
+  
+    .container {
+      flex-flow: column-reverse;
+    }
+  
+    .scroll-ctrl {
+        margin-top: toRem(40);
+
+        a {
+          margin: auto;
+        }
+    }
+  
+    .copyright {
+        margin-bottom: toRem(60);
+    }
+  }
+}
+
+.spacer-5 {
+  width: toRem(200);
+}
+
+.user-menu {
+  margin-top: toRem(20);
+}

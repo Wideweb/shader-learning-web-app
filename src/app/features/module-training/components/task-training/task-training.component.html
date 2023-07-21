@@ -1,0 +1,23 @@
+<ng-container *ngIf="loaded$ | async">
+  <task
+    [model]="(task$ | async)!"
+    [shaderProgram]="(userShaderProgram$ | async)!"
+    [submissions]="(submissions$ | async)!"
+    [liked]="(liked$ | async) === true"
+    [disliked]="(disliked$ | async) === true"
+    [canEdit]="(canEdit$ | async) === true"
+    [isFirstTask]="(isFirstTask$ | async) === true"
+    [isNextTaskAvailable]="(isNextTaskAvailable$ | async) === true"
+    (onEdit)="edit()"
+    (onLike)="like()"
+    (onDislike)="dislike()"
+    (onUShaderProgramChange)="handleFragmentCodeChange($event)"
+    (onResetToLastSubmettedCode)="resetToLastSubmettedCode()"
+    (onResetToDefaultCode)="resetToDefaultCode()"
+    (onSubmissionSelect)="selectSubmission($event)"
+    (onSubmit)="submit($event)"
+    (onSwitchToPrev)="switchToPrev()"
+    (onSwitchToNext)="switchToNext()"
+    >
+  </task>
+</ng-container>

@@ -6,7 +6,7 @@ import { Logout } from "../../auth/state/auth.actions";
 import { ModuleTaskListDto } from "../models/module-task-list.model";
 import { ModuleDto } from "../models/module.model";
 import { ModuleService } from "../services/module.service";
-import { ModuleCreate, ModuleEditDescriptionBegin, ModuleEditDescriptionCancel, ModuleEditNameBegin, ModuleEditNameCancel, ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleTaskUpdate, ModuleToggleLock, ModuleUpdate, ModuleUpdateDescription, ModuleUpdateName } from "./module.actions";
+import { ModuleCreate, ModuleEditDescriptionBegin, ModuleEditDescriptionCancel, ModuleEditNameBegin, ModuleEditNameCancel, ModuleLoad, ModuleTaskReorder, ModuleTaskToggleVisibility, ModuleTaskUpdate, ModuleToggleLock, ModuleUpdate, ModuleUpdateCover, ModuleUpdateDescription, ModuleUpdateName, ModuleUpdatePageHeaderImage } from "./module.actions";
 
 export interface ModuleStateModel {
   current: ModuleDto | null;
@@ -76,7 +76,7 @@ export class ModuleState {
 
     try 
     {
-      const current = await firstValueFrom(this.service.get(action.id));
+      const current = await this.service.get(action.id);
       ctx.setState(patch<ModuleStateModel>({ current, error: null }));
       return current;
     } 
@@ -98,7 +98,7 @@ export class ModuleState {
   async craete(ctx: StateContext<ModuleStateModel>, action: ModuleCreate) {
     try 
     {
-      const id = await firstValueFrom(this.service.create(action.payload));
+      const id = await this.service.create(action.payload);
       ctx.dispatch(new ModuleLoad(id));
       return id;
     } 
@@ -175,6 +175,52 @@ export class ModuleState {
           description: action.description
         }),
         descriptionEdit: false,
+      }));
+    } 
+    catch (error)
+    {
+      ctx.setState(patch<ModuleStateModel>({ error }));
+      throw error;
+    }
+  }
+
+  @Action(ModuleUpdateCover)
+  async updateCover(ctx: StateContext<ModuleStateModel>, action: ModuleUpdateCover) {
+    const module = ctx.getState().current;
+    if (!module) {
+      throw 'No module';
+    }
+
+    try 
+    {
+      await this.service.updateCover(module.id, action.file);
+      return ctx.setState(patch<ModuleStateModel>({
+        current: patch<ModuleDto>({
+          cover: action.file
+        }),
+      }));
+    } 
+    catch (error)
+    {
+      ctx.setState(patch<ModuleStateModel>({ error }));
+      throw error;
+    }
+  }
+
+  @Action(ModuleUpdatePageHeaderImage)
+  async updatePageHeaderImage(ctx: StateContext<ModuleStateModel>, action: ModuleUpdatePageHeaderImage) {
+    const module = ctx.getState().current;
+    if (!module) {
+      throw 'No module';
+    }
+
+    try 
+    {
+      await this.service.updatePageHeaderImage(module.id, action.file);
+      return ctx.setState(patch<ModuleStateModel>({
+        current: patch<ModuleDto>({
+          pageHeaderImage: action.file
+        }),
       }));
     } 
     catch (error)

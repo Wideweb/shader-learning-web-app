@@ -1,0 +1,156 @@
+<div class="task">
+  <div class="body body-left">
+    <div class="heading">
+      <h2 class="name">{{model.name}}<a *ngIf="canEdit" class="action-link" (click)="edit()"><mat-icon>edit</mat-icon></a></h2>
+  
+      <div class="tools">
+        <a class="btn-like like" [ngClass]="{active: liked}" (click)="like()"><i class="ico thumbs-up-ico"></i><span>{{ model.likes }}</span></a>
+        <a class="btn-like dislike" [ngClass]="{active: disliked}" (click)="dislike()"><i class="ico thumbs-down-ico"></i><span>{{ model.dislikes }}</span></a>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <a class="p2 tab" [ngClass]="{active: isActiveTab('task')}" (click)="activataTab('task')">Task</a>
+      <a class="p2 tab" [ngClass]="{active: isActiveTab('theory')}" (click)="activataTab('theory')">Theory</a>
+    </div>
+
+    <div class="tab-content">
+      <ng-container *ngIf="isActiveTab('task')">
+        <div *ngIf="model?.description" class="p2 description-markdown-compiled" [innerHtml]="compiledTaskDescription"></div>
+
+        <div class="channels" *ngIf="model.channels.length > 0">
+          <p class="p2">Textures: </p>
+          <div class="list">
+            <ng-container *ngFor="let channel of model.channels; let i = index">
+              <task-channel [label]="'iChannel' + i" [file]="channel.file"></task-channel>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isActiveTab('theory')">
+        <div *ngIf="model?.description" class="p2 description-markdown-compiled" [innerHtml]="compiledTheoryDescription"></div>
+      </ng-container>
+
+      <!-- <ng-container *ngIf="isActiveTab('theory')">
+        <task-submissions [data]="submissions" (onSubmissionSelect)="selectSubmission($event)"></task-submissions>
+      </ng-container> -->
+    </div>
+
+    <div class="actions">
+      <a class="btn-link btn-link-ico-addon left"
+        [attr.disabled]="isFirstTask"
+        (click)="switchToPrevTask()"><span class="ico-container"><i class="ico chevron-left-ico"></i></span>Previous</a>
+
+      <a class="btn-link btn-link-ico-addon"
+        [attr.disabled]="!isNextTaskAvailable"
+        (click)="switchToNextTask()">Next<span class="ico-container"><i class="ico chevron-right-ico"></i></span></a>
+    </div>
+
+  </div>
+
+  <div class="body body-right">
+    <div class="editor-section">
+      <div class="container">
+        <code-editor [files]="programFiles"></code-editor>
+
+        <ng-container *ngIf="showCompilationStatus">
+          <div *ngIf="!hasCompilationError" class="toast success">
+            <div class="container">
+              <div class="ico-container"><i class="ico check-circle-ico"></i></div>
+              <div class="p3 message">Program successfully complited</div>
+              <a (click)="hideCompilationStatus()" class="close-ctrl"><span class="ico-container"><i class="ico close-ico"></i></span></a>
+            </div>
+          </div>
+
+          <div *ngIf="hasCompilationError" class="toast error">
+            <div class="container">
+              <div class="ico-container"><i class="ico alert-circle-ico"></i></div>
+              <div class="p3 message">Program compilation error</div>
+              <a (click)="hideCompilationStatus()" class="close-ctrl"><span class="ico-container"><i class="ico close-ico"></i></span></a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="output-section">
+      <div class="container">
+        <div class="output">
+          <p class="p3 title">Expected</p>
+          <div class="render-img">
+            <app-gl-scene
+              [sceneData]="model.sceneSettings"
+              [vertexShader]="model.vertexShader"
+              [fragmentShader]="model.fragmentShader"
+              [channels]="model.channels"
+              [compileTrigger]="compileTrigger"
+              ></app-gl-scene>
+          </div>
+        </div>
+
+        <div class="output">
+          <p class="p3 title">Output</p>
+          <div class="render-img">
+            <app-gl-scene
+              [sceneData]="model.sceneSettings"
+              [vertexShader]="vertexShaderApplied"
+              [fragmentShader]="fragmentShaderApplied"
+              [channels]="model.channels"
+              [compileTrigger]="compileTrigger"
+              (onError)="handleProgramCompilationError($event)"
+              (onSuccess)="handleProgramCompilationSuccess()">
+            </app-gl-scene>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="tools">
+        <div class="spacer"></div>
+        <a class="tools-action" (click)="resetToLastSubmettedCode()" appTooltip [appTooltipTemplate]=lastSubmitted>
+          <mat-icon class="icon">history</mat-icon>
+        </a>
+        <a class="tools-action" (click)="resetToDefaultCode()" appTooltip [appTooltipTemplate]=resetToDefault>
+          <mat-icon class="icon">restart_alt</mat-icon>
+        </a>
+      </div> -->
+
+    </div>
+
+    <div class="toolbar-section">
+      <div class="container">
+        <ng-template #lastSubmitted>
+          <div class="tooltip">Retrieve last submitted code</div>
+        </ng-template>
+  
+        <ng-template #resetToDefault>
+          <div class="tooltip">Reset to default code definition</div>
+        </ng-template>
+
+
+        <div class="toolbar-group actions">
+          <a class="btn-link white" (click)="run()">Run code</a>
+          <a *hasPermission="['task_submit']" class="btn-link" (click)="submit()">Submit</a>
+        </div>
+    
+        <div class="spacer"></div>
+    
+        <div class="toolbar-group links">
+          <a class="btn-text" (click)="resetToLastSubmettedCode()"><i class="ico clock-ico"></i>Last submit</a>
+          <a class="btn-text" (click)="resetToDefaultCode()"><i class="ico reset-ico"></i>Reset</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="actions footer-actions">
+    <a class="btn-link btn-link-ico-addon left"
+      [attr.disabled]="isFirstTask"
+      (click)="switchToPrevTask()"><span class="ico-container"><i class="ico chevron-left-ico"></i></span>Previous</a>
+
+    <a class="btn-link btn-link-ico-addon"
+      [attr.disabled]="!isNextTaskAvailable"
+      (click)="switchToNextTask()">Next<span class="ico-container"><i class="ico chevron-right-ico"></i></span></a>
+  </div>
+</div>

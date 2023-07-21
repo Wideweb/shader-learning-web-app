@@ -8,4 +8,6 @@ export interface ModuleDto {
     createdBy: { id: number; name: string };
     tasks: ModuleTaskListDto[];
     locked: boolean;
+    cover: File | null;
+    pageHeaderImage: File | null;
 }

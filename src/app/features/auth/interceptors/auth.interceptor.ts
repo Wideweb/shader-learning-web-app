@@ -1,18 +1,20 @@
 import { Injectable } from "@angular/core";
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse} from "@angular/common/http";
-import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from "rxjs";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpContextToken} from "@angular/common/http";
+import { BehaviorSubject, catchError, filter, Observable, Subject, switchMap, take, throwError } from "rxjs";
 import { Router } from "@angular/router";
 import { Store } from "@ngxs/store";
 import { AuthState } from "../state/auth.state";
 import { AuthClear, RefreshAccessToken } from "../state/auth.actions";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { isExpired } from "../services/token.utils";
+import { API } from "src/environments/environment";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
     private isRefreshing = false;
 
-    private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private refreshTokenSubject: Subject<any> = new Subject<any>();
 
     constructor(private router: Router, private store: Store, private snackBar: MatSnackBar) {}
 
@@ -23,14 +25,51 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     authorizeRequest(request: HttpRequest<any>, next: HttpHandler) {
-        const accessToken = this.store.selectSnapshot(AuthState.accessToken);
-
-        if (accessToken) {
-            return next.handle(this.addTokenHeader(request, accessToken));
-        }
-        else {
+        if (request.context.get(CANCEL_AUTH) || !request.url.includes(API)) {
             return next.handle(request);
         }
+
+        const accessToken = this.store.selectSnapshot(AuthState.accessToken);
+        const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
+
+        if (!isAuthenticated) {
+            return next.handle(request);
+        }
+
+        const tokenExpired = !accessToken.value || isExpired(accessToken.expiresAt);
+
+        if (isAuthenticated && !tokenExpired) {
+            return next.handle(this.addTokenHeader(request, accessToken.value));
+        }
+
+        if (isAuthenticated && tokenExpired && !this.isRefreshing) {
+            this.isRefreshing = true;
+            this.refreshTokenSubject.next(null);
+
+            return this.store
+                .dispatch(new RefreshAccessToken())
+                .pipe(
+                    catchError(() => this.store.dispatch(new AuthClear())),
+                    switchMap(() => {
+                        this.isRefreshing = false;
+                        const accessToken = this.store.selectSnapshot(AuthState.accessToken).value;
+                        this.refreshTokenSubject.next(accessToken);
+                        return next.handle(this.addTokenHeader(request, accessToken));
+                    }),
+                );
+        }
+
+        return this.refreshTokenSubject.pipe(
+            take(1),
+            switchMap((token) => {
+                if (token) {
+                    return next.handle(this.addTokenHeader(request, token));
+                } 
+                else {
+                    return next.handle(request);
+                }
+            })
+        );
     }
 
     handleError(request: HttpRequest<any>, next: HttpHandler, error: any): Observable<HttpEvent<any>> {
@@ -43,12 +82,13 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         if (error.status === 403) {
-            this.snackBar.open('Unauthorized', '', {
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
-                duration: 5000,
-                panelClass: 'snack-bar-item-server-error'
-            });
+            // this.snackBar.open('Unauthorized', '', {
+            //     horizontalPosition: 'right',
+            //     verticalPosition: 'top',
+            //     duration: 5000,
+            //     panelClass: 'snack-bar-item-server-error'
+            // });
+            this.router.navigate(['/explore']);
         }
 
         return throwError(() => error);
@@ -65,12 +105,12 @@ export class AuthInterceptor implements HttpInterceptor {
                     catchError((err) => this.store.dispatch(new AuthClear())
                         .pipe(switchMap(() => {
                             console.log('Unauthorized')
-                            this.router.navigate(['/home']);
+                            this.router.navigate(['/explore']);
                             return throwError(() => err);
                         }))),
                     switchMap(() => {
                         this.isRefreshing = false;
-                        const accessToken = this.store.selectSnapshot(AuthState.accessToken)!;
+                        const accessToken = this.store.selectSnapshot(AuthState.accessToken).value;
                         this.refreshTokenSubject.next(accessToken);
                         return next.handle(this.addTokenHeader(request, accessToken));
                     }),
@@ -90,3 +130,5 @@ export class AuthInterceptor implements HttpInterceptor {
         });
     }
 }
+
+export const CANCEL_AUTH = new HttpContextToken<boolean>(() => false);

@@ -1,0 +1,70 @@
+@import 'common.scss';
+
+:host {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: toRem(40) toRem(40) toRem(50) toRem(40);
+
+    @include for-tablet-up {
+        min-width: toRem(380);
+    }
+}
+
+.user-data {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .symbol-circle {
+        position: relative;
+        width: toRem(100);
+        height: toRem(100);
+        border-radius: 100%;
+        background-color: $blue;
+        margin-bottom: toRem(20);
+    
+        .symbol {
+            position: absolute;
+            display: inline-block;
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+            color: $white;
+        }
+    }
+    
+    .name {
+        text-align: center;
+        margin-bottom: toRem(4);
+    }
+    
+    .email {
+        text-align: center;
+        color: $grey;
+        margin-bottom: toRem(20);
+    }
+    
+    .rank {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        color: $blue;
+        gap: toRem(4);
+    }
+}
+
+.divider {
+    width: 100%;
+    box-sizing: border-box;
+    height: toRem(1);
+    border-top: solid toRem(1) $light-blue;
+    margin: toRem(30) 0;
+}
+
+.links {
+    width: 100%;
+}

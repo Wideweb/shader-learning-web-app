@@ -123,12 +123,8 @@
             </div>
 
             <div class="form-row">
-                <code-editor
-                  [files]="taskProgram"
-                  [prompts]="taskProgramPrompts"
-                  (onChange)="handleTaskProgramFileChange($event)"
-                  (onRun)="runTask()"
-                ></code-editor>
+                <code-editor [files]="taskProgramFiles"></code-editor>
+                <a class="btn-link white" (click)="runTask()">Run code</a>
             </div>
         </div>
     
@@ -171,14 +167,18 @@
             </div>
 
             <div class="form-row">
-                <code-editor
-                  [files]="defaultProgram"
-                  [prompts]="defaultProgramPrompts"
-                  (onChange)="handleDefaultProgramFileChange($event)"
-                  (onRun)="runDefault()"
-                ></code-editor>
+                <code-editor [files]="defaultProgramFiles"></code-editor>
+                <a class="btn-link white" (click)="runDefault()">Run code</a>
             </div>
         </div>
+    </div>
+
+    <div class="form-row rules">
+        <ng-container *ngFor="let ruleForm of rulesForms.controls; let i = index">
+            <rule-form [form]="ruleForm"></rule-form>
+        </ng-container>
+
+        <a class="btn-link white" (click)="addRule()">Add Rule</a>
     </div>
 
     <div class="form-row">

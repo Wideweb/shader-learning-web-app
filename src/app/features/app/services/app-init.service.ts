@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { distinctUntilChanged, interval, lastValueFrom, Subject, takeUntil, zip } from 'rxjs';
+import { distinctUntilChanged, interval, Subject, takeUntil, zip } from 'rxjs';
 import { AuthToken } from '../../auth/services/auth.token';
 import { IsTokenExpired, LoadMe, UpdateToken } from '../../auth/state/auth.actions';
 import { AuthState } from '../../auth/state/auth.state';
 import { LocalService } from '../../common/services/local-storage.service';
+import { LocationHistoryService } from '../../common/services/location-history.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class AppInitService implements OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private storage: LocalService) {
+  constructor(private store: Store, private storage: LocalService, private locationHistory: LocationHistoryService) {
     this.accessToken = new AuthToken('accessToken', 'accessTokenExpiresAt', this.storage);
     this.refreshToken = new AuthToken('refreshToken', 'refreshTokenExpiresAt', this.storage);
   }
@@ -28,6 +29,8 @@ export class AppInitService implements OnDestroy {
   }
 
   public async init(): Promise<any> {
+    this.locationHistory.init();
+
     zip(this.refreshToken.update$, this.accessToken.update$)
       .pipe(
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
@@ -47,13 +50,18 @@ export class AppInitService implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(auth => {
-        this.accessToken.set(auth.accessToken.value, auth.accessToken.life);
-        this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.life);
+        if (auth.refreshToken.value) {
+          this.accessToken.set(auth.accessToken.value, auth.accessToken.expiresAt);
+          this.refreshToken.set(auth.refreshToken.value, auth.refreshToken.expiresAt);
+        } else {
+          this.accessToken.clear();
+          this.refreshToken.clear();
+        }
       });
 
     const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
     if (isAuthenticated) {
-      await lastValueFrom(this.store.dispatch(new LoadMe()));
+      this.store.dispatch(new LoadMe());
     }
   }
 }

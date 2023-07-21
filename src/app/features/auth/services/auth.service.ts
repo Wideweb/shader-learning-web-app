@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable, shareReplay } from 'rxjs';
 import { API } from 'src/environments/environment';
 import { UserDto } from '../models/user.model';
@@ -7,6 +7,7 @@ import { UserSignUp } from '../models/user-sign-up.model';
 import { SessionData } from '../models/session-data.model';
 import { UserLogIn } from '../models/user-login.model';
 import { ResetPasswordData } from '../models/reset-password-data.model';
+import { CANCEL_AUTH } from '../interceptors/auth.interceptor';
 
 @Injectable()
 export class AuthService {
@@ -50,7 +51,9 @@ export class AuthService {
   }
 
   public refreshAccessToken(refreshToken: string) {
-    return this.http.post<{ token: string; expiresIn: number }>(`${API}/refreshToken`, { refreshToken }).pipe(
+    return this.http.post<{ token: string; expiresAt: number }>(`${API}/refreshToken`, { refreshToken }, {
+      context: new HttpContext().set(CANCEL_AUTH, true)
+    }).pipe(
       shareReplay(1),
     );
   }

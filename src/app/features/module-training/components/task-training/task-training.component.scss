@@ -1,0 +1,11 @@
+@import 'common.scss';
+
+:host {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+
+    @include for-desktop-up {
+        height: 100%;
+    }
+}

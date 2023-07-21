@@ -1,0 +1,81 @@
+<div class="page max-width">
+
+    <a class="btn-text back-link" routerLink="/rating"><i class="ico arrow-left-ico"></i><span class="text">Back To Rating</span></a>
+
+    <ng-container *ngIf="(loaded$ | async) && (user$ | async)">
+
+        <div class="heading">
+            <div class="title"><h2 class="user-name">{{userName$ | async}}</h2><span class="p3 user-score">{{userScore$ | async}}</span></div>
+            <div class="statistics">
+                <span class="submissions p2">Submitted:&nbsp;{{userSumbissions$ | async}}</span>
+                <i class="divider"></i>
+                <span class="acceptions p2">Accepted:&nbsp;{{userAcceptions$ | async}}</span>
+            </div>
+        </div>
+
+        <div class="empty" *ngIf="(hasTasks$ | async) === false">
+            <app-svg-icon class="ico" name="not-found"></app-svg-icon>
+            <h2 class="title">Not found</h2>
+            <p class="p2 message">This user has not yet started solving tasks</p>
+        </div>
+
+        <div class="rating" *ngIf="hasTasks$ | async" [ngClass]="{hidden: !tableReady}">
+
+            <div class="table" #table>
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="task">
+                        <th mat-header-cell *matHeaderCellDef class="header-cell p3 task"> Task </th>
+                        <td mat-cell *matCellDef="let element" class="cell task">
+                            <ng-container *ngIf="element.locked">
+                                <p class="p2 cut-text">{{element.name}}</p>
+                            </ng-container>
+                            <ng-container *ngIf="!element.locked">
+                                <div class="cut-text">
+                                    <a class="btn-text p2" routerLink="/module-training/{{element.moduleId}}/task/{{element.id}}">{{element.name}}</a>
+                                </div>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="score">
+                        <th mat-header-cell *matHeaderCellDef class="header-cell p3 score"> Score </th>
+                        <td mat-cell *matCellDef="let element" class="cell p2 score"> {{element.score}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef class="header-cell p3 status"> Status </th>
+                        <td mat-cell *matCellDef="let element" class="cell p2 status">
+                            <div *ngIf="element.accepted" class="container accepted">
+                                <div class="ico-container"><i class="ico check-circle-ico"></i></div>
+                                <div class="p2 message">Accepted</div>
+                            </div>
+                    
+                            <div *ngIf="element.rejected" class="container rejected">
+                                <div class="ico-container"><i class="ico alert-circle-ico"></i></div>
+                                <div class="p2 message">Rejected</div>
+                            </div>
+
+                        </td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></tr>
+                </table>
+            </div>
+        
+            <div class="paginator">
+                <ng-container *ngIf="tableReady">
+                    <p class="p3 range-label">{{pageFrom}}-{{pageTo}} out of {{length}} items</p>
+                    <a class="btn-ico" (click)="previousPage()" [attr.disabled]="isFirstPage"><i class="ico chevron-left-ico"></i></a>
+                    <a class="btn-ico" (click)="nextPage()" [attr.disabled]="isLastPage"><i class="ico chevron-right-ico"></i></a>
+                </ng-container>
+            </div>
+        </div>
+
+    </ng-container>
+</div>
+
+<mat-paginator hidePageSize="true"></mat-paginator>
+
+    

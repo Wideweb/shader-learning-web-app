@@ -11,7 +11,7 @@
         <ng-container matColumnDef="task-link">
             <th mat-header-cell *matHeaderCellDef> Task </th>
             <td mat-cell *matCellDef="let element">
-                <a class="action-link" routerLink="/module-progress/{{element.moduleId}}/training/{{element.id}}">{{element.name}}</a>
+                <a class="action-link" routerLink="/module-training/{{element.moduleId}}/task/{{element.id}}">{{element.name}}</a>
             </td>
             </ng-container>
 

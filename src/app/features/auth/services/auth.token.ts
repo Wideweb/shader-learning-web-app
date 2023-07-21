@@ -1,30 +1,29 @@
 import { BehaviorSubject, filter, map, zip } from "rxjs";
 import { LocalService } from "../../common/services/local-storage.service";
+import { isExpired } from "./token.utils";
 
 export interface AuthTokenUpdateEvent {
     value: string;
-    life: number;
-    expired: boolean;
+    expiresAt: number;
 }
 
 export class AuthToken {
 
     public update$: BehaviorSubject<AuthTokenUpdateEvent>;
 
-    constructor(private valueKey: string, private lifeKey: string, private storage: LocalService) { 
+    constructor(private valueKey: string, private expiresAtKey: string, private storage: LocalService) { 
         this.update$ = new BehaviorSubject(this.getUpdateEvent());
 
         const value$ = this.storage.message$.pipe(filter(message => message.key == valueKey));
-        const life$ = this.storage.message$.pipe(filter(message => message.key == lifeKey));
+        const expiresAtKey$ = this.storage.message$.pipe(filter(message => message.key == expiresAtKey));
 
-        zip(value$, life$).pipe(map(() => this.getUpdateEvent())).subscribe(this.update$);
+        zip(value$, expiresAtKey$).pipe(map(() => this.getUpdateEvent())).subscribe(this.update$);
     }
 
     private getUpdateEvent() {
         const event = {
             value: this.getValue(),
-            life: this.getLife(),
-            expired: this.isExpired(),
+            expiresAt: this.getExpiresAt(),
         };
 
         return event;
@@ -34,9 +33,9 @@ export class AuthToken {
         return this.storage.getData(this.valueKey);;
     }
 
-    public set(value: string, life: number): void {
+    public set(value: string, expiresAt: number): void {
         this.setValue(value);
-        this.setLife(life);
+        this.setExpiresAt(expiresAt);
     }
 
     private setValue(value: string): void {
@@ -47,55 +46,24 @@ export class AuthToken {
         this.storage.saveData(this.valueKey, value);
     }    
 
-    public getLife() {
-        return Number.parseInt(this.storage.getData(this.lifeKey));
+    public getExpiresAt() {
+        return Number.parseInt(this.storage.getData(this.expiresAtKey));
     }
     
-    private setLife(life: number) {
-        if (life == this.getLife() || (isNaN(life) && isNaN(this.getLife()))) {
+    private setExpiresAt(expiresAt: number) {
+        if (expiresAt == this.getExpiresAt() || (isNaN(expiresAt) && isNaN(this.getExpiresAt()))) {
             return;
         }
 
-        this.storage.saveData(this.lifeKey, JSON.stringify(life));
+        this.storage.saveData(this.expiresAtKey, JSON.stringify(expiresAt));
     }
 
-    public isExpired(): boolean {
-        const life = this.getLife();
-        if (Number.isNaN(life)) {
-            return true;
-        }
-
-        const hasExpiration = life > 0;
-        return hasExpiration && this.getExpiresAt() < this.getNowUTC();
-    }
-
-    public getExpiresAt(): number {
-        const life = this.getLife();
-
-        if (Number.isNaN(life)) {
-            return 0;
-        }
-
-        const hasExpiration = life > 0;
-        if (!hasExpiration) {
-            Number.MAX_VALUE;
-        }
-
-        return this.computeExpiresAt(life);
+    public isExpired() {
+        return isExpired(this.getExpiresAt());
     }
 
     public clear() {
         this.storage.removeData(this.valueKey);
-        this.storage.removeData(this.lifeKey);
-    }
-
-    private getNowUTC(): number {
-        var date = new Date();
-        var nowUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-        return nowUTC;
-    }
-    
-    private computeExpiresAt(expiresIn: number): number {
-        return this.getNowUTC() + expiresIn * 1000;
+        this.storage.removeData(this.expiresAtKey);
     }
 }

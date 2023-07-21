@@ -1,0 +1,10 @@
+<div class="container">
+    <ng-container *ngFor="let task of tasks; last as isLast" >
+        <module-navigation-task
+            [moduleId]="moduleId"
+            [task]="task"
+            [selected]="isCurrentTask(task)"
+            [showStatusName]="showStatusName"
+        ></module-navigation-task>
+    </ng-container>
+</div>

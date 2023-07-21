@@ -1,0 +1,47 @@
+<div class="landing-page">
+
+  <div class="main-animation max-width">
+    <landing-animation [size]="size"></landing-animation>
+  </div>
+
+  <div class="intro max-width">
+    <div class="content">
+      <h1>Discover what math can do with Shader Learning</h1>
+      <p class="p1">Learn GPU programming or improve your existing skills by solving tasks</p>
+      <a class="btn-link btn-link-ico-addon" routerLink="/explore">Start learning<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+    </div>
+  </div>
+
+  <div class="slogan max-width">
+    <span class="quotes">
+      <i class="quote-filled-ico"></i>
+      <i class="quote-blank-ico"></i>
+    </span>
+    
+    <h3>
+      With Shader Learning, you're not just learning to code in OpenGL, you're joining a community of like-minded individuals who share your passion for creativity and innovation
+    </h3>
+  </div>
+
+  <div class="modules">
+    <h2>Modules</h2>
+    <carousel class="table"
+      [loaded]="(modulesLoaded$ | async)!"
+      [data]="(modules$ | async)!"
+      [cardsGap]="isSmall ? 220 : 40"
+      [size]="size">
+    </carousel>
+  </div>
+
+  <div class="reviews max-width">
+    <h2>What our users say</h2>
+    <feedback [loaded]="(feedbackLoaded$ | async)!" [data]="(feedback$ | async)!" [size]="size"></feedback>
+  </div>
+
+  <div class="contact-us">
+    <div class="container max-width">
+      <landing-contact-us [size]="size"></landing-contact-us>
+    </div>
+  </div>
+
+</div>

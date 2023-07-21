@@ -35,6 +35,7 @@ export class ModuleCreateComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
       locked: false,
+      cover: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -61,6 +62,7 @@ export class ModuleCreateComponent implements OnInit {
         name: this.form.value.name,
         description: this.form.value.description,
         locked: this.form.value.locked,
+        cover: this.form.value.cover,
       }))
       .subscribe({
         error: (e) => {

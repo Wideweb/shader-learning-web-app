@@ -1,0 +1,179 @@
+@import 'common.scss';
+
+.checked-ico {
+    display: none;
+}
+
+.task {
+    display: inline-flex;
+    flex-direction: row;
+    gap: toRem(16);
+    cursor: default;
+
+    &.default {
+        .name {
+            color: $black;
+        }
+
+        .status-name {
+            color: $light-grey;
+        }
+
+        .status {
+            background: $white;
+            box-shadow: inset 0 0 0 toRem(1) $blue;
+        }
+
+        @include for-desktop-up {
+            &:hover {
+                cursor: pointer;
+                
+                .name {
+                    color: $blue-secondary;
+                }
+                
+                .status {
+                    box-shadow: inset 0 0 0 toRem(1) $blue-secondary;
+                }
+            }
+        }
+
+        &:active {
+            .name {
+                color: $dark-blue;
+            }
+            
+            .status {
+                box-shadow: inset 0 0 0 toRem(1) $dark-blue;
+            }
+        }
+    }
+
+    &.accepted {
+        .name {
+            color: $green-secondary;
+        }
+
+        .status-name {
+            color: $black;
+        }
+
+        .status {
+            background: $green-secondary;
+
+            .checked-ico {
+                display: block;
+            }
+        }
+
+        @include for-desktop-up {
+            &:hover {
+                cursor: pointer;
+                
+                .name {
+                    color: $blue-secondary;
+                }
+                
+                .status {
+                    background: $blue-secondary;
+                }
+            }
+        }
+
+        &:active {
+            .name {
+                color: $dark-blue;
+            }
+            
+            .status {
+                background: $dark-blue;
+            }
+        }
+    }
+
+    &.locked {
+        .name {
+            color: $light-grey;
+        }
+
+        .status-name {
+            color: $light-grey;
+        }
+
+        .status {
+            background: $white;
+            box-shadow: inset 0 0 0 toRem(1) $light-grey;
+        }
+    }
+
+    &.selected {
+        position: relative;
+
+        .name {
+            color: $blue;
+        }
+
+        .status-name {
+            color: $black;
+        }
+
+        .status {
+            background: $white;
+            box-shadow: inset 0 0 0 toRem(1) $blue;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: toRem(12);
+                height: toRem(12);
+                background-color: $blue;
+                border-radius: 100%;
+            }
+        }
+
+        @include for-desktop-up {
+            &:hover {
+                cursor: pointer;
+                
+                .name {
+                    color: $blue-secondary;
+                }
+                
+                .status {
+                    box-shadow: inset 0 0 0 toRem(1) $blue-secondary;
+
+                    &::before {
+                        background-color: $blue-secondary;
+                    }
+                }
+            }
+        }
+
+        &:active {
+            .name {
+                color: $dark-blue;
+            }
+            
+            .status {
+                box-shadow: inset 0 0 0 toRem(1) $dark-blue;
+
+                &::before {
+                    background-color: $dark-blue;
+                }
+            }
+        }
+    }
+}
+
+.status {
+    display: inline-block;
+    position: relative;
+    width: toRem(20);
+    min-width: toRem(20);
+    height: toRem(20);
+    min-height: toRem(20);
+    border-radius: 100%;
+}

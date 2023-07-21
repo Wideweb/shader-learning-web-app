@@ -1,0 +1,30 @@
+<div class="container">
+    <a (click)="cancel()" class="close-ctrl"><span class="ico-container"><i class="ico close-ico"></i></span></a>
+
+    <h3 class="title">Dislike</h3>
+
+    <p class="p2 message">
+        Your answer will help us create a better product. Could you tell us why you gave a dislike to this task?
+    </p>
+
+    <form class="form" [formGroup]="form">
+
+        <div class="form-row">
+            <div class="selection">
+                <app-checkbox formControlName="unclearDescription">Description or examples are unclear or incorrect</app-checkbox>
+                <app-checkbox formControlName="strictRuntime">Runtime is too strict</app-checkbox>
+                <app-checkbox formControlName="other">Other</app-checkbox>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <textarea class="p2" formControlName="message" autocomplete="off" placeholder="Add comment"></textarea>
+        </div>
+
+    </form>
+
+    <div class="actions">
+        <a class="btn-link white" (click)="cancel()">Cancel</a>
+        <a class="btn-link" (click)="submit()" [attr.disabled]="disabled$ | async">Confirm</a>
+    </div>
+</div>

@@ -50,7 +50,7 @@ export class GlScene
   public camera = new GlCamera();
   public object = new GlSceneObject();
 
-  public background = 0xFFFFFF;
+  public background = 0xFAFAFA;
 }
 
 export interface GlProgramChannel {

@@ -1,0 +1,15 @@
+<ng-container *ngIf="(module$ | async) != null && (loaded$ | async) then moduleEl else placeholderEl"></ng-container>
+
+<ng-template #moduleEl>
+    <module-view
+        [module]="(module$ | async)!"
+        [finished]="(finished$ | async)!"
+    ></module-view>
+</ng-template>
+
+<ng-template #placeholderEl>
+    <ng-container *ngIf="pageHeaderImageSrc$">
+        <app-svg-img class="page-header-image" [src]="(pageHeaderImageSrc$ | async)!"></app-svg-img>
+    </ng-container>
+    <module-view-placeholder></module-view-placeholder>
+</ng-template>

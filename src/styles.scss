@@ -1,0 +1,1358 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'common.scss';
+
+@font-face {
+    font-family: $font-regular;
+    src: url("/assets/AvenirNextLTPro-Regular.otf") format("opentype") ;
+}
+
+@font-face {
+    font-family: $font-bold;
+    src: url("/assets/AvenirNextLTPro-Bold.otf") format("opentype") ;
+}
+
+@font-face {
+    font-family: $font-code;
+    src: url("/assets/CutiveMono-Regular.ttf") format("truetype") ;
+}
+
+@import '/node_modules/codemirror/lib/codemirror.css';
+@import '/node_modules/codemirror/addon/hint/show-hint.css';
+
+html {
+    min-width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: $white;
+}
+
+// @media (min-width: 1440px) {
+//     html {
+//         font-size: 20px;
+//     }
+// }
+
+body,
+#index {
+    min-width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: toRem(14);
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// * {
+//     font-family: "Avenir Next LT Pro Regular", -apple-system, Roboto, sans-serif;
+// }
+
+.description-markdown-compiled code {
+    font-family: $font-code;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+    color: $grey;
+
+    // padding: 2px 4px;
+    // background-color: #ececef;
+    // border-radius: 4px;
+    // display: inline-block;
+}
+
+.description-markdown-compiled *:first-child {
+    margin-top: 0;
+}
+
+.description-markdown-compiled pre + pre {
+    margin-top: toRem(10);
+}
+
+.description-markdown-compiled pre>code {
+    // display: block;
+
+    font-size: toRem(16);
+    font-family: $font-code;
+    font-style: normal;
+    font-weight: 400;
+    line-height: toRem(24);
+    color: $grey;
+
+    // margin-bottom: toRem(16);
+    // padding: toRem(12);
+    // overflow-x: auto;
+    // border-radius: toRem(4);
+    // border: toRem(1) solid $light-grey;
+}
+
+// .description-markdown-compiled pre {
+//     font-family: monospace;
+//     white-space: pre;
+// }
+
+// .description-markdown-compiled h1 {
+//     margin: 24px 0 16px;
+//     border-bottom: 1px solid #e6e6ea;
+// }
+
+// .description-markdown-compiled h2 {
+//     margin: 24px 0 16px;
+//     border-bottom: 1px solid #e6e6ea;
+// }
+
+// .description-markdown-compiled h3 {
+//     margin: 24px 0 16px;
+// }
+
+p {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+    left: 0;
+    left: 0;
+}
+
+.btn {
+    width: 100px;
+    height: 50px;
+    /* border-radius: 5px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0;
+}
+
+.btn+.btn {
+    margin-left: 10px;
+}
+
+.btn.btn-cancel {
+    color: darkcyan;
+    background-color: white;
+    box-shadow: inset 0 0 1px 2px darkcyan;
+}
+
+.btn.btn-submit {
+    color: white;
+    background-color: darkcyan;
+}
+
+.btn.btn-rounded {
+    border-radius: 5px;
+}
+
+.btn.disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+.page-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.page {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.page-scroll {
+    width: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-content-wrapper {
+    width: 100%;
+    max-width: 860px;
+}
+
+@media (max-width: 890px) {
+    .page-content-wrapper {
+        box-sizing: border-box;
+        padding: 0 15px;
+    }
+}
+
+.page-footer {
+    width: 100%;
+    height: 100px;
+    background-color: gainsboro;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-header {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 30px;
+}
+
+.page-header .icon {
+    color: darkcyan;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+.mat-mdc-menu-panel .mat-mdc-menu-content {
+    padding: 0;
+}
+
+.mdc-checkbox__ripple {
+    display: none !important;
+}
+
+.mat-ripple-element {
+    display: none !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: toRem(16) !important;
+    background-color: $white !important;
+}
+
+.cdk-overlay-backdrop {
+    background-color: #1F1F1F52;
+    backdrop-filter: blur(toRem(1));
+}
+
+.mat-mdc-menu-panel.mat-mdc-menu-panel {
+    margin-top: toRem(16);
+    max-width: unset !important;
+    min-width: unset !important;
+    border-radius: toRem(16);
+    box-shadow: 0 0 toRem(8) 0 rgba(26, 36, 91, 0.09);
+}
+
+.CodeMirror {
+    background-color: $white;
+    font-family: monospace;
+    color: $black;
+
+    font-family: Source Code Pro, monospace;
+    font-size: toRem(15);
+    line-height: toRem(24);
+}
+
+.CodeMirror-gutters {
+    width: toRem(40);
+    background-color: $light-blue;
+    border: none;
+}
+
+.CodeMirror-linenumber {
+    width: toRem(40) !important;
+    box-sizing: border-box;
+    padding-right: toRem(8);
+}
+
+.CodeMirror-hints {
+    background: #e3e3e3;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+.CodeMirror-hint {
+    box-sizing: border-box;
+    padding: 4px 8px !important;
+    color: #555;
+    border-radius: 0;
+}
+
+.CodeMirror pre.CodeMirror-line, .CodeMirror pre.CodeMirror-line-like {
+    padding: 0 toRem(8);
+}
+
+.CodeMirror-activeline-background {
+    background: transparent !important;
+}
+
+.CodeMirror-activeline-background {
+    box-shadow: inset 0px 1px 0px #0000000e, inset 0px -1px 0px #0000000e;
+}
+
+.CodeMirror-activeline-gutter .CodeMirror-linenumber {
+    color: $white;
+}
+
+.CodeMirror-line-error .CodeMirror-linenumber {
+    color: $red;
+}
+
+.backdropBackground {
+    background-color: #1F1F1F52;
+    backdrop-filter: blur(toRem(1));
+}
+
+/*************************************************/
+/**********************COMMON*********************/
+/*************************************************/
+
+.max-width {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+
+    @include for-phone-only {    
+      max-width: toRem(280);
+    }
+  
+    @include for-tablet-up {    
+        max-width: toRem(600);
+    }
+  
+    @include for-desktop-up {    
+        max-width: toRem(920);
+    }
+}
+
+h1 {
+    font-family: $font-bold;
+    font-size: toRem(40);
+    line-height: toRem(50);
+    color: $black;
+    margin: 0;
+}
+
+h2 {
+    font-family: $font-bold;
+    font-size: toRem(36);
+    line-height: toRem(40);
+    margin: 0;
+    color: $black;
+}
+
+@media (max-width: 639px) {
+    h1 {
+        font-size: toRem(36);
+        line-height: toRem(44);
+    }
+
+    h2 {
+        font-size: toRem(26);
+        line-height: toRem(28);
+    }
+}
+
+h3 {
+    font-family: $font-bold;
+    font-size: toRem(18);
+    line-height: toRem(24);
+    margin: 0;
+    color: $black;
+}
+
+.p1 {
+    font-family: $font-regular;
+    line-height: toRem(24);
+    font-size: toRem(18);
+    color: $black;
+}
+
+.p2 {
+    font-family: $font-regular;
+    line-height: toRem(20);
+    font-size: toRem(16);
+    color: $black;
+}
+
+.p2-bold {
+    font-family: $font-bold;
+    line-height: toRem(20);
+    font-size: toRem(16);
+    font-weight: 700;
+    color: $black;
+}
+
+.p2-task {
+    font-family: $font-regular;
+    font-size: toRem(16);
+    font-style: normal;
+    font-weight: 400;
+    line-height: toRem(24);
+}
+
+.p3 {
+    font-family: $font-regular;
+    line-height: toRem(20);
+    font-size: toRem(14);
+    font-weight: 400;
+    color: $black;
+}
+
+// * {
+//     font-family: "Avenir Next LT Pro Regular";
+//     color: $black;
+// }
+
+.quote-filled-ico {
+    display: inline-block;
+    width: toRem(12);
+    height: toRem(25);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/quote-filled.svg);
+    mask-image: url(/assets/quote-filled.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(12);
+    mask-size: toRem(12);
+}
+
+.quote-blank-ico {
+    display: inline-block;
+    width: toRem(14);
+    height: toRem(26);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/quote-blank.svg);
+    mask-image: url(/assets/quote-blank.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    mask-size: toRem(14);
+    -webkit-mask-size: toRem(14);
+}
+
+.arrow-up-right-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/arrow-up-right.svg);
+    mask-image: url(/assets/arrow-up-right.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.arrow-up-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/arrow-up.svg);
+    mask-image: url(/assets/arrow-up.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.arrow-left-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/arrow-left.svg);
+    mask-image: url(/assets/arrow-left.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.chevron-left-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevron-left.svg);
+    mask-image: url(/assets/chevron-left.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.chevron-right-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevron-right.svg);
+    mask-image: url(/assets/chevron-right.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.chevrons-left-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevrons-left.svg);
+    mask-image: url(/assets/chevrons-left.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.chevrons-right-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevrons-right.svg);
+    mask-image: url(/assets/chevrons-right.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.list-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/list.svg);
+    mask-image: url(/assets/list.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.menu-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/menu.svg);
+    mask-image: url(/assets/menu.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.close-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/close.svg);
+    mask-image: url(/assets/close.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.checked-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(12);
+    height: toRem(8);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $white;
+    -webkit-mask-image: url(/assets/checked.svg);
+    mask-image: url(/assets/checked.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(12);
+    mask-size: toRem(12);
+}
+
+.linkedin-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(40);
+    height: toRem(40);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/linkedin.svg);
+    mask-image: url(/assets/linkedin.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(40);
+    mask-size: toRem(40);
+}
+
+.behance-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(40);
+    height: toRem(40);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/behance.svg);
+    mask-image: url(/assets/behance.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(40);
+    mask-size: toRem(40);
+}
+
+.mail-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(40);
+    height: toRem(40);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/mail.svg);
+    mask-image: url(/assets/mail.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(40);
+    mask-size: toRem(40);
+}
+
+.eye-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/eye.svg);
+    mask-image: url(/assets/eye.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.eye-off-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/eye-off.svg);
+    mask-image: url(/assets/eye-off.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-down-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-down.svg);
+    mask-image: url(/assets/thumbs-down.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-down-filled-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-down-filled.svg);
+    mask-image: url(/assets/thumbs-down-filled.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-up-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-up.svg);
+    mask-image: url(/assets/thumbs-up.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.thumbs-up-filled-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/thumbs-up-filled.svg);
+    mask-image: url(/assets/thumbs-up-filled.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.reset-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/reset.svg);
+    mask-image: url(/assets/reset.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.check-circle-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/check-circle.svg);
+    mask-image: url(/assets/check-circle.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.alert-circle-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/alert-circle.svg);
+    mask-image: url(/assets/alert-circle.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.clock-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/clock.svg);
+    mask-image: url(/assets/.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.log-out-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/log-out.svg);
+    mask-image: url(/assets/log-out.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.rank-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/rank.svg);
+    mask-image: url(/assets/rank.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.ico-container {
+    display: inline-block;
+    position: relative;
+    width: toRem(24);
+    height: toRem(24);
+}
+
+.btn-ico {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: toRem(40);
+    height: toRem(40);
+    cursor: pointer;
+
+    .ico {
+        background-color: $black;
+    }
+    
+    @include for-desktop-up {
+        &:hover .ico {
+            background-color: $blue;
+        }
+    }
+    
+    &:active .ico {
+        background-color: $blue-secondary;
+    }
+    
+    &[disabled=true] .ico {
+        background-color: $light-grey;
+        cursor: not-allowed;
+    }
+}
+
+a.link {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+
+    &.link-standout {
+        text-decoration: underline;
+        color: $blue;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            color: $blue-secondary;
+        }
+    }
+
+    &:active {
+        color: $blue;
+    }
+}
+
+.btn-circle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: toRem(40);
+    height: toRem(40);
+    border-radius: 100%;
+    color: $white;
+    background-color: $blue;
+    cursor: pointer;
+}
+
+.btn-circle .ico {
+    color: $white;
+    background-color: $white;
+}
+
+.btn-circle.secondary {
+    background-color: $white;
+}
+
+.btn-circle.secondary .ico {
+    color: $blue;
+    background-color: $blue;
+}
+
+@include for-desktop-up {
+
+    .btn-circle:hover, .btn-circle.secondary:hover {
+        background-color: $grey;
+    }
+
+    .btn-circle.secondary:hover .ico {
+        color: $white;
+        background-color: $white;
+    }
+}
+
+.btn-circle:active, .btn-circle.secondary:active {
+    background-color: $black;
+}
+
+.btn-circle.secondary:active .ico {
+    color: $white;
+    background-color: $white;
+}
+
+.btn-circle[disabled=true] {
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: $white;
+    box-shadow: inset 0 0 0 toRem(2) $light-grey;
+}
+
+.btn-circle.secondary[disabled=true] {
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: $white;
+    box-shadow: none;
+}
+
+.btn-circle[disabled=true] .ico, .btn-circle.secondary[disabled=true] .ico {
+    color: $light-grey;
+    background-color: $light-grey;
+}
+
+.btn-side-bar {
+    display: inline-block;
+    position: relative;
+    width: toRem(28);
+    height: toRem(28);
+    background-color: $dark-blue;
+    border-radius: toRem(4);
+    cursor: pointer;
+
+    .ico {
+        background-color: $white;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            background-color: $grey;
+        }
+    }
+
+    &:active {
+        background-color: $black;
+    }
+}
+
+.btn-link {
+    font-family: $font-regular;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    background-color: $blue;
+    color: $white;
+    box-sizing: border-box;
+    padding: toRem(12) toRem(24);
+    font-size: toRem(16);
+    line-height: toRem(16);
+    border-radius: toRem(48);
+    user-select: none;
+    border: none;
+    cursor: pointer;
+}
+
+@include for-desktop-up {
+    .btn-link:hover {
+        background-color: $grey;
+    }
+}
+
+.btn-link:active {
+    background-color: $black;
+}
+
+.btn-link[disabled=true] {
+    background-color: $white;
+    color: $light-grey;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+    cursor: not-allowed;
+
+    .ico {
+        background-color: $light-grey;
+    }
+}
+
+.btn-link-ico-addon {
+    position: relative;
+    padding-right: toRem(45);
+}
+
+.btn-link-ico-addon .ico-container {
+    position: relative;
+    display: inline-block;
+    width: toRem(32);
+    height: toRem(32);
+    border-radius: 100%;
+    background-color: $white;
+    position: absolute;
+    right: toRem(4);
+    top: toRem(4);
+}
+
+.btn-link-ico-addon.left {
+    padding-right: toRem(24);
+    padding-left: toRem(45);
+}
+
+.btn-link-ico-addon.left .ico-container {
+    right: unset;
+    left: toRem(4);
+    top: toRem(4);
+}
+
+@include for-desktop-up {
+    .btn-link.btn-link-ico-addon:hover .ico {
+        background-color: $grey;
+    }
+}
+
+.btn-link.btn-link-ico-addon:active .ico {
+    background-color: $black;
+}
+
+.btn-link.btn-link-ico-addon[disabled=true] .ico {
+    background-color: $light-grey;
+}
+
+.btn-link.darker {
+    background-color: $dark-blue;
+}
+
+.btn-link.darker .ico {
+    background-color: $dark-blue;
+}
+
+@include for-desktop-up {
+    .btn-link.darker:hover {
+        background-color: $grey;
+    }
+}
+
+.btn-link.darker:active {
+    background-color: $black;
+}
+
+.btn-link.darker[disabled=true] {
+    background-color: $white;
+    color: $light-grey;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+
+    .ico {
+        background-color: $light-grey;
+    }
+}
+
+.btn-link.white {
+    background-color: $white;
+    color: $blue;
+    box-shadow: inset 0 0 0 toRem(1) $blue;
+}
+
+@include for-desktop-up {
+    .btn-link.white:hover {
+        background-color: $grey;
+        color: $white;
+        box-shadow: unset;
+    }
+}
+
+.btn-link.white:active {
+    background-color: $black;
+    color: $white;
+    box-shadow: unset;
+}
+
+.btn-link.white[disabled=true] {
+    background-color: $white;
+    color: $light-grey;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+
+    .ico {
+        background-color: $light-grey;
+    }
+}
+
+.btn-text {
+    display: inline-block;
+    font-family: $font-regular;
+    position: relative;
+    cursor: pointer;
+    font-size: toRem(14);
+    line-height: toRem(24);
+    -webkit-text-stroke-width: toRem(0.3);
+
+    color: $blue;
+    .ico {
+        background-color: $blue;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            color: $blue-secondary;
+            .ico {
+                background-color: $blue-secondary;
+            }
+        }
+    }
+
+    &:active {
+        color: $dark-blue;
+        .ico {
+            background-color: $dark-blue;
+        }
+    }
+
+    .ico {
+        float: left;
+        transform: unset;
+        left: unset;
+        right: unset;
+        top: unset;
+        position: relative;
+        margin-right: toRem(8);
+    }
+}
+
+.btn-text.black {
+    color: $black;
+    .ico {
+        background-color: $black;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            color: $blue-secondary;
+            .ico {
+                background-color: $blue-secondary;
+            }
+        }
+    }
+
+    &:active {
+        color: $dark-blue;
+        .ico {
+            background-color: $dark-blue;
+        }
+    }
+}
+
+.btn-text.white {
+    color: $white;
+    .ico {
+        background-color: $white;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            color: $grey;
+            .ico {
+                background-color: $grey;
+            }
+        }
+    }
+
+    &:active {
+        color: $black;
+        .ico {
+            background-color: $black;
+        }
+    }
+}
+
+
+.btn-like {
+    display: inline-flex;
+    align-items: center;
+    font-family: $font-regular;
+    position: relative;
+    cursor: pointer;
+    line-height: toRem(24);
+    -webkit-text-stroke-width: toRem(0.3);
+    box-sizing: border-box;
+    padding: toRem(2) toRem(10);
+    border-radius: toRem(24);
+
+    color: $blue;
+    .ico {
+        background-color: $blue;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            background-color: $blue;
+            color: $white;
+            .ico {
+                background-color: $white;
+            }
+        }
+    }
+
+    &:active {
+        background-color: $blue-secondary;
+        color: $white;
+        .ico {
+            background-color: $white;
+        }
+    }
+
+    .ico {
+        float: left;
+        transform: unset;
+        left: unset;
+        right: unset;
+        top: unset;
+        position: relative;
+        margin-right: toRem(4);
+    }
+
+    & > span {
+        margin-bottom: toRem(-2);
+    }
+}
+
+.cut-text { 
+    width: 100%;
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ph-animation {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: -50%;
+        z-index: 1;
+        width: 100%;
+        pointer-events: none;
+        content: " ";
+        background: linear-gradient(to right, #fafafa00 20%, #fafafa40 50%, #fafafa00 80%);
+        animation: ph-animation 1s linear infinite;
+    }
+}
+
+@keyframes ph-animation {
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    90% {
+        transform: translate(150%, 0);
+    }
+
+    100% {
+        transform: translate(150%, 0);
+    }
+}

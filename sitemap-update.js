@@ -15,7 +15,7 @@ const fetchModules = () => {
         .then(dataJSON => {
             if (dataJSON) {
                 dataJSON.filter(element => !element.locked).forEach(element => {
-                    untrackedUrlsList.push(`https://shader-learning.com/module-progress/${element.id}/view`);
+                    untrackedUrlsList.push(`https://shader-learning.com/module-view/${element.id}`);
                 });
                 filterUniqueURLs();
             }

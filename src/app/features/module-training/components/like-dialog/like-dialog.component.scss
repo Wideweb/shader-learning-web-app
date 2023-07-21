@@ -1,0 +1,42 @@
+
+@import 'common.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding: toRem(40) 0;
+    max-width: toRem(380);
+    min-width: toRem(380);
+
+    @include for-phone-only {    
+        min-width: 0;
+        padding: toRem(40) toRem(50);
+    }
+}
+
+.ico {
+    width: toRem(168);
+    min-width: toRem(168);
+    height: toRem(168);
+    min-height: toRem(168);
+    margin-bottom: toRem(30);
+}
+
+.title {
+    color: $blue;
+    margin-bottom: toRem(36);
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(10);
+    width: 100%;
+    box-sizing: border-box;
+
+    @include for-tablet-up {    
+        padding: 0 toRem(40);
+    }
+}

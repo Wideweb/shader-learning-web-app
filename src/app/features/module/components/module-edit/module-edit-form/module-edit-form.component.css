@@ -74,7 +74,7 @@ h1 {
 .form-field-editable .edit .actions {
     display: flex;
     flex-direction: row;
-    align-items: start;
+    align-items: flex-start;
     box-sizing: border-box;
     padding-top: 15px;
 }

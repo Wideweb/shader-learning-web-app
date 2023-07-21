@@ -1,47 +1,50 @@
 <div class="container">
-    <div class="logo" routerLink="/">H</div>
-    <div class="panel">
-        <div class="panel-header">
-            <span>Get started today</span>
+    <div class="form-part">
+        <div class="logo-wrapper">
+            <img class="logo" src="assets/logo.svg" alt="Shader Learning">
         </div>
+        <h2 class="title">Create Account</h2>
+        <div class="form-wrapper">
+            <form class="form" [formGroup]="form" autocomplete="on">
+                <div class="form-field" [ngClass]="{'invalid': form.get('name')?.invalid && form.get('name')?.touched}">
+                    <label class="p2">Name</label>
+                    <input name="name" type="text" placeholder="Enter your name" formControlName="name" autocomplete="username">
 
-        <form class="form" [formGroup]="form">
-            <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher">
+                    <div class="errors">
+                        <div class="error p3" *ngIf="form.get('name')?.hasError('required')">name is required</div>
+                        <div class="error p3" *ngIf="form.get('name')?.hasError('USER_NAME_NOT_UNIQUE')">name is not unique</div>
+                    </div>
+                </div>
 
-                <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+                <div class="form-field" [ngClass]="{'invalid': form.get('email')?.invalid && form.get('email')?.touched}">
+                    <label class="p2">Email</label>
+                    <input name="email" type="text" placeholder="Enter your email" formControlName="email" autocomplete="email">
 
-                <mat-error *ngIf="form.get('name')?.hasError('USER_NAME_NOT_UNIQUE')">Name is not unique</mat-error>
-            </mat-form-field>
+                    <div class="errors">
+                        <div class="error p3" *ngIf="form.get('email')?.hasError('required')">email is required</div>
+                        <div class="error p3" *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">incorrect email</div>
+                        <div class="error p3" *ngIf="form.get('email')?.hasError('EMAIL_NOT_UNIQUE')">email is not unique</div>
+                    </div>
+                </div>
 
-            <mat-form-field>
-                <mat-label>Email</mat-label>
-                <input type="email" matInput formControlName="email" [errorStateMatcher]="matcher">
+                <div class="form-field" [ngClass]="{'invalid': form.get('password')?.invalid && form.get('password')?.touched}">
+                    <label class="p2">Password</label>
+                    <input name="password" type="password" placeholder="Enter your password" formControlName="password" autocomplete="new-password">
 
-                <mat-error
-                    *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">Please
-                    enter a valid email address</mat-error>
+                    <div class="errors">
+                        <div class="error p3" *ngIf="form.get('password')?.hasError('required')">password is required</div>
+                    </div>
+                </div>
 
-                <mat-error *ngIf="form.get('email')?.hasError('required')">Email is
-                    <strong>required</strong></mat-error>
+                <button type="submit" class="btn-submit btn-link" (click)="signUp()">Sign Up</button>
+            </form>
 
-                <mat-error *ngIf="form.get('email')?.hasError('EMAIL_NOT_UNIQUE')">Email is not unique</mat-error>
-            </mat-form-field>
-
-            <mat-form-field>
-                <mat-label>Password</mat-label>
-                <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher">
-
-                <mat-error *ngIf="form.get('password')?.hasError('required')">Password is
-                    <strong>required</strong></mat-error>
-            </mat-form-field>
-
-            <div class="action">
-                <button type="submit" class="btn btn-submit btn-rounded" (click)="signUp()">Sign Up</button>
-            </div>
-        </form>
-
-        <a class="panel-footer" (click)="toLogIn()">Already have an account?&nbsp;<span>Log In</span></a>
+            <p class="p3 underlying-message">Already have an account?&nbsp;<a class="link link-standout" (click)="toLogIn()">Sign In</a></p>
+        </div>
+    </div>
+    <div class="image-part">
+        <div class="image-wrapper">
+            <img src="assets/create-account.svg">
+        </div>
     </div>
 </div>

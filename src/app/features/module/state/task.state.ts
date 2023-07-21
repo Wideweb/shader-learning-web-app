@@ -76,6 +76,7 @@ export class TaskState {
         animationSteps: null,
         animationStepTime: null,
         sceneSettings: new GlScene(),
+        rules: [],
       }
     });
   }

@@ -10,14 +10,14 @@ import { TaskProgressDto } from '../models/task-progress.model';
 })
 export class UserProfileService {
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    public getProfile(userId: number): Observable<UserProfileDto> {
-      return this.http.get<UserProfileDto>(`${API}/users/${userId}/profile`).pipe(shareReplay(1));
-    }
+  public getProfile(userId: number): Observable<UserProfileDto> {
+    return this.http.get<UserProfileDto>(`${API}/users/${userId}/profile`).pipe(shareReplay(1));
+  }
 
-    public getProgress(userId: number): Observable<TaskProgressDto[]> {
-      return this.http.get<TaskProgressDto[]>(`${API}/users/${userId}/progress`).pipe(shareReplay(1));
+  public getProgress(userId: number): Observable<TaskProgressDto[]> {
+    return this.http.get<TaskProgressDto[]>(`${API}/users/${userId}/progress`).pipe(shareReplay(1));
   }
 
   public getProfileMe(): Observable<UserProfileDto> {
@@ -26,5 +26,5 @@ export class UserProfileService {
 
   public getProgressMe(): Observable<TaskProgressDto[]> {
     return this.http.get<TaskProgressDto[]>(`${API}/me/progress`).pipe(shareReplay(1));
-}
+  }
 }

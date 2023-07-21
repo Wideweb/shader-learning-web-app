@@ -2,11 +2,12 @@ import { Injectable } from "@angular/core";
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse} from "@angular/common/http";
 import { catchError, Observable, throwError } from "rxjs";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from "@angular/router";
 
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
 
-    constructor(private snackBar: MatSnackBar) {}
+    constructor(private snackBar: MatSnackBar, private router: Router) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
@@ -15,7 +16,9 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     }
 
     handleError(request: HttpRequest<any>, next: HttpHandler, error: any): Observable<HttpEvent<any>> {
-        if (error instanceof HttpErrorResponse && error.status >= 500) {
+        if (error instanceof HttpErrorResponse && error.status == 404) {
+            this.router.navigate(['/404'], { replaceUrl: true });
+        } else if (error instanceof HttpErrorResponse && error.status >= 500) {
             this.snackBar.open('Server Error', '', {
                 horizontalPosition: 'right',
                 verticalPosition: 'top',

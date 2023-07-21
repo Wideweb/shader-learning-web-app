@@ -1,0 +1,150 @@
+@import 'common.scss';
+
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    textarea {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+        height: toRem(80);
+        background-color: $white;
+        border: none;
+        resize: vertical;
+        box-sizing: border-box;
+        padding: toRem(10) toRem(16);
+        border-radius: toRem(8);
+        box-shadow: inset 0 0 0 toRem(1) $black;
+        color: $black;
+        resize: none;
+    
+        &::placeholder {
+            color: $light-grey;
+        }
+
+        &.ng-invalid {
+            outline-width: 0;
+            box-shadow: inset 0 0 0 toRem(1) $red;
+        }
+
+        &:focus {
+            outline-width: 0;
+            box-shadow: inset 0 0 0 toRem(1) $blue;
+        }
+
+        &[disabled] {
+            outline-width: 0;
+            color: $light-grey;
+            box-shadow: inset 0 0 0 toRem(1) $light-grey;
+        }
+    }
+}
+
+.form-field {
+    position: relative;
+    width: 100%;
+    margin-bottom: toRem(10);
+
+    & + .form-field {
+        margin-top: toRem(10);
+    }
+
+    label {
+        display: block;
+        width: 100%;
+        margin-bottom: toRem(5);
+        font-weight: bold;
+    }
+
+    input {
+        display: block;
+        width: 100%;
+        height: toRem(40);
+        box-sizing: border-box;
+        border-radius: toRem(24);
+        padding: toRem(10) toRem(24) toRem(10) toRem(24);
+        margin-bottom: toRem(5);
+        border: toRem(1) solid $black;
+        background-color: $white;
+        outline: none;
+
+        font-family: "Avenir Next LT Pro Regular";
+        line-height: toRem(20);
+        font-size: toRem(16);
+        color: $black;
+
+        &::placeholder {
+            font-family: "Avenir Next LT Pro Regular";
+            line-height: toRem(20);
+            font-size: toRem(16);
+            color: $light-grey;
+        }
+
+        &:focus {
+            border-color: $blue;
+        }
+
+        &[type=password] {
+            padding-top: toRem(14);
+
+            &::placeholder {
+                position: relative;
+                top: toRem(-2);
+            }
+
+            &::-ms-reveal {
+                display: none;
+            }
+        }
+    }
+
+    .errors {
+        display: none;
+        width: 100%;
+    }
+
+    .error {
+        box-sizing: border-box;
+        color: $red;
+    }
+
+    &.invalid {
+        margin-bottom: toRem(0);
+
+        input {
+            border-color: $red;
+
+            &:focus {
+                border-color: $blue;
+            }
+        }
+
+        .errors {
+            display: block;
+        }
+    }
+
+    .input-group {
+        position: relative;
+
+        &.input-group-inner-addon-right {
+            input {
+                padding-right: toRem(45);
+            }
+        }
+
+        .inner-addon-right {
+            position: absolute;
+            top: toRem(0);
+            right: toRem(12);
+            cursor: pointer;
+        }
+    }
+}
+
+.btn-submit {
+    margin-top: toRem(15);
+}

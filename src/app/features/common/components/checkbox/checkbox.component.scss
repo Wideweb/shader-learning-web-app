@@ -1,0 +1,48 @@
+@import 'common.scss';
+
+:host {
+    display: block;
+    overflow: hidden;
+}
+
+.container {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: toRem(8);
+
+    input {
+        position: absolute;
+        opacity: 0;
+    }
+    
+    .checkmark {
+        display: inline-block;
+        position: relative;
+        width: toRem(20);
+        min-width: toRem(20);
+        height: toRem(20);
+        min-height: toRem(20);
+        border-radius: toRem(4);
+        box-shadow: inset 0 0 0 toRem(1) $blue;    
+    }
+
+    @include for-desktop-up {
+        &:hover .checkmark {
+            box-shadow: inset 0 0 0 toRem(1) $dark-blue;  
+        }
+    }
+
+    &.checked .checkmark {
+        box-shadow: unset;
+        background-color: $blue;
+    }
+
+    @include for-desktop-up {
+        &:hover.checked .checkmark {
+            box-shadow: unset;
+            background-color: $dark-blue;
+        }
+    }
+}

@@ -1,38 +1,49 @@
 <div class="container">
-    <div class="logo" routerLink="/">H</div>
-    <div class="panel">
-        <div class="panel-header">
-            <span>Log in to your account</span>
+    <div class="form-part">
+        <div class="logo-wrapper">
+            <img class="logo" src="assets/logo.svg" alt="Shader Learning">
         </div>
+        <h2 class="title">Sign in</h2>
+        <div class="form-wrapper">
+            <form class="form" [formGroup]="form" autocomplete="on">
+                <div class="form-field" [ngClass]="{'invalid': form.get('email')?.invalid && form.get('email')?.touched}">
+                    <label class="p2">Email</label>
+                    <input name="email" type="text" placeholder="Enter your email" formControlName="email" autocomplete="email">
 
-        <form class="form" [formGroup]="form">
-            <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input type="text" matInput formControlName="name" [errorStateMatcher]="matcher">
+                    <div class="errors">
+                        <div class="error p3" *ngIf="form.get('email')?.hasError('required')">email is required</div>
+                        <div class="error p3" *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">incorrect email</div>
+                        <div class="error p3" *ngIf="form.get('email')?.hasError('EMAIL_NOT_FOUND')">email is not found</div>
+                    </div>
+                </div>
 
-                <mat-error *ngIf="form.get('name')?.hasError('required')">Name is <strong>required</strong></mat-error>
+                <div class="form-field" [ngClass]="{'invalid': form.get('password')?.invalid && form.get('password')?.touched}">
+                    <label class="p2">Password</label>
 
-                <mat-error *ngIf="form.get('name')?.hasError('USER_NAME_NOT_FOUND')">Name is not found</mat-error>
-            </mat-form-field>
+                    <div class="input-group input-group-inner-addon-right">
+                        <input name="password" [type]="passwordHidden ? 'password' : 'text'" placeholder="Enter your password" formControlName="password" autocomplete="password">
+                        <a class="btn-ico inner-addon-right" (click)="togglePasswordVisibility()">
+                            <i class="ico eye-ico" *ngIf="passwordHidden" ></i>
+                            <i class="ico eye-off-ico" *ngIf="!passwordHidden"></i>
+                        </a>
+                    </div>
 
-            <mat-form-field>
-                <mat-label>Password</mat-label>
-                <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher">
+                    <div class="errors">
+                        <div class="error p3" *ngIf="form.get('password')?.hasError('required')">password is required</div>
+                    </div>
+                </div>
 
-                <mat-error *ngIf="form.get('password')?.hasError('required')">Password is
-                    <strong>required</strong></mat-error>
+                <a class="link p3 link-standout" routerLink="/password-reset">Forgot password?</a>
 
-                <mat-error *ngIf="form.get('password')?.hasError('PASSWORD_NOT_MATCH')">Password does not
-                    match</mat-error>
-            </mat-form-field>
+                <button type="submit" class="btn-submit btn-link" (click)="login()">Sign in</button>
+            </form>
 
-            <div class="action">
-                <button type="submit" class="btn btn-submit btn-rounded" (click)="login()">Login</button>
-            </div>
-        </form>
-
-        <a class="panel-footer" (click)="toSignUp()">New to Shader Learnig?&nbsp;<span>Sign Up</span></a>
+            <p class="p3 underlying-message">Don't have an account?&nbsp;<a class="link link-standout" routerLink="/password-reset" (click)="toSignUp()">Create account</a></p>
+        </div>
     </div>
-
-    <a class="password-reset-link" routerLink="/password-reset">Forgot your password?</a>
+    <div class="image-part">
+        <div class="image-wrapper">
+            <img src="assets/sign-in.svg">
+        </div>
+    </div>
 </div>
