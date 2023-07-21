@@ -22,6 +22,7 @@
     border-top-left-radius: toRem(40);
     border-top-right-radius: toRem(40);
     overflow: hidden;
+    background: linear-gradient(225deg, #85D94C 0%, #3E54C2 100%);
 
     .page-header-image {
         position: absolute;
@@ -46,15 +47,6 @@
         position: relative;
         box-sizing: border-box;
         padding: toRem(20) 0 toRem(50) 0;
-    }
-
-    .back-link  > span {
-        color: $white;
-        font-weight: bolder;
-    }
-
-    .back-link .ico-container > i {
-        background-color: $white;
     }
 
     .title {

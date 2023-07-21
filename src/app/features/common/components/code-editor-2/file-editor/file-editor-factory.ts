@@ -29,6 +29,7 @@ export const createFileEditorInstance = (
         doc,
         extensions: [
             EditorView.theme(styleSpecs),
+            EditorView.lineWrapping,
             EditorState.tabSize.of(8),
             
             keymap.of([

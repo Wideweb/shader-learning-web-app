@@ -21,6 +21,9 @@ export class ModuleComponent implements OnInit, OnDestroy {
   @Select(ModuleProgressState.loaded)
   public loaded$!: Observable<boolean>;
 
+  @Select(ModuleProgressState.finished)
+  public finished$!: Observable<boolean>;
+
   public pageHeaderImageSrc$: Observable<string> | null = null;
 
   private destroy$: Subject<boolean> = new Subject<boolean>();

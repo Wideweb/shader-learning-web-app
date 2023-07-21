@@ -100,7 +100,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
   constructor(private ref: ElementRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('shaderProgram' in changes || 'model' in changes) {
+    //  || 'model' in changes
+    if ('shaderProgram' in changes) {
       this.createProgramFiles();
     }
 
@@ -123,6 +124,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
     if (!this.model || !this.shaderProgram) {
       return;
     }
+
+    console.log('CHANGED');
 
     const rules: CodeEditorLinterRule[]  = this.model.rules.map((rule) => ({
       keyword: rule.keyword,

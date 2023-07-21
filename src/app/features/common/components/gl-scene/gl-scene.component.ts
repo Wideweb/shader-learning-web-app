@@ -159,6 +159,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       precision: 'highp',
       premultipliedAlpha: false,
       preserveDrawingBuffer: true,
+      alpha: true,
     });
   
     this.renderer.debug.checkShaderErrors = true;
@@ -250,6 +251,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       component.material.uniforms['iTime'].value = component.time;
 
       component.isRendering = true;
+      component.renderer.clear(true);
       component.renderer.render(component.scene, component.camera);
       component.isRendering = false;
 

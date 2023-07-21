@@ -18,6 +18,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AppUserMenuComponent } from './components/layout/user-menu/user-menu.component';
 
 export function initializeAppFactory(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -29,6 +30,7 @@ export function initializeAppFactory(appInitService: AppInitService) {
   declarations: [
     AppComponent,
     AppLayoutComponent,
+    AppUserMenuComponent,
     DonateComponent,
     AboutComponent,
     NotFoundComponent

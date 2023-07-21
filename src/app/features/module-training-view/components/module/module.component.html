@@ -3,6 +3,7 @@
 <ng-template #moduleEl>
     <module-view
         [module]="(module$ | async)!"
+        [finished]="(finished$ | async)!"
     ></module-view>
 </ng-template>
 

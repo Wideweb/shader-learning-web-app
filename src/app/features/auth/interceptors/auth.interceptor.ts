@@ -7,6 +7,7 @@ import { AuthState } from "../state/auth.state";
 import { AuthClear, RefreshAccessToken } from "../state/auth.actions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { isExpired } from "../services/token.utils";
+import { API } from "src/environments/environment";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -24,7 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     authorizeRequest(request: HttpRequest<any>, next: HttpHandler) {
-        if (request.context.get(CANCEL_AUTH)) {
+        if (request.context.get(CANCEL_AUTH) || !request.url.includes(API)) {
             return next.handle(request);
         }
 

@@ -255,6 +255,14 @@ ul {
     backdrop-filter: blur(toRem(1));
 }
 
+.mat-mdc-menu-panel.mat-mdc-menu-panel {
+    margin-top: toRem(16);
+    max-width: unset !important;
+    min-width: unset !important;
+    border-radius: toRem(16);
+    box-shadow: 0 0 toRem(8) 0 rgba(26, 36, 91, 0.09);
+}
+
 .CodeMirror {
     background-color: $white;
     font-family: monospace;
@@ -851,6 +859,40 @@ h3 {
     mask-size: toRem(24);
 }
 
+.log-out-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/log-out.svg);
+    mask-image: url(/assets/log-out.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
+.rank-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $blue;
+    -webkit-mask-image: url(/assets/rank.svg);
+    mask-image: url(/assets/rank.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
 .ico-container {
     display: inline-block;
     position: relative;
@@ -1137,36 +1179,12 @@ a.link {
     }
 }
 
-.back-link-wrapper {
-    width: 100%;
-    margin-top: toRem(20);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.back-link {
-    font-family: $font-regular;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: toRem(8);
-    cursor: pointer;
-    & > span {
-        color: $blue;
-        font-weight: bolder;
-    }
-}
-
-.back-link .ico-container  > i {
-    background-color: $blue;
-}
-
 .btn-text {
     display: inline-block;
     font-family: $font-regular;
     position: relative;
     cursor: pointer;
+    font-size: toRem(14);
     line-height: toRem(24);
     -webkit-text-stroke-width: toRem(0.3);
 
@@ -1201,6 +1219,53 @@ a.link {
         margin-right: toRem(8);
     }
 }
+
+.btn-text.black {
+    color: $black;
+    .ico {
+        background-color: $black;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            color: $blue-secondary;
+            .ico {
+                background-color: $blue-secondary;
+            }
+        }
+    }
+
+    &:active {
+        color: $dark-blue;
+        .ico {
+            background-color: $dark-blue;
+        }
+    }
+}
+
+.btn-text.white {
+    color: $white;
+    .ico {
+        background-color: $white;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            color: $grey;
+            .ico {
+                background-color: $grey;
+            }
+        }
+    }
+
+    &:active {
+        color: $black;
+        .ico {
+            background-color: $black;
+        }
+    }
+}
+
 
 .btn-like {
     display: inline-flex;

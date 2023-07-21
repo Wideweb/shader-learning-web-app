@@ -626,7 +626,7 @@ export class ModuleProgressState {
       userShaderProgram: {
         vertex: userTask.vertexShader || DEFAULT_VERTEX_SHADER,
         fragment: userTask.fragmentShader || DEFAULT_FRAGMENT_SHADER,
-        compile: false,
+        compile: true,
       },
     }));
   }
@@ -642,7 +642,7 @@ export class ModuleProgressState {
       userShaderProgram: {
         vertex: userTask.defaultVertexShader || DEFAULT_VERTEX_SHADER,
         fragment: userTask.defaultFragmentShader || DEFAULT_FRAGMENT_SHADER,
-        compile: false,
+        compile: true,
       },
     }));
   }

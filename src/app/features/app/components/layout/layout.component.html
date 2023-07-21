@@ -6,6 +6,16 @@
   <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>About</h2></a>
 </div>
 
+<mat-menu #menu xPosition="before">
+  <app-user-menu
+    class="user-menu"
+    [symbol]="(userSymbol$ | async)!"
+    [name]="(userName$ | async)!"
+    [email]="(userEmail$ | async)!"
+    [rank]="(userRank$ | async)!">
+  </app-user-menu>
+</mat-menu>
+
 <div class="page-container">
   <div class="page">
     <div class="page-scroll" (scroll)="onScroll($event)">
@@ -34,7 +44,7 @@
               <a class="btn-link" routerLink="/login">Sign in</a>
             </ng-container>
             <ng-container *ngIf="isAuthenticated$ | async">
-              <a class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
+              <a [matMenuTriggerFor]="menu" class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
             </ng-container>
           </div>
         </div>
@@ -58,7 +68,7 @@
               <a class="btn-link" routerLink="/login">Sign in</a>
             </ng-container>
             <ng-container *ngIf="isAuthenticated$ | async">
-              <a class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
+              <a [matMenuTriggerFor]="menu" class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
             </ng-container>
           </div>
         </div>

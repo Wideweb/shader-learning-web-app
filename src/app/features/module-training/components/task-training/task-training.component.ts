@@ -214,7 +214,8 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
     const module = this.store.selectSnapshot(ModuleProgressState.module);
     const finished = this.store.selectSnapshot(ModuleProgressState.finished);
     if (finished) {
-      this.router.navigate([`module-training/${module!.id}/end`]);
+      // this.router.navigate([`module-training/${module!.id}/end`]);
+      this.router.navigate([`module-view/${module!.id}`]);
     } else {
       this.store.dispatch(new ModuleProgressLoadNextTask());
     }

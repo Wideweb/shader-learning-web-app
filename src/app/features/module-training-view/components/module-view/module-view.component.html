@@ -2,17 +2,11 @@
 
   <app-sticky>
     <div class="heading">
-      <app-svg-img class="page-header-image" [src]="pageHeaderImageSrc"></app-svg-img>
-      <!-- <img class="img" [src]="pageHeaderImageSrc"> -->
-      <!-- let pageHeaderImage = null;
-        if (module.pageHeaderImage) {
-            const fileBlob = await firstValueFrom(this.http.get(`${API}/modules/${moduleId}/pageHeaderImage`, { responseType: 'blob' }).pipe(shareReplay(1)));
-            pageHeaderImage = new File([fileBlob], `page-header`);
-        } -->
+      <!-- <app-svg-img class="page-header-image" [src]="pageHeaderImageSrc"></app-svg-img> -->
 
       <div class="container max-width">
 
-        <a class="back-link" routerLink="/explore"><span class="ico-container"><i class="arrow-left-ico"></i></span><span class="p3 text">Back To Explore</span></a>
+        <a class="btn-text white back-link" routerLink="/explore"><i class="ico arrow-left-ico"></i><span class="text">Back To Explore</span></a>
 
         <div class="title">
           <h2 class="module-name">{{module!.name}}</h2>
@@ -24,7 +18,9 @@
           {{ module!.description }}
         </div>
 
-        <a class="btn-link btn-link-ico-addon darker" routerLink="/module-training/{{ module!.id }}/task">{{started ? 'Continue' : 'Start'}}<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+        <ng-container *ngIf="!finished">
+          <a class="btn-link btn-link-ico-addon darker" routerLink="/module-training/{{ module!.id }}/task">{{started ? 'Continue' : 'Start'}}<span class="ico-container"><i class="ico arrow-up-right-ico"></i></span></a>
+        </ng-container>
         <!-- <div class="created-by">
           <span>Author:</span>&nbsp;<a class="name" routerLink="/user-profile/{{module.createdBy.id}}">{{ module.createdBy.name }}</a>
         </div> -->

@@ -13,6 +13,9 @@ export class ModuleViewComponent implements OnInit, OnChanges {
   @Input()
   public module!: ModuleProgressDto;
 
+  @Input()
+  public finished: boolean = true;
+
   public started: boolean = false;
 
   public pageHeaderImageSrc = '';

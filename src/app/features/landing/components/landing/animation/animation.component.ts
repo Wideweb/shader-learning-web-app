@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ComponentSize } from '../../../constants';
+import { GlScene } from 'src/app/features/common/gl-scene/models';
 
 @Component({
   selector: 'landing-animation',
@@ -45,7 +46,7 @@ export class LandingAnimationComponent {
       coords = rotate(coords, angle);
       float y = sin(coords.x * 6.28 * 0.75 - iTime * 0.5) * 0.1;
 
-      return 1.0 - smoothstep(0.000, 0.002, abs(y - coords.y));
+      return 1.0 - smoothstep(0.000, 0.003, abs(y - coords.y));
     }
 
     float line2(vec2 coords, float angle)
@@ -54,7 +55,7 @@ export class LandingAnimationComponent {
       float y = sin(coords.x * 6.28 * 0.75 - iTime * 0.5) * 0.1;
       y *= -1.0;
 
-      return 1.0 - smoothstep(0.000, 0.002, abs(y - coords.y));
+      return 1.0 - smoothstep(0.000, 0.003, abs(y - coords.y));
     }
 
     void main() {
@@ -89,9 +90,15 @@ export class LandingAnimationComponent {
       color = mix(color, vec4(0.52, 0.85, 0.3, 1.0), t2);
 
       float d1 = distance(uv, vec2(0.0));
-      color = mix(vec4(1.0, 1.0, 1.0, 0.0), color, smoothstep(0.0, 0.5, 1.0 - d1));
+      color = mix(vec4(1.0, 1.0, 1.0, 0.0), color, smoothstep(0.0, 0.25, 1.0 - d1));
       
       gl_FragColor = color;
     }
   `;
+
+  public sceneData = new GlScene();
+
+  constructor() {
+    this.sceneData.background = 0xFAFAFA;
+  }
 }

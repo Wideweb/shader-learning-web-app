@@ -10,7 +10,6 @@ export class GlFactory {
     public createScene(sceneData: GlScene): THREE.Scene {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(sceneData.background);
-        scene.background
         return scene;
     }
 

@@ -80,6 +80,9 @@
 
     .ico {
         margin-bottom: toRem(28);
+        @include for-phone-only {    
+            margin-top: toRem(60);
+        }
     }
 
     .title {
@@ -88,6 +91,7 @@
     }
 
     .message {
+        text-align: center;
         color: $grey;
     }
 }
@@ -306,7 +310,7 @@ mat-paginator {
     height: 0;
 }
 
-.back-link .btn-text {
+.back-link .text {
     @include for-phone-only {    
         display: none;
     }
