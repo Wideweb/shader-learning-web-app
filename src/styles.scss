@@ -608,7 +608,9 @@ h3 {
     position: absolute;
     display: inline-block;
     width: toRem(24);
+    min-width: toRem(24);
     height: toRem(24);
+    min-height: toRem(24);
     top: 50%;
     right: 50%;
     transform: translate(50%, -50%);
@@ -1021,7 +1023,9 @@ a.link {
     display: inline-block;
     position: relative;
     width: toRem(28);
+    min-width: toRem(28);
     height: toRem(28);
+    min-height: toRem(28);
     background-color: $dark-blue;
     border-radius: toRem(4);
     cursor: pointer;

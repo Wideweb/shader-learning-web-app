@@ -12,6 +12,24 @@
     }
 }
 
+// @keyframes move-out-animation {
+//     0% {
+//         right: 0;
+//     }
+//     100% {
+//         right: -100vw;
+//     }
+// }
+
+// @keyframes move-in-animation {
+//     0% {
+//         right: -100vw;
+//     }
+//     100% {
+//         right: 0;
+//     }
+// }
+
 .navigation {
     display: flex;
     flex-direction: row;
@@ -25,6 +43,11 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+
+    // animation: move-in-animation 1s forwards ease-in-out;
+    // &.hidden {
+    //     animation: move-out-animation 1s forwards ease-in-out;
+    // }
 
     .module-tasks {
         box-sizing: border-box;

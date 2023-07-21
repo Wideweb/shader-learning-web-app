@@ -108,6 +108,9 @@
         }
         @include for-phone-only {
             padding-right: toRem(40);
+            flex-direction: column;
+            gap: toRem(10);
+            padding-bottom: toRem(0);    
         }
         
         .name {
@@ -222,9 +225,13 @@
         width: 100%;
         // height: fit-content;
         box-sizing: border-box;
-        padding: 0 toRem(55) 0 toRem(44 + 8);
         position: absolute;
         bottom: toRem(10);
+
+        padding: 0 toRem(55) 0 toRem(44 + 8);
+        @include for-phone-only {
+            padding-right: toRem(8);
+        }
 
         .container {
             width: 100%;

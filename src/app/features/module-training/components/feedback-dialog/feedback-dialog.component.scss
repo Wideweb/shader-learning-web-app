@@ -8,6 +8,10 @@
     box-sizing: border-box;
     padding: toRem(40);
     max-width: toRem(570);
+
+    @include for-phone-only {    
+        padding: toRem(20) toRem(15);
+    }
 }
 
 .title {
@@ -18,8 +22,13 @@
     position: absolute;
     color: $black;
     cursor: pointer;
+    
     top: toRem(32);
     right: toRem(40);
+    @include for-phone-only {    
+        top: toRem(12);
+        right: toRem(15);
+    }
 
     .ico-container {
         width: toRem(40);
