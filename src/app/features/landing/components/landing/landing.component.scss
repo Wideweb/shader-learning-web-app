@@ -58,10 +58,10 @@
     z-index: 2;
     gap: toRem(12);
 
-    @include for-phone-only {    
-        margin-top: toRem(200);
-        flex-direction: column;
-    }
+    // @include for-phone-only {    
+    //     margin-top: toRem(200);
+    //     flex-direction: column;
+    // }
 }
 
 .slogan .quotes {

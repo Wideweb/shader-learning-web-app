@@ -1,6 +1,6 @@
 <div class="landing-page">
 
-  <div class="main-animation max-width">
+  <div class="main-animation max-width" *ngIf="!isSmall">
     <landing-animation [size]="size"></landing-animation>
   </div>
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { AppEventService } from '../../services/event.service';
 import { Subject, takeUntil } from 'rxjs';
 import { toRem } from '../../services/utils';
@@ -8,7 +8,10 @@ import { toRem } from '../../services/utils';
   templateUrl: './sticky.component.html',
   styleUrls: ['./sticky.component.scss']
 })
-export class AppStickyComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AppStickyComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+
+  @Input()
+  public active = true;
 
   @ViewChild('stickable') stickable!: ElementRef;
   
@@ -28,7 +31,19 @@ export class AppStickyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.appEvents.pageScroll$.pipe(takeUntil(this.destroy$)).subscribe((top) => this.onScroll(top));
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('active' in changes && this.stickable && this.placeholder && !this.active) {
+      this.stickable.nativeElement.classList.remove("sticky");
+      this.placeholder.nativeElement.style.setProperty('height', '0');
+      this.sticked = false;
+    }
+  }
+
   onScroll(top: number) {
+    if (!this.active) {
+      return;
+    }
+
     if (!this.stickable || !this.placeholder) {
       return;
     }
