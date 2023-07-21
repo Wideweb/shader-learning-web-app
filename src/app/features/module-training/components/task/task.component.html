@@ -52,7 +52,7 @@
   <div class="body body-right">
     <div class="editor-section">
       <div class="container">
-        <code-editor-2 [files]="programFiles"></code-editor-2>
+        <code-editor [files]="programFiles"></code-editor>
 
         <ng-container *ngIf="showCompilationStatus">
           <div *ngIf="!hasCompilationError" class="toast success">

@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, OnDestroy} from '@angular/core';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features/app/app.constants';
 import * as marked from 'marked';
-import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor-2/declarations';
-import { createFileEditorInstance } from 'src/app/features/common/components/code-editor-2/file-editor/file-editor-factory';
+import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor/declarations';
+import { createFileEditorInstance } from 'src/app/features/common/components/code-editor/file-editor/file-editor-factory';
 import { UserShaderProgram } from 'src/app/features/module-training-common/state/module-training-common.state';
 import { TaskDto, TaskHintDto, TaskSubmitDto } from 'src/app/features/module-training-common/models/task.model';
 import { UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
@@ -124,8 +124,6 @@ export class TaskComponent implements OnChanges, OnDestroy {
     if (!this.model || !this.shaderProgram) {
       return;
     }
-
-    console.log('CHANGED');
 
     const rules: CodeEditorLinterRule[]  = this.model.rules.map((rule) => ({
       keyword: rule.keyword,

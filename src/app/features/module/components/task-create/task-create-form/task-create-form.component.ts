@@ -13,8 +13,8 @@ import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
 import { GlProgramChannel, GlScene } from 'src/app/features/common/gl-scene/models';
 import { SceneSettingsFormComponent } from '../scene-settings-form/scene-settings-form.component';
-import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor-2/declarations';
-import { createFileEditorInstance } from 'src/app/features/common/components/code-editor-2/file-editor/file-editor-factory';
+import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor/declarations';
+import { createFileEditorInstance } from 'src/app/features/common/components/code-editor/file-editor/file-editor-factory';
 import { RuleFormComponent } from '../rule-form/rule-form.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

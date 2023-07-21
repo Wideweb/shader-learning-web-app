@@ -23,8 +23,6 @@ import { LocalService } from "./services/local-storage.service";
 import { CommonModule } from "@angular/common";
 import { UserTaskResultStatusPipe } from "./pipes/user-task-result-status.pipe";
 import { FileService } from "./services/file.service";
-import { CodeEditorComponent } from "./components/code-editor/code-editor.component";
-import { CodeEditorLinePromptComponent } from "./components/code-editor/line-prompt/line-prompt.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { AppTooltipComponent } from "./components/tooltip/tooltip.component";
 import { AppTooltipRendererDirective } from "./components/tooltip/tooltip-renderer.directive";
@@ -33,8 +31,8 @@ import { MatSelectModule } from "@angular/material/select";
 import { ToRemPipe } from "./pipes/to-rem.pipe";
 import { AppStickyComponent } from "./components/sticky/sticky.component";
 import { AppSvgIconComponent } from "./components/svg-icon/svg-icon.component";
-import { CodeEditor2Component } from "./components/code-editor-2/code-editor-2.component";
-import { FileEditorComponent } from "./components/code-editor-2/file-editor/file-editor.component";
+import { CodeEditorComponent } from "./components/code-editor/code-editor.component";
+import { FileEditorComponent } from "./components/code-editor/file-editor/file-editor.component";
 import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
 import { AppSpinnerComponent } from "./components/spinner/spinner.component";
 import { LocationHistoryService } from "./services/location-history.service";
@@ -43,8 +41,6 @@ import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
 @NgModule({
   declarations: [
     GlSceneComponent,
-    CodeEditorComponent,
-    CodeEditorLinePromptComponent,
     AppTooltipComponent,
     UserTaskResultStatusPipe,
     ToRemPipe,
@@ -54,7 +50,7 @@ import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
     AppSvgIconComponent,
     AppSvgImageComponent,
     FileEditorComponent,
-    CodeEditor2Component,
+    CodeEditorComponent,
     AppCheckboxComponent,
     AppSpinnerComponent,
   ],
@@ -104,7 +100,6 @@ import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
     MatSelectModule,
     
     GlSceneComponent,
-    CodeEditorComponent,
     AppTooltipRendererDirective,
     UserTaskResultStatusPipe,
     ToRemPipe,
@@ -113,7 +108,7 @@ import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
     AppSvgIconComponent,
     AppSvgImageComponent,
     FileEditorComponent,
-    CodeEditor2Component,
+    CodeEditorComponent,
     AppCheckboxComponent,
     AppSpinnerComponent,
   ],

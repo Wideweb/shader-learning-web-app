@@ -1,48 +1,15 @@
 <div class="container">
   
   <div class="files">
-    <!-- <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="selectFile($event)">
-      <ng-container *ngFor="let file of files">
-        <mat-tab [label]="file.name" [labelClass]="file.hasError ? 'error' : []">
-        </mat-tab>
-      </ng-container>
-    </mat-tab-group> -->
     <ng-container *ngFor="let file of files">
       <a class="p2 file" [ngClass]="{'error': file.hasError, 'selected': isSelected(file)}" (click)="selectFile(file)">{{file.name}}</a>
     </ng-container>
   </div>
 
-  <div class="code">
-    <ngx-codemirror
-      [ngModel]="currentFile.data"
-      (ngModelChange)="hanldeCodeChange($event)"
-      [options]="{
-        tabSize: 2,
-        autofocus: false,
-        lineNumbers: true,
-        mode: currentFile.mode,
-        styleActiveLine: true
-      }"
-    ></ngx-codemirror>
-  </div>
+  <div *ngIf="currentFile" class="file-editor">
+    <file-editor
+      [file]="currentFile"
+    ></file-editor>
+  <div>
 
-  <!-- <div class="footer">
-
-    <div class="toolbar">
-      <a class="btn-link white" (click)="run()">Run code</a>
-      <a class="btn-link" (click)="run()">Submit</a>
-  
-      <div class="spacer"></div>
-  
-      <a class="btn-text"><i class="ico clock-ico"></i>Last submit</a>
-      <a class="btn-text"><i class="ico reset-ico"></i>Reset</a>
-    </div>
-  
-    <div class="output">
-      <div class="item" [ngClass]="output.type">
-        <div>{{ output.message }}</div>
-      </div>
-    </div>
-
-  </div> -->
 </div>
