@@ -20,7 +20,18 @@
     margin-bottom: toRem(30);
 }
 
+.ico.accepted {
+    width: toRem(168);
+    min-width: toRem(168);
+    height: toRem(168);
+    min-height: toRem(168);
+}
+
 .ico.rejected {
+    width: toRem(124);
+    min-width: toRem(124);
+    height: toRem(168);
+    min-height: toRem(168);
     box-sizing: border-box;
     padding: toRem(20) 0 toRem(22) 0;
 }
