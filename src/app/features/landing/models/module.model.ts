@@ -4,4 +4,5 @@ export interface ModuleDto {
   description: string;
   tasks: number;
   order: number;
+  cover: boolean;
 }

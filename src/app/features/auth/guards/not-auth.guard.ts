@@ -14,7 +14,7 @@ export class NotAuthGuard implements CanActivate {
             return true;
         }
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/explore']);
         return false;
     }
 }

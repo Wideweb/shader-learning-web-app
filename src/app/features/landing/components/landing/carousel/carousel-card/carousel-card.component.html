@@ -1,6 +1,7 @@
 <div class="container" [ngClass]="{'last': last}">
   <div class="base">
-    <img [src]="model.imageSrc">
+    <img *ngIf="model.imageSrc" [src]="model.imageSrc">
+    <div *ngIf="!model.imageSrc" class="empty-image"></div>
     <div class="p3 label">{{model.label}}</div>
     <div class="btn-container">
       <a class="btn-circle secondary" [routerLink]="model.link"><i class="ico arrow-up-right-ico"></i></a>

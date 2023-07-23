@@ -30,6 +30,9 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
   @Input()
   public size: ComponentSize = ComponentSize.Big;
 
+  @Input()
+  public velocity: number = 4;
+
   @ViewChild('table')
   private tableEl!: ElementRef;
 
@@ -199,7 +202,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
       const distance = Math.abs(component.targetPosition - component.position);
       const progress = easeOutQuart(saturate(distance / initDistance));
 
-      const velocity = (component.targetPosition - component.fromPosition) * 4;
+      const velocity = (component.targetPosition - component.fromPosition) * component.velocity;
       const delta = velocity * (deltaTime / 1000) * Math.max(0.01, progress);
       
       if (Math.abs(delta) > Math.abs(component.targetPosition - component.position) || progress < 0.01) {

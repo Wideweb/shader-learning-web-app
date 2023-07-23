@@ -29,6 +29,7 @@
       [loaded]="(modulesLoaded$ | async)!"
       [data]="(modules$ | async)!"
       [cardsGap]="isSmall ? 220 : 40"
+      [velocity]="isSmall ? 2 : 4"
       [size]="size">
     </carousel>
   </div>
