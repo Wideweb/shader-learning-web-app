@@ -1,6 +1,7 @@
 <div class="container">
   <div class="base">
-    <img [src]="model.imageSrc">
+    <img *ngIf="model.imageSrc" [src]="model.imageSrc">
+    <div *ngIf="!model.imageSrc" class="empty-image"></div>
     <div class="p3 label">{{model.label}}</div>
     <div class="p2 locker" *ngIf="model.locked">locked</div>
     <div class="btn-container">

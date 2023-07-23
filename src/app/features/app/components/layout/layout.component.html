@@ -1,9 +1,9 @@
 <div class="navbar-menu-collapsible" *ngIf="!isNavbarMenuCollapsed">
   <a class="collapse" (click)="hideNavbarMenu()"><i class="close-ico"></i></a>
-  <a class="nav-link" routerLink="/explore" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Explore</h2></a>
-  <a class="nav-link" routerLink="/rating" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Rating</h2></a>
-  <a class="nav-link" routerLink="/donate" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>Donate</h2></a>
-  <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="hideNavbarMenu()"><h2>About</h2></a>
+  <a class="nav-link" routerLink="/explore" (click)="hideNavbarMenu()"><h2>Explore</h2></a>
+  <a class="nav-link" routerLink="/rating" (click)="hideNavbarMenu()"><h2>Rating</h2></a>
+  <a class="nav-link" routerLink="/donate" (click)="hideNavbarMenu()"><h2>Donate</h2></a>
+  <a class="nav-link" routerLink="/about" (click)="hideNavbarMenu()"><h2>About</h2></a>
 </div>
 
 <mat-menu #menu xPosition="before">
@@ -22,7 +22,10 @@
 
       <div class="navbar navbar-big max-width">
         <div class="nav-group">
-          <div class="site-brand">
+          <a class="site-brand" routerLink="/" *ngIf="!(isAuthenticated$ | async)">
+            <app-svg-icon class="ico" name="logo" alt="Shader Learning"></app-svg-icon>
+          </a>
+          <div class="site-brand" *ngIf="isAuthenticated$ | async">
             <app-svg-icon class="ico" name="logo" alt="Shader Learning"></app-svg-icon>
           </div>
         </div>
@@ -31,10 +34,10 @@
 
         <div class="nav-group">
           <div class="nav-menu">
-            <a class="nav-link p2" routerLink="/explore" routerLinkActive="active">Explore</a>
-            <a class="nav-link p2" routerLink="/rating" routerLinkActive="active">Rating</a>
-            <a class="nav-link p2" routerLink="/donate" routerLinkActive="active">Donate</a>
-            <a class="nav-link p2" routerLink="/about" routerLinkActive="active">About</a>
+            <a class="nav-link p2" routerLink="/explore">Explore</a>
+            <a class="nav-link p2" routerLink="/rating">Rating</a>
+            <a class="nav-link p2" routerLink="/donate">Donate</a>
+            <a class="nav-link p2" routerLink="/about">About</a>
           </div>
         </div>
 
@@ -54,11 +57,19 @@
         <a class="btn-ico navbar-menu-toggle" (click)="showNavbarMenu()"><i class="ico menu-ico"></i></a>
 
         <div class="nav-group">
-          <div class="site-brand">
+          <ng-template #siteBrand>
             <app-svg-icon class="ico" name="logo" alt="Shader Learning" *ngIf="!isSmall"></app-svg-icon>
             <div class="small-logo-wrapper">
               <app-svg-icon class="ico" name="small-logo" alt="Shader Learning" *ngIf="isSmall"></app-svg-icon>
             </div>
+          </ng-template>
+
+          <a class="site-brand" routerLink="/" *ngIf="!(isAuthenticated$ | async)">
+            <ng-container *ngTemplateOutlet="siteBrand"></ng-container>
+          </a>
+
+          <div class="site-brand" *ngIf="isAuthenticated$ | async">
+            <ng-container *ngTemplateOutlet="siteBrand"></ng-container>
           </div>
         </div>
 

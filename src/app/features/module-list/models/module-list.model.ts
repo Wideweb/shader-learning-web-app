@@ -7,4 +7,5 @@ export interface ModuleListDto {
   locked: boolean;
   acceptedTasks: number;
   hasProgress: boolean;
+  cover: boolean;
 }
