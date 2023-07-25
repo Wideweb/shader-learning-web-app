@@ -4,7 +4,7 @@
     
     <ng-container *ngIf="loaded">
       <ng-container *ngFor="let card of innerData; let i = index; let last = last">
-        <carousel-card class="item" [model]="card" [last]="last && isFull" [style.width]="cardWdith | toRem"></carousel-card>
+        <carousel-card class="item" [model]="card" [last]="last && isFull && (inTransition$ | async) === false" [style.width]="cardWdith | toRem"></carousel-card>
       </ng-container>
     </ng-container>
   
