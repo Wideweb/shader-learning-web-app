@@ -1,7 +1,7 @@
 <div class="container big" *ngIf="isBig">
   <div class="column">
     <ng-container *ngIf="isPrimaryVisible && loaded">
-      <feedback-card [model]="data[visibleIndex]" [isPrimary]="true" [style.opacity]="opacity"></feedback-card>
+      <feedback-card [model]="data[visibleIndex]" [isPrimary]="true"></feedback-card>
     </ng-container>
     <ng-container *ngIf="!loaded">
       <feedback-card-placeholder></feedback-card-placeholder>
@@ -15,7 +15,7 @@
     </div>
 
     <ng-container *ngIf="isSecondaryVisible && loaded">
-      <feedback-card [model]="data[visibleIndex + 1]" [isPrimary]="false" [style.opacity]="opacity"></feedback-card>
+      <feedback-card [model]="data[visibleIndex + 1]" [isPrimary]="false"></feedback-card>
     </ng-container>
     <ng-container *ngIf="!loaded">
       <feedback-card-placeholder></feedback-card-placeholder>
@@ -26,7 +26,7 @@
 <div class="container medium small" *ngIf="isMedium || isSmall">
   <div class="row">
     <ng-container *ngIf="isPrimaryVisible && loaded">
-      <feedback-card [model]="data[visibleIndex]" [isPrimary]="true" [style.opacity]="opacity"></feedback-card>
+      <feedback-card [model]="data[visibleIndex]" [isPrimary]="true"></feedback-card>
     </ng-container>
     <ng-container *ngIf="!loaded">
       <feedback-card-placeholder></feedback-card-placeholder>
@@ -35,7 +35,7 @@
 
   <div class="row secondary-card-row" *ngIf="isMedium">
     <ng-container *ngIf="isSecondaryVisible && loaded">
-      <feedback-card [model]="data[visibleIndex + 1]" [isPrimary]="false" [style.opacity]="opacity"></feedback-card>
+      <feedback-card [model]="data[visibleIndex + 1]" [isPrimary]="false"></feedback-card>
     </ng-container>
     <ng-container *ngIf="!loaded">
       <feedback-card-placeholder></feedback-card-placeholder>

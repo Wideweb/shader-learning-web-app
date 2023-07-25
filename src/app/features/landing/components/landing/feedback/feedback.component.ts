@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FeedbackCardModel } from './feedback-card/feedback-card.component';
+import { Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { FeedbackCardComponent, FeedbackCardModel } from './feedback-card/feedback-card.component';
 import { FinitAction, emptyAction } from './finit-action';
 import { easeLinier } from 'src/app/features/common/services/easing';
 import { ComponentSize } from '../../../constants';
@@ -12,7 +12,7 @@ class OpacityAction extends FinitAction {
   protected override step(progress: number) {
     const t = this.ease(progress);
     const value = this.from + (this.to - this.from) * t;
-    this.component.opacity = value;
+    this.component.setOpacity(value);
   }
 }
 
@@ -32,11 +32,12 @@ export class FeedbackComponent implements OnDestroy, OnInit {
   @Input()
   public size: ComponentSize = ComponentSize.Big;
 
+  @ViewChildren(FeedbackCardComponent, { read: ElementRef })
+  private cards!: QueryList<ElementRef>;
+
   public visibleIndex = 0;
 
   private index = 0;
-
-  public opacity = 1.0;
 
   private rafHandle = -1;
 
@@ -74,7 +75,7 @@ export class FeedbackComponent implements OnDestroy, OnInit {
     return this.size === ComponentSize.Big;
   }
 
-  constructor(private hostRef: ElementRef) {}
+  constructor(private hostRef: ElementRef, private ngZone: NgZone) {}
 
   ngOnInit(): void { }
 
@@ -97,7 +98,7 @@ export class FeedbackComponent implements OnDestroy, OnInit {
   next() {
     if (!this.nextDisabled) {
       this.index += 1;
-      this.startTrasition();
+      this.ngZone.runOutsideAngular(() => this.startTrasition());
     }
   }
 
@@ -105,7 +106,7 @@ export class FeedbackComponent implements OnDestroy, OnInit {
     if (!this.prevDisabled)
     {
       this.index -= 1;
-      this.startTrasition();
+      this.ngZone.runOutsideAngular(() => this.startTrasition());
     }
   }
 
@@ -173,7 +174,7 @@ export class FeedbackComponent implements OnDestroy, OnInit {
       // } 
 
       if (this.action.isForward() && this.action.isDone()) {
-        this.switchPage();
+        this.ngZone.run(() => this.switchPage());
         this.action = this.fadeInAction;
         this.action.setDirection(true);
         this.action.reset();
@@ -203,6 +204,10 @@ export class FeedbackComponent implements OnDestroy, OnInit {
         return;
       }
     }
+  }
+
+  setOpacity(value: number) {
+    this.cards.map(e => e.nativeElement.style.setProperty('opacity', value));
   }
 
   switchPage() {

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { CarouselCardComponent, CarouselCardModel } from './carousel-card/carousel-card.component';
 import { easeOutQuart } from 'src/app/features/common/services/easing';
 import { saturate } from 'src/app/features/common/services/math';
@@ -112,7 +112,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
     return this.innerData && this.innerData.length == this.maxCapacity;
   }
 
-  constructor(private hostRef: ElementRef) {}
+  constructor(private hostRef: ElementRef, private ngZone: NgZone) {}
 
   ngAfterViewInit(): void {
     this.resize();
@@ -164,7 +164,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
   next() {
     if (!this.nextDisabled) {
       this.targetPosition++;
-      this.startTrasition();
+      this.ngZone.runOutsideAngular(() => this.startTrasition());
     }
   }
 
@@ -172,7 +172,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
     if (!this.prevDisabled)
     {
       this.targetPosition--;
-      this.startTrasition();
+      this.ngZone.runOutsideAngular(() => this.startTrasition());
     }
   }
 
