@@ -63,11 +63,7 @@ img {
 }
 
 .last {
-    -webkit-filter: blur(toRem(5));
-    -moz-filter: blur(toRem(5));
-    -o-filter: blur(toRem(5));
-    -ms-filter: blur(toRem(5));
-    filter: blur(toRem(5));
+    animation: blur-animation 0.5s forwards linear;
     pointer-events: none;
 }
 
@@ -76,4 +72,23 @@ img {
     top: toRem(100);
     left: 50%;
     transform: translate(-50%, 0);
+    animation: fade-in-animation 0.5s forwards linear;
+}
+
+@keyframes blur-animation {
+    0% {
+        filter: blur(0);
+    }
+    100% {
+        filter: blur(toRem(2.5));
+    }
+}
+
+@keyframes fade-in-animation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

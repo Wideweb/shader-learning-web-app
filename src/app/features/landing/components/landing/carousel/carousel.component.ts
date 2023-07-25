@@ -4,7 +4,7 @@ import { easeOutQuart } from 'src/app/features/common/services/easing';
 import { saturate } from 'src/app/features/common/services/math';
 import { toRem } from 'src/app/features/common/services/utils';
 import { CarouselCardPlaceholderComponent } from './carousel-card-placeholder/carousel-card-placeholder.component';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ComponentSize } from '../../../constants';
 
 @Component({
@@ -57,6 +57,8 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
   private fromPosition = 0;
 
   private inTransition = false;
+
+  public inTransition$ = new BehaviorSubject<boolean>(false);
 
   private rafHandle = -1;
 
@@ -184,6 +186,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
     }
     
     this.inTransition = true;
+    this.inTransition$.next(true);
 
     let t0 = performance.now();
     let t1 = t0;
@@ -207,7 +210,10 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
       
       if (Math.abs(delta) > Math.abs(component.targetPosition - component.position) || progress < 0.01) {
         component.position = component.targetPosition;
-        component.inTransition = false;
+        component.ngZone.run(() => {
+          component.inTransition = false;
+          component.inTransition$.next(false);
+        });
       } else {
         component.position += delta;
       }
