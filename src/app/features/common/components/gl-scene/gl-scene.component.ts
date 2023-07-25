@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener, NgZone } from '@angular/core';
 import * as THREE from 'three';
 import { Texture } from 'three';
 import { GlProgramChannel, GlScene } from '../../gl-scene/models';
@@ -88,7 +88,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   private destroy$: Subject<void> = new Subject<void>();
 
-  constructor(private elementRef: ElementRef, private glService: GlService, private glFactory: GlFactory) {}
+  constructor(private elementRef: ElementRef, private glService: GlService, private glFactory: GlFactory, private ngZone: NgZone) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -112,7 +112,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.setCanvasSize();
       this.createRenderer();
       this.createScene();
-      this.startRenderingLoop();
+      this.ngZone.runOutsideAngular(() => this.startRenderingLoop());
     // }, 100);
   }
 
@@ -235,7 +235,7 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       const rem = getRem();
       if (!isEqual(component.prevRem, rem)) {
         component.prevRem = rem;
-        component.restart();
+        component.ngZone.run(() => component.restart());
         return;
       }
 
@@ -256,8 +256,10 @@ export class GlSceneComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       component.isRendering = false;
 
       if (component.notifyStatusChange && !component.hasIssue) {
-        component.notifyStatusChange = false;
-        component.onSuccess.emit();
+        component.ngZone.run(() => {
+          component.notifyStatusChange = false;
+          component.onSuccess.emit();
+        });
       }
     }());
   }

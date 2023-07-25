@@ -105,7 +105,7 @@ export class ModuleProgressState {
       return false;
     }
 
-    const currentTask = state.module.tasks[currentTaskIndex + 1];
+    const currentTask = state.module.tasks[currentTaskIndex];
     return currentTask.accepted;
   }
 

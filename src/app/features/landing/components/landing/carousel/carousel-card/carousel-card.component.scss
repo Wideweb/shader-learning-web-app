@@ -68,6 +68,7 @@ img {
     -o-filter: blur(toRem(5));
     -ms-filter: blur(toRem(5));
     filter: blur(toRem(5));
+    pointer-events: none;
 }
 
 .btn-view-all {
