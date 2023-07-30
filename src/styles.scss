@@ -263,6 +263,22 @@ ul {
     box-shadow: 0 0 toRem(8) 0 rgba(26, 36, 91, 0.09);
 }
 
+.mat-mdc-snack-bar-container.snack-bar-item-server-error .mdc-snackbar__surface {
+    --mat-mdc-snack-bar-button-color: #F44F4F;
+    --mdc-snackbar-container-color: #FAFAFA;
+    --mdc-snackbar-supporting-text-color: #F44F4F;
+    box-shadow: none;
+    border-radius: toRem(8);
+    border: solid #F44F4F toRem(1);
+    padding: 0;
+    overflow: hidden;
+    margin: toRem(30);
+
+    .mat-mdc-snack-bar-label {
+        padding: 0;
+    }
+}
+
 .CodeMirror {
     background-color: $white;
     font-family: monospace;

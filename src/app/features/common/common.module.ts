@@ -37,6 +37,7 @@ import { AppCheckboxComponent } from "./components/checkbox/checkbox.component";
 import { AppSpinnerComponent } from "./components/spinner/spinner.component";
 import { LocationHistoryService } from "./services/location-history.service";
 import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
+import { AppServerErrorToastComponent } from "./components/server-error-toast/server-error-toast.component";
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
     CodeEditorComponent,
     AppCheckboxComponent,
     AppSpinnerComponent,
+    AppServerErrorToastComponent,
   ],
   imports: [
     CommonModule,
