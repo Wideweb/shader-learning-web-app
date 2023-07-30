@@ -17,6 +17,8 @@ export class ModuleViewComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
   public finished: boolean = true;
 
+  public accepted = 0;
+
   public started: boolean = false;
 
   public pageHeaderImageSrc = '';
@@ -41,6 +43,7 @@ export class ModuleViewComponent implements OnInit, OnChanges, AfterViewInit {
     if ('module' in changes) {
       this.updateMetaData();
       this.pageHeaderImageSrc = `${API}/modules/${this.module.id}/pageHeaderImage`;
+      this.accepted = (this.module.tasks || []).filter(t => t.accepted).length;
     }
   }
 

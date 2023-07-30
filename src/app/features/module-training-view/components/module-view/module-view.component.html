@@ -2,7 +2,7 @@
 
   <app-sticky [active]="!isSmall">
     <div class="heading">
-      <!-- <app-svg-img class="page-header-image" [src]="pageHeaderImageSrc"></app-svg-img> -->
+      <app-svg-img class="page-header-image" [src]="pageHeaderImageSrc"></app-svg-img>
 
       <div class="container max-width">
 
@@ -10,7 +10,7 @@
 
         <div class="title">
           <h2 class="module-name">{{module!.name}}</h2>
-          <span class="p3 capacity">{{module!.tasks.length}}&nbsp;tasks</span>
+          <span class="p3 capacity"><span *ngIf="started">{{accepted}}&nbsp;/&nbsp;</span>{{module!.tasks.length}}&nbsp;tasks</span>
           <a class="btn-ico" *hasPermission="['module_edit']" routerLink="/module/{{module.id}}/edit"><mat-icon>edit</mat-icon></a>
         </div>
         

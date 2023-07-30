@@ -3,6 +3,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { catchError, Observable, throwError } from "rxjs";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from "@angular/router";
+import { AppServerErrorToastComponent } from "../components/server-error-toast/server-error-toast.component";
 
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
@@ -19,9 +20,9 @@ export class ServerErrorInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status == 404) {
             this.router.navigate(['/404'], { replaceUrl: true });
         } else if (error instanceof HttpErrorResponse && error.status >= 500) {
-            this.snackBar.open('Server Error', '', {
+            this.snackBar.openFromComponent(AppServerErrorToastComponent, {
                 horizontalPosition: 'right',
-                verticalPosition: 'top',
+                verticalPosition: 'bottom',
                 duration: 5000,
                 panelClass: 'snack-bar-item-server-error'
             });
