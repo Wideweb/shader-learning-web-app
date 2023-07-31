@@ -54,8 +54,7 @@
       <div class="container">
         <code-editor [files]="programFiles"></code-editor>
 
-        <ng-container *ngIf="showCompilationStatus">
-          <div *ngIf="!hasCompilationError" class="toast success">
+          <div *ngIf="!hasCompilationError" class="toast success" [ngClass]="compilationStatusShown ? 'fade-in' : 'fade-out'">
             <div class="container">
               <div class="ico-container"><i class="ico check-circle-ico"></i></div>
               <div class="p3 message">Program successfully complited</div>
@@ -63,14 +62,13 @@
             </div>
           </div>
 
-          <div *ngIf="hasCompilationError" class="toast error">
+          <div *ngIf="hasCompilationError" class="toast error" [ngClass]="compilationStatusShown ? 'fade-in' : 'fade-out'">
             <div class="container">
               <div class="ico-container"><i class="ico alert-circle-ico"></i></div>
               <div class="p3 message">Program compilation error</div>
               <a (click)="hideCompilationStatus()" class="close-ctrl"><span class="ico-container"><i class="ico close-ico"></i></span></a>
             </div>
           </div>
-        </ng-container>
       </div>
     </div>
 

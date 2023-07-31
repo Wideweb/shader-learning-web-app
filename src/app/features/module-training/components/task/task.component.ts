@@ -7,6 +7,7 @@ import { UserShaderProgram } from 'src/app/features/module-training-common/state
 import { TaskDto, TaskHintDto, TaskSubmitDto } from 'src/app/features/module-training-common/models/task.model';
 import { UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
 import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'task',
@@ -89,7 +90,9 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   public hasCompilationError = false;
 
-  public showCompilationStatus = false;
+  public hideCompilationStatus$ = new Subject();
+
+  public compilationStatusShown = false;
 
   private vertexFile: FileEditorInstance | null = null;
 
@@ -97,7 +100,14 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   private activeTask: 'task' | 'theory' = 'task';
 
-  constructor(private ref: ElementRef) {}
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+
+  constructor(private ref: ElementRef) {
+    this.hideCompilationStatus$.pipe(
+      debounceTime(2000),
+      takeUntil(this.destroy$),
+    ).subscribe(() => (this.compilationStatusShown = false));
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     //  || 'model' in changes
@@ -179,7 +189,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
     if (vertexErrors.length > 0 || fragmentErrors.length > 0) {
       this.hasCompilationError = true;
-      this.showCompilationStatus = true;
+      this.compilationStatusShown = true;
+      this.hideCompilationStatus$.next(true);
       return true;
     }
 
@@ -199,7 +210,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.fragmentFile?.setErrors(errors.fragment.map(error => ({ ...error, type: 'error' } as FileError)));
 
     this.hasCompilationError = true;
-    this.showCompilationStatus = true;
+    this.compilationStatusShown = true;
+    this.hideCompilationStatus$.next(true);
   }
 
   handleProgramCompilationSuccess(): void {
@@ -207,7 +219,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.fragmentFile?.setErrors([]);
 
     this.hasCompilationError = false;
-    this.showCompilationStatus = true;
+    this.compilationStatusShown = true;
+    this.hideCompilationStatus$.next(true);
   }
 
   hasHints(): boolean {
@@ -255,7 +268,7 @@ export class TaskComponent implements OnChanges, OnDestroy {
   }
 
   hideCompilationStatus() {
-    this.showCompilationStatus = false;
+    this.compilationStatusShown = false;
   }
 
   switchToNextTask() {
@@ -278,5 +291,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
     if (this.fragmentFile) {
       this.fragmentFile.destroy();
     }
+
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

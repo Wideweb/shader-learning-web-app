@@ -58,9 +58,9 @@
 
         <div class="nav-group">
           <ng-template #siteBrand>
-            <app-svg-icon class="ico" name="logo" alt="Shader Learning" *ngIf="!isSmall"></app-svg-icon>
-            <div class="small-logo-wrapper">
-              <app-svg-icon class="ico" name="small-logo" alt="Shader Learning" *ngIf="isSmall"></app-svg-icon>
+            <app-svg-icon class="ico big-logo" name="logo" alt="Shader Learning" *ngIf="!isSmall"></app-svg-icon>
+            <div class="small-logo-wrapper" *ngIf="isSmall">
+              <app-svg-icon class="ico" name="small-logo" alt="Shader Learning"></app-svg-icon>
             </div>
           </ng-template>
 

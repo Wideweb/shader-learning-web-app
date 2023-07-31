@@ -73,9 +73,7 @@
 
   @include for-tablet-up {    
       .site-brand {
-          position: absolute;
-          left: 50%;
-          transform: translate(-50%, 0);
+          padding-left: toRem(120);
       }
   }
 }
@@ -92,6 +90,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 
   .ico {
     max-width: toRem(283);
