@@ -15,7 +15,7 @@ export class SpinnerService implements OnDestroy {
     public hidden$: Observable<boolean>;
 
     constructor() {
-        this.shown$ = this.show$.asObservable().pipe(switchMap(v => iif(() => v, of(true), interval(200).pipe(map(() => false)))))
+        this.shown$ = this.show$.asObservable().pipe(switchMap(v => iif(() => v, of(true), interval(200).pipe(map(() => false)))));
         this.hidden$ = this.show$.asObservable().pipe(map(shown => !shown));
     }
 

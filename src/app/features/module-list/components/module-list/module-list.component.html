@@ -1,19 +1,22 @@
 <div class="container">
 
-    <h2 class="header max-width">Explore</h2>
+    <div class="max-width">
 
+        <h2 class="header">Explore</h2>
 
-    <div class="modules max-width">
+        <div class="modules">
 
-        <ng-container *ngIf="loaded$ | async">
-            <a *hasPermission="['module_create']" class="card-add-module p2" (click)="createNew()">Create Module</a>
-            <ng-container *ngFor="let module of (modules$ | async)">
-                <module-list-card [model]="module"></module-list-card>
+            <ng-container *ngIf="loaded$ | async">
+                <a *hasPermission="['module_create']" class="card-add-module p2" (click)="createNew()">Create Module</a>
+                <ng-container *ngFor="let module of (modules$ | async)">
+                    <module-list-card [model]="module"></module-list-card>
+                </ng-container>
             </ng-container>
-        </ng-container>
 
-        <ng-container *ngIf="(loaded$ | async) === false">
-            <module-list-card-placeholder  *ngFor="let i of placeholders"></module-list-card-placeholder>
-        </ng-container>
+            <ng-container *ngIf="(loaded$ | async) === false">
+                <module-list-card-placeholder  *ngFor="let i of placeholders"></module-list-card-placeholder>
+            </ng-container>
+        </div>
+
     </div>
 </div>
