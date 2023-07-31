@@ -1,22 +1,30 @@
 <div class="container">
-    <ng-container *ngIf="data.accepted then acceptedEl else rejectedEl"></ng-container>
-
-    <ng-template #acceptedEl>
+    <ng-container *ngIf="isAccepted">
         <app-svg-icon class="ico accepted" name="accepted"></app-svg-icon>
         <h2 class="title accepted">Accepted</h2>
         <p class="p2 message">The task is successfully completed</p>
         <div class="actions">
-            <a class="btn-link" (click)="next()">Next</a>
-            <a class="btn-link white" (click)="retry()">Retry</a>
+            <a class="btn-link" (click)="nextTask()">Next</a>
+            <a class="btn-link white" (click)="retryTask()">Retry</a>
         </div>
-    </ng-template>
+    </ng-container>
 
-    <ng-template #rejectedEl>
+    <ng-container *ngIf="isRejected">
         <app-svg-icon class="ico rejected" name="rejected"></app-svg-icon>
         <h2 class="title rejected">Rejected</h2>
         <p class="p2 message">The task is not completed. Please, try again</p>
         <div class="actions">
-            <a class="btn-link" (click)="retry()">Retry</a>
+            <a class="btn-link" (click)="retryTask()">Retry</a>
         </div>
-    </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="isModuleFinished">
+        <app-svg-icon class="ico accepted" name="finished"></app-svg-icon>
+        <h2 class="title accepted">Finished</h2>
+        <p class="p2 message"><span>The module is successfully completed.</span><br><span *ngIf="data.nextModuleId">You can proceed to the tasks<br>in the next module</span></p>
+        <div class="actions">
+            <a *ngIf="data.nextModuleId" class="btn-link" (click)="nextModule()">Next module</a>
+            <a class="btn-link white" (click)="toExplore()">Back to Explore</a>
+        </div>
+    </ng-container>
 </div>

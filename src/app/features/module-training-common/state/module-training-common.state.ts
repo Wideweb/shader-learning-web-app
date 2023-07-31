@@ -100,13 +100,11 @@ export class ModuleProgressState {
     const currentTaskId = state.userTask.task.id;
     const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
 
-    if (currentTaskIndex < 0 || currentTaskIndex >= state.module.tasks.length)
-    {
-      return false;
-    }
+    const isAccepted = currentTaskIndex >= 0 && state.module.tasks[currentTaskIndex]?.accepted;
+    const isLast = currentTaskIndex == state.module.tasks.length - 1;
+    const isNextAccepted = !isLast && state.module.tasks[currentTaskIndex + 1]?.accepted;
 
-    const currentTask = state.module.tasks[currentTaskIndex];
-    return currentTask.accepted;
+    return !isLast && (isAccepted || isNextAccepted);
   }
 
   @Selector()
@@ -118,6 +116,17 @@ export class ModuleProgressState {
     const currentTaskId = state.userTask?.task.id;
     const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
     return currentTaskIndex === 0;
+  }
+
+  @Selector()
+  static isLastTask(state: ModuleProgressStateModel): boolean {
+    if (!state.module || !state.userTask || !state.userTask.task) {
+      return false;
+    }
+
+    const index = state.module.tasks.findIndex(t => t.id === state.userTask!.task.id);
+
+    return state.module.tasks.length === index + 1;
   }
 
   @Selector()
@@ -186,7 +195,7 @@ export class ModuleProgressState {
         const module = await firstValueFrom(this.moduleProgressService.getUserProgress(action.id));
         ctx.setState(patch<ModuleProgressStateModel>({
           module,
-          finished: !!module && this.findNextTaskId(module) === null,
+          finished: !!module && this.findNextTaskId(module, null) === null,
           error: null
         }));
         return module;
@@ -218,7 +227,7 @@ export class ModuleProgressState {
 
         ctx.setState(patch<ModuleProgressStateModel>({
           module: moduleProgress,
-          finished: !!moduleProgress && this.findNextTaskId(moduleProgress) === null,
+          finished: !!moduleProgress && this.findNextTaskId(moduleProgress, null) === null,
           error: null
         }));
         return module;
@@ -290,7 +299,7 @@ export class ModuleProgressState {
 
     try 
     {
-      const nextTaskId = this.findNextTaskId(module);
+      const nextTaskId = this.findNextTaskId(module, ctx.getState().userTask?.task);
       if (!nextTaskId) {
         ctx.setState(patch<ModuleProgressStateModel>({ userTask: null, finished: true }));
         return null;
@@ -331,7 +340,14 @@ export class ModuleProgressState {
     }
   }
   
-  private findNextTaskId(module: ModuleProgressDto) {
+  private findNextTaskId(module: ModuleProgressDto, currTask: TaskDto | null | undefined) {
+    if (currTask) {
+      const nextTask = module.tasks.find(task => task.order > currTask.order);
+      if (nextTask) {
+        return nextTask.id;
+      }
+    }
+
     const nextTask = module.tasks.find(task => !task.accepted);
     return nextTask ? nextTask.id : null;
   }
@@ -353,7 +369,12 @@ export class ModuleProgressState {
     {
       const currentTaskId = ctx.getState().userTask?.task.id;
       const currentTaskIndex = module.tasks.findIndex(task => task.id === currentTaskId);
-      if (currentTaskIndex < 0 || currentTaskIndex >= module.tasks.length || !module.tasks[currentTaskIndex]?.accepted)
+
+      const isAccepted = currentTaskIndex >= 0 && module.tasks[currentTaskIndex]?.accepted;
+      const isLast = currentTaskIndex == module.tasks.length - 1;
+      const isNextAccepted = !isLast && module.tasks[currentTaskIndex + 1]?.accepted;
+
+      if (isLast || (!isAccepted && !isNextAccepted))
       {
         ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
         return ctx.getState().userTask;
@@ -504,7 +525,7 @@ export class ModuleProgressState {
       }));
 
       if (accepted) {
-        const nextTaskId = this.findNextTaskId(ctx.getState().module!);
+        const nextTaskId = this.findNextTaskId(ctx.getState().module!, ctx.getState().userTask?.task);
         if (nextTaskId) {
           ctx.setState(patch<ModuleProgressStateModel>({
             module: patch<ModuleProgressDto>({
