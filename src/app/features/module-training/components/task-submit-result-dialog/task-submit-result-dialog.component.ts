@@ -1,7 +1,24 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TaskSubmitResultDto } from 'src/app/features/module-training-common/models/task.model';
+
+export enum TaskSubmitResultDialogSelection {
+  RetryTask,
+  NextTask,
+  NextModule,
+  ToExlore
+}
+
+export enum TaskSubmitResultType {
+  TaskAccepted,
+  TaskRejected,
+  ModuleFinished
+}
+
+export interface TaskSubmitResultDialogModel {
+  type: TaskSubmitResultType;
+  nextModuleId: number | null;
+}
 
 @Component({
   selector: 'task-submit-result-dialog',
@@ -11,13 +28,33 @@ import { TaskSubmitResultDto } from 'src/app/features/module-training-common/mod
 export class TaskSubmitResultDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<TaskSubmitResultDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: TaskSubmitResultDto) { }
+    @Inject(MAT_DIALOG_DATA) public data: TaskSubmitResultDialogModel) { }
 
-  retry() {
-    this.dialogRef.close(false);
+  get isAccepted(): boolean {
+    return this.data.type === TaskSubmitResultType.TaskAccepted;
+  } 
+
+  get isRejected(): boolean {
+    return this.data.type === TaskSubmitResultType.TaskRejected;
+  } 
+
+  get isModuleFinished(): boolean {
+    return this.data.type === TaskSubmitResultType.ModuleFinished;
+  } 
+
+  retryTask() {
+    this.dialogRef.close(TaskSubmitResultDialogSelection.RetryTask);
   }
 
-  next() {
-    this.dialogRef.close(true);
+  nextTask() {
+    this.dialogRef.close(TaskSubmitResultDialogSelection.NextTask);
+  }
+
+  nextModule() {
+    this.dialogRef.close(TaskSubmitResultDialogSelection.NextModule);
+  }
+
+  toExplore() {
+    this.dialogRef.close(TaskSubmitResultDialogSelection.ToExlore);
   }
 }

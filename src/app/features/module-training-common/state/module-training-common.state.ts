@@ -99,14 +99,34 @@ export class ModuleProgressState {
 
     const currentTaskId = state.userTask.task.id;
     const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
-
-    if (currentTaskIndex < 0 || currentTaskIndex >= state.module.tasks.length)
-    {
+    if (currentTaskIndex < 0) {
       return false;
     }
 
-    const currentTask = state.module.tasks[currentTaskIndex];
-    return currentTask.accepted;
+    const isLast = currentTaskIndex == state.module.tasks.length - 1;
+    if (isLast) {
+      return false;
+    }
+
+    
+    const nextTask = state.module.tasks[currentTaskIndex + 1];
+    return !nextTask.locked;
+  }
+
+  @Selector()
+  static isPrevTaskAvailable(state: ModuleProgressStateModel): boolean {
+    if (!state.userTask || !state.module) {
+      return false;
+    }
+
+    const currentTaskId = state.userTask.task.id;
+    const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
+    if (currentTaskIndex <= 0) {
+      return false;
+    }
+    
+    const prevTask = state.module.tasks[currentTaskIndex - 1];
+    return !prevTask.locked;
   }
 
   @Selector()
@@ -118,6 +138,17 @@ export class ModuleProgressState {
     const currentTaskId = state.userTask?.task.id;
     const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
     return currentTaskIndex === 0;
+  }
+
+  @Selector()
+  static isLastTask(state: ModuleProgressStateModel): boolean {
+    if (!state.module || !state.userTask || !state.userTask.task) {
+      return false;
+    }
+
+    const index = state.module.tasks.findIndex(t => t.id === state.userTask!.task.id);
+
+    return state.module.tasks.length === index + 1;
   }
 
   @Selector()
@@ -186,7 +217,7 @@ export class ModuleProgressState {
         const module = await firstValueFrom(this.moduleProgressService.getUserProgress(action.id));
         ctx.setState(patch<ModuleProgressStateModel>({
           module,
-          finished: !!module && this.findNextTaskId(module) === null,
+          finished: !!module && this.findNextTaskId(module, null) === null,
           error: null
         }));
         return module;
@@ -218,7 +249,7 @@ export class ModuleProgressState {
 
         ctx.setState(patch<ModuleProgressStateModel>({
           module: moduleProgress,
-          finished: !!moduleProgress && this.findNextTaskId(moduleProgress) === null,
+          finished: !!moduleProgress && this.findNextTaskId(moduleProgress, null) === null,
           error: null
         }));
         return module;
@@ -290,7 +321,7 @@ export class ModuleProgressState {
 
     try 
     {
-      const nextTaskId = this.findNextTaskId(module);
+      const nextTaskId = this.findNextTaskId(module, ctx.getState().userTask?.task);
       if (!nextTaskId) {
         ctx.setState(patch<ModuleProgressStateModel>({ userTask: null, finished: true }));
         return null;
@@ -331,9 +362,14 @@ export class ModuleProgressState {
     }
   }
   
-  private findNextTaskId(module: ModuleProgressDto) {
-    const nextTask = module.tasks.find(task => !task.accepted);
-    return nextTask ? nextTask.id : null;
+  private findNextTaskId(module: ModuleProgressDto, currTask: TaskDto | null | undefined) {
+    const nextNotAcceptedTask = module.tasks.find(task => !task.accepted);
+    const nextByOrderTask = currTask ? module.tasks.find(task => task.order > currTask.order) : null;
+
+    if (nextByOrderTask && nextByOrderTask.accepted) {
+      return nextByOrderTask.id
+    }
+    return nextNotAcceptedTask ? nextNotAcceptedTask.id : null;
   }
 
   @Action(ModuleProgressSwitchToNextTask)
@@ -352,8 +388,17 @@ export class ModuleProgressState {
     try 
     {
       const currentTaskId = ctx.getState().userTask?.task.id;
-      const currentTaskIndex = module.tasks.findIndex(task => task.id === currentTaskId);
-      if (currentTaskIndex < 0 || currentTaskIndex >= module.tasks.length || !module.tasks[currentTaskIndex]?.accepted)
+      const currentTaskIndex= module.tasks.findIndex(task => task.id === currentTaskId);
+      const currentTask = module.tasks[currentTaskIndex];
+      if (!currentTask) {
+        throw "App Error: no task";
+      }
+
+      const isLast = currentTaskIndex == module.tasks.length - 1;
+      const allPrevAccepted = module.tasks.filter(task => task.order <= currentTask.order).every(task => task.accepted);
+      const isNextAccepted = !isLast && module.tasks[currentTaskIndex + 1]?.accepted;
+
+      if (isLast || (!allPrevAccepted && !isNextAccepted))
       {
         ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
         return ctx.getState().userTask;
@@ -503,20 +548,19 @@ export class ModuleProgressState {
         error: null
       }));
 
-      if (accepted) {
-        const nextTaskId = this.findNextTaskId(ctx.getState().module!);
-        if (nextTaskId) {
-          ctx.setState(patch<ModuleProgressStateModel>({
-            module: patch<ModuleProgressDto>({
-              tasks: updateItem(task => task?.id == nextTaskId, patch({ 
-                locked: false
-              }))
-            }),
-          }));
-        } else {
-          ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
+      if (accepted && ctx.getState().module?.tasks.some(t => t.id == taskSubmitResult.nextTaskId)) {
+        ctx.setState(patch<ModuleProgressStateModel>({
+          module: patch<ModuleProgressDto>({
+            tasks: updateItem(task => task?.id == taskSubmitResult.nextTaskId, patch({ 
+              locked: false
+            }))
+          }),
+        }));
       }
-    }
+       
+      if (taskSubmitResult.moduleFinished) {
+        ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
+      }
 
       return taskSubmitResult;
     } 

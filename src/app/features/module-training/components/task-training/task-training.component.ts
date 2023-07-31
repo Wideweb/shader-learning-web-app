@@ -4,7 +4,7 @@ import { TaskSubmitDialogComponent } from '../task-submit-dialog/task-submit-dia
 import { combineLatest, filter, firstValueFrom, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { TaskSubmitResultDialogComponent } from '../task-submit-result-dialog/task-submit-result-dialog.component';
+import { TaskSubmitResultDialogComponent, TaskSubmitResultDialogModel, TaskSubmitResultDialogSelection, TaskSubmitResultType } from '../task-submit-result-dialog/task-submit-result-dialog.component';
 import { FeedbackComponent } from '../feedback-dialog/feedback-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from 'src/app/features/common/components/confirm-dialog/confirm-dialog.component';
 import { ModuleProgressState, UserShaderProgram } from 'src/app/features/module-training-common/state/module-training-common.state';
@@ -53,8 +53,8 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
   @Select(ModuleProgressState.userShaderProgram)
   public userShaderProgram$!: Observable<UserShaderProgram>;
 
-  @Select(ModuleProgressState.isFirstTask)
-  public isFirstTask$!: Observable<boolean>;
+  @Select(ModuleProgressState.isPrevTaskAvailable)
+  public isPrevTaskAvailable$!: Observable<boolean>;
 
   @Select(ModuleProgressState.isNextTaskAvailable)
   public isNextTaskAvailable$!: Observable<boolean>;
@@ -109,14 +109,45 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
   }
 
   showSubmitResult(taskSubmitResult: TaskSubmitResultDto) {
+    const isLastTask = this.store.selectSnapshot(ModuleProgressState.isLastTask);
+
+    let type = TaskSubmitResultType.TaskAccepted;
+
+    if (taskSubmitResult.accepted && taskSubmitResult.moduleFinished && taskSubmitResult.statusChanged) {
+      type = TaskSubmitResultType.ModuleFinished;
+    } else if (taskSubmitResult.accepted && taskSubmitResult.moduleFinished && isLastTask) {
+      type = TaskSubmitResultType.ModuleFinished;
+    } else if (!taskSubmitResult.accepted) {
+      type = TaskSubmitResultType.TaskRejected;
+    }
+
     this.dialog
-      .open<TaskSubmitResultDialogComponent, TaskSubmitResultDto, boolean>(TaskSubmitResultDialogComponent, { 
+      .open<TaskSubmitResultDialogComponent, TaskSubmitResultDialogModel, TaskSubmitResultDialogSelection>(TaskSubmitResultDialogComponent, { 
         disableClose: true,
-        data: taskSubmitResult
+        data: {
+          type,
+          nextModuleId: taskSubmitResult.nextModuleId
+        }
       })
       .afterClosed()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(result => result ? this.next() : this.retry());
+      .subscribe(result => {
+        if (result == TaskSubmitResultDialogSelection.RetryTask) {
+          this.retry();
+        }
+
+        if (result == TaskSubmitResultDialogSelection.NextTask) {
+          this.next();
+        }
+
+        if (result == TaskSubmitResultDialogSelection.NextModule) {
+          this.router.navigate([`/module-view/${taskSubmitResult.nextModuleId}`]);
+        }
+
+        if (result == TaskSubmitResultDialogSelection.ToExlore) {
+          this.router.navigate([`/explore`]);
+        }
+      });
   }
 
   edit() {
@@ -211,14 +242,14 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
   }
 
   next(): void {
-    const module = this.store.selectSnapshot(ModuleProgressState.module);
-    const finished = this.store.selectSnapshot(ModuleProgressState.finished);
-    if (finished) {
-      // this.router.navigate([`module-training/${module!.id}/end`]);
-      this.router.navigate([`module-view/${module!.id}`]);
-    } else {
+    // const module = this.store.selectSnapshot(ModuleProgressState.module);
+    // const finished = this.store.selectSnapshot(ModuleProgressState.finished);
+    // if (finished) {
+    //   // this.router.navigate([`module-training/${module!.id}/end`]);
+    //   this.router.navigate([`module-view/${module!.id}`]);
+    // } else {
       this.store.dispatch(new ModuleProgressLoadNextTask());
-    }
+    // }
   }
 
   retry(): void { }

@@ -49,9 +49,13 @@ export interface TaskSubmitResultDto {
     match: number;
     score: number;
     accepted: boolean;
+    statusChanged: boolean;
     vertexShader: string;
     fragmentShader: string;
     at: Date;
+    moduleFinished: boolean;
+    nextModuleId: number | null;
+    nextTaskId: number | null;
 }
 
 export interface TaskSubmitDto {
