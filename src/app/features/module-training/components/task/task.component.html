@@ -39,7 +39,7 @@
 
     <div class="actions">
       <a class="btn-link btn-link-ico-addon left"
-        [attr.disabled]="isFirstTask"
+        [attr.disabled]="!isPrevTaskAvailable"
         (click)="switchToPrevTask()"><span class="ico-container"><i class="ico chevron-left-ico"></i></span>Previous</a>
 
       <a class="btn-link btn-link-ico-addon"
@@ -146,7 +146,7 @@
 
   <div class="actions footer-actions">
     <a class="btn-link btn-link-ico-addon left"
-      [attr.disabled]="isFirstTask"
+      [attr.disabled]="!isPrevTaskAvailable"
       (click)="switchToPrevTask()"><span class="ico-container"><i class="ico chevron-left-ico"></i></span>Previous</a>
 
     <a class="btn-link btn-link-ico-addon"

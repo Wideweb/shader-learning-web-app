@@ -99,12 +99,34 @@ export class ModuleProgressState {
 
     const currentTaskId = state.userTask.task.id;
     const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
+    if (currentTaskIndex < 0) {
+      return false;
+    }
 
-    const isAccepted = currentTaskIndex >= 0 && state.module.tasks[currentTaskIndex]?.accepted;
     const isLast = currentTaskIndex == state.module.tasks.length - 1;
-    const isNextAccepted = !isLast && state.module.tasks[currentTaskIndex + 1]?.accepted;
+    if (isLast) {
+      return false;
+    }
 
-    return !isLast && (isAccepted || isNextAccepted);
+    
+    const nextTask = state.module.tasks[currentTaskIndex + 1];
+    return !nextTask.locked;
+  }
+
+  @Selector()
+  static isPrevTaskAvailable(state: ModuleProgressStateModel): boolean {
+    if (!state.userTask || !state.module) {
+      return false;
+    }
+
+    const currentTaskId = state.userTask.task.id;
+    const currentTaskIndex = state.module.tasks.findIndex(task => task.id === currentTaskId);
+    if (currentTaskIndex <= 0) {
+      return false;
+    }
+    
+    const prevTask = state.module.tasks[currentTaskIndex - 1];
+    return !prevTask.locked;
   }
 
   @Selector()
@@ -341,15 +363,13 @@ export class ModuleProgressState {
   }
   
   private findNextTaskId(module: ModuleProgressDto, currTask: TaskDto | null | undefined) {
-    if (currTask) {
-      const nextTask = module.tasks.find(task => task.order > currTask.order);
-      if (nextTask) {
-        return nextTask.id;
-      }
-    }
+    const nextNotAcceptedTask = module.tasks.find(task => !task.accepted);
+    const nextByOrderTask = currTask ? module.tasks.find(task => task.order > currTask.order) : null;
 
-    const nextTask = module.tasks.find(task => !task.accepted);
-    return nextTask ? nextTask.id : null;
+    if (nextByOrderTask && nextByOrderTask.accepted) {
+      return nextByOrderTask.id
+    }
+    return nextNotAcceptedTask ? nextNotAcceptedTask.id : null;
   }
 
   @Action(ModuleProgressSwitchToNextTask)
@@ -368,13 +388,17 @@ export class ModuleProgressState {
     try 
     {
       const currentTaskId = ctx.getState().userTask?.task.id;
-      const currentTaskIndex = module.tasks.findIndex(task => task.id === currentTaskId);
+      const currentTaskIndex= module.tasks.findIndex(task => task.id === currentTaskId);
+      const currentTask = module.tasks[currentTaskIndex];
+      if (!currentTask) {
+        throw "App Error: no task";
+      }
 
-      const isAccepted = currentTaskIndex >= 0 && module.tasks[currentTaskIndex]?.accepted;
       const isLast = currentTaskIndex == module.tasks.length - 1;
+      const allPrevAccepted = module.tasks.filter(task => task.order <= currentTask.order).every(task => task.accepted);
       const isNextAccepted = !isLast && module.tasks[currentTaskIndex + 1]?.accepted;
 
-      if (isLast || (!isAccepted && !isNextAccepted))
+      if (isLast || (!allPrevAccepted && !isNextAccepted))
       {
         ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
         return ctx.getState().userTask;
@@ -524,20 +548,19 @@ export class ModuleProgressState {
         error: null
       }));
 
-      if (accepted) {
-        const nextTaskId = this.findNextTaskId(ctx.getState().module!, ctx.getState().userTask?.task);
-        if (nextTaskId) {
-          ctx.setState(patch<ModuleProgressStateModel>({
-            module: patch<ModuleProgressDto>({
-              tasks: updateItem(task => task?.id == nextTaskId, patch({ 
-                locked: false
-              }))
-            }),
-          }));
-        } else {
-          ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
+      if (accepted && ctx.getState().module?.tasks.some(t => t.id == taskSubmitResult.nextTaskId)) {
+        ctx.setState(patch<ModuleProgressStateModel>({
+          module: patch<ModuleProgressDto>({
+            tasks: updateItem(task => task?.id == taskSubmitResult.nextTaskId, patch({ 
+              locked: false
+            }))
+          }),
+        }));
       }
-    }
+       
+      if (taskSubmitResult.moduleFinished) {
+        ctx.setState(patch<ModuleProgressStateModel>({ finished: true }));
+      }
 
       return taskSubmitResult;
     } 

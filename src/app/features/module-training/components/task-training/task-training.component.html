@@ -6,7 +6,7 @@
     [liked]="(liked$ | async) === true"
     [disliked]="(disliked$ | async) === true"
     [canEdit]="(canEdit$ | async) === true"
-    [isFirstTask]="(isFirstTask$ | async) === true"
+    [isPrevTaskAvailable]="(isPrevTaskAvailable$ | async) === true"
     [isNextTaskAvailable]="(isNextTaskAvailable$ | async) === true"
     (onEdit)="edit()"
     (onLike)="like()"

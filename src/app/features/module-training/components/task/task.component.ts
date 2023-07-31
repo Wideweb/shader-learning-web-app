@@ -36,7 +36,7 @@ export class TaskComponent implements OnChanges, OnDestroy {
   public canEdit: boolean = false;
 
   @Input()
-  public isFirstTask: boolean = false;
+  public isPrevTaskAvailable: boolean = false;
 
   @Input()
   public isNextTaskAvailable: boolean = false;
@@ -265,7 +265,7 @@ export class TaskComponent implements OnChanges, OnDestroy {
   }
 
   switchToPrevTask() {
-    if (!this.isFirstTask) {
+    if (this.isPrevTaskAvailable) {
       this.onSwitchToPrev.emit();
     }
   }

@@ -53,8 +53,8 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
   @Select(ModuleProgressState.userShaderProgram)
   public userShaderProgram$!: Observable<UserShaderProgram>;
 
-  @Select(ModuleProgressState.isFirstTask)
-  public isFirstTask$!: Observable<boolean>;
+  @Select(ModuleProgressState.isPrevTaskAvailable)
+  public isPrevTaskAvailable$!: Observable<boolean>;
 
   @Select(ModuleProgressState.isNextTaskAvailable)
   public isNextTaskAvailable$!: Observable<boolean>;
