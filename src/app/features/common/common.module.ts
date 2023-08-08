@@ -38,6 +38,7 @@ import { AppSpinnerComponent } from "./components/spinner/spinner.component";
 import { LocationHistoryService } from "./services/location-history.service";
 import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
 import { AppServerErrorToastComponent } from "./components/server-error-toast/server-error-toast.component";
+import { AchievementDialogComponent } from "./components/achievements-dialog/achievements-dialog.component";
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AppServerErrorToastComponent } from "./components/server-error-toast/se
     AppCheckboxComponent,
     AppSpinnerComponent,
     AppServerErrorToastComponent,
+    AchievementDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -113,6 +115,7 @@ import { AppServerErrorToastComponent } from "./components/server-error-toast/se
     CodeEditorComponent,
     AppCheckboxComponent,
     AppSpinnerComponent,
+    AchievementDialogComponent,
   ],
 })
 export class AppCommonModule {
