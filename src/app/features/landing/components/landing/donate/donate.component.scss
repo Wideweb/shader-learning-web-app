@@ -1,0 +1,90 @@
+@import 'common.scss';
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: toRem(30) 0 toRem(120) 0;
+}
+
+.slogan {
+    position: relative;
+    max-width: toRem(440);
+    margin-bottom: toRem(30);
+    box-sizing: border-box;
+    padding-right: toRem(20);
+
+    // @include for-tablet-up {    
+    //     max-width: toRem(360);
+    // }
+
+    // @include for-desktop-up {    
+    //     max-width: toRem(440);
+    // }
+
+    .quotes {
+        position: absolute;
+        white-space: nowrap;
+        top: 0;
+        left: toRem(-42);
+
+        i + i {
+            margin-left: toRem(4);
+        }
+    }
+
+    .p1 {
+        width: 100%;
+    }
+}
+
+.persons {
+    display: flex;
+    flex-direction: row;
+    gap: toRem(60);
+
+    @include for-phone-only {    
+        flex-direction: column;
+        gap: toRem(30);
+        margin-top: toRem(50);
+    }
+}
+
+.person {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: toRem(15);
+
+    min-width: toRem(170);
+    width: fit-content;
+    min-height: toRem(220);
+
+    flex-direction: column;
+    &.second {
+        flex-direction: column-reverse;
+    }
+
+    .photo {
+        width: toRem(160);
+        min-width: toRem(160);
+        height: toRem(160);
+        min-height: toRem(160);
+        border-radius: 100%;
+        background-color: $light-grey;
+    }
+    
+    .name {
+        color: $black;
+        white-space: nowrap;
+        text-align: center;
+    }
+    
+    .title {
+        color: $grey;
+        white-space: nowrap;
+        text-align: center
+    }
+}

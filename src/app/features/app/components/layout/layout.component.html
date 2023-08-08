@@ -1,7 +1,7 @@
 <div class="navbar-menu-collapsible" *ngIf="!isNavbarMenuCollapsed">
   <a class="collapse" (click)="hideNavbarMenu()"><i class="close-ico"></i></a>
   <a class="nav-link" routerLink="/explore" (click)="hideNavbarMenu()"><h2>Explore</h2></a>
-  <a class="nav-link" routerLink="/rating" (click)="hideNavbarMenu()"><h2>Rating</h2></a>
+  <a *ngIf="isAuthenticated$ | async" class="nav-link" routerLink="/rating" (click)="hideNavbarMenu()"><h2>Rating</h2></a>
   <a class="nav-link" routerLink="/donate" (click)="hideNavbarMenu()"><h2>Donate</h2></a>
   <a class="nav-link" routerLink="/about" (click)="hideNavbarMenu()"><h2>About</h2></a>
 </div>
@@ -35,7 +35,7 @@
         <div class="nav-group">
           <div class="nav-menu">
             <a class="nav-link p2" routerLink="/explore">Explore</a>
-            <a class="nav-link p2" routerLink="/rating">Rating</a>
+            <a *ngIf="isAuthenticated$ | async" class="nav-link p2" routerLink="/rating">Rating</a>
             <a class="nav-link p2" routerLink="/donate">Donate</a>
             <a class="nav-link p2" routerLink="/about">About</a>
           </div>
@@ -44,7 +44,8 @@
         <div class="nav-group nav-group-right">
           <div class="nav-menu">
             <ng-container *ngIf="!(isAuthenticated$ | async)">
-              <a class="btn-link" routerLink="/login">Sign in</a>
+              <a class="btn-text btn-login" routerLink="/login">Log in</a>
+              <a class="btn-link" routerLink="/sign-up">Sign up</a>
             </ng-container>
             <ng-container *ngIf="isAuthenticated$ | async">
               <a [matMenuTriggerFor]="menu" class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
@@ -76,7 +77,8 @@
         <div class="nav-group nav-group-right">
           <div class="nav-menu">
             <ng-container *ngIf="!(isAuthenticated$ | async)">
-              <a class="btn-link" routerLink="/login">Sign in</a>
+              <a class="btn-text btn-login" routerLink="/login">Log in</a>
+              <a class="btn-link" routerLink="/sign-up">Sign in</a>
             </ng-container>
             <ng-container *ngIf="isAuthenticated$ | async">
               <a [matMenuTriggerFor]="menu" class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
@@ -94,7 +96,7 @@
           <div class="copyright p3">Alkevich Entertainment</div>
           <div class="nav-menu">
             <a class="nav-link p2" routerLink="/explore">Explore</a>
-            <a class="nav-link p2" routerLink="/rating">Rating</a>
+            <a *ngIf="isAuthenticated$ | async" class="nav-link p2" routerLink="/rating">Rating</a>
             <a class="nav-link p2" routerLink="/donate">Donate</a>
             <a class="nav-link p2" routerLink="/about">About</a>
           </div>
