@@ -11,6 +11,11 @@ export class Login {
     static readonly type = '[Auth] Login';
     constructor(public payload: UserLogIn) {}
 }
+
+export class LoginWithGoogle {
+    static readonly type = '[Auth] LoginWithGoogle';
+    constructor(public token: string) {}
+}
   
 export class Logout {
     static readonly type = '[Auth] Logout';

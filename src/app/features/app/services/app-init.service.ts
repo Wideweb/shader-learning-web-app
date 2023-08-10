@@ -1,11 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { distinctUntilChanged, interval, Subject, takeUntil, zip } from 'rxjs';
+import { distinctUntilChanged, filter, interval, Subject, takeUntil, zip } from 'rxjs';
 import { AuthToken } from '../../auth/services/auth.token';
-import { IsTokenExpired, LoadMe, UpdateToken } from '../../auth/state/auth.actions';
+import { IsTokenExpired, LoadMe, LoginWithGoogle, UpdateToken } from '../../auth/state/auth.actions';
 import { AuthState } from '../../auth/state/auth.state';
 import { LocalService } from '../../common/services/local-storage.service';
 import { LocationHistoryService } from '../../common/services/location-history.service';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { GOOGLE_OATH_CLIENT_ID } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +20,7 @@ export class AppInitService implements OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private store: Store, private storage: LocalService, private locationHistory: LocationHistoryService) {
+  constructor(private store: Store, private storage: LocalService, private locationHistory: LocationHistoryService, private socialAuthService: SocialAuthService) {
     this.accessToken = new AuthToken('accessToken', 'accessTokenExpiresAt', this.storage);
     this.refreshToken = new AuthToken('refreshToken', 'refreshTokenExpiresAt', this.storage);
   }
@@ -58,6 +60,11 @@ export class AppInitService implements OnDestroy {
           this.refreshToken.clear();
         }
       });
+
+    this.socialAuthService.authState.pipe(
+      filter(user => !!user),
+      takeUntil(this.destroy$),
+    ).subscribe((user) => this.store.dispatch(new LoginWithGoogle(user.idToken)));
 
     const isAuthenticated = this.store.selectSnapshot(AuthState.isAuthenticated);
     if (isAuthenticated) {

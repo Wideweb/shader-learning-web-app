@@ -1199,6 +1199,44 @@ a.link {
     }
 }
 
+.btn-link.google {
+    position: relative;
+    width: 100%;
+    background-color: $white;
+    color: $black;
+    box-shadow: inset 0 0 0 toRem(1) $light-grey;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: toRem(10);
+
+    padding: toRem(10) toRem(24);
+
+    asl-google-signin-button {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    @include for-desktop-up {
+        &:hover {
+            background-color: $white;
+            color: $black;
+            box-shadow: inset 0 0 0 toRem(1) $black;
+        }
+    }
+    
+    &:active {
+        background-color: $white;
+        color: $black;
+        box-shadow: inset 0 0 0 toRem(1) $black;
+    }
+}
+
 .btn-text {
     display: inline-block;
     font-family: $font-regular;

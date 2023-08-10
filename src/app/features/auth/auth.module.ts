@@ -14,6 +14,8 @@ import { AuthGuard } from "./guards/auth.guard";
 import { NotAuthGuard } from "./guards/not-auth.guard";
 import { AuthService } from "./services/auth.service";
 import { AuthState } from "./state/auth.state";
+import { GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig } from "@abacritt/angularx-social-login";
+import { GOOGLE_OATH_CLIENT_ID } from "src/environments/environment";
 
 @NgModule({
   declarations: [
@@ -30,10 +32,27 @@ import { AuthState } from "./state/auth.state";
     AppCommonModule.forChild(),
     RouterModule,
     NgxsModule.forFeature([AuthState]),
+    GoogleSigninButtonModule
   ],
   exports: [
     HasPermissionDirective,
-    NoPermissionDirective
+    NoPermissionDirective,
+  ],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(GOOGLE_OATH_CLIENT_ID, {
+              oneTapEnabled: false
+            }),
+          },
+        ],
+      } as SocialAuthServiceConfig,
+    },
   ],
 })
 export class AuthModule {

@@ -39,4 +39,8 @@ testem.log
 
 # System files
 .DS_Store
+**/.DS_Store
+.editorconfig
+.vscode/
+temp/
 Thumbs.db

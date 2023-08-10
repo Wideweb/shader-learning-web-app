@@ -7,6 +7,15 @@
         </div>
         <h2 class="title">Sign in</h2>
         <div class="form-wrapper">
+            <a class="btn-link google">
+                <app-svg-icon name="google"></app-svg-icon><p class="p2 label">Log in with Google</p>
+                <asl-google-signin-button shape="rectangular" type="standard" size="large" locale="en" width="280"></asl-google-signin-button>
+            </a>
+
+            <div class="separator">
+                <div class="line"></div><span class="p3">or</span><div class="line"></div>
+            </div>
+                
             <form class="form" [formGroup]="form" autocomplete="on">
                 <div class="form-field" [ngClass]="{'invalid': form.get('email')?.invalid && form.get('email')?.touched}">
                     <label class="p2">Email</label>
