@@ -32,6 +32,12 @@ export class AuthService {
     );
   }
 
+  public loginWithGoogle(token: string): Observable<SessionData> {
+    return this.http.post<SessionData>(`${API}/google-login`, { token }).pipe(
+      shareReplay(1),
+    );
+  }
+
   public requestResetPassword(email: string): Observable<void> {
     return this.http.post<void>(`${API}/requestResetPassword`, {email}).pipe(
       shareReplay(1),

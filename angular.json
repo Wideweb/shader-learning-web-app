@@ -82,7 +82,10 @@
               "browserTarget": "shader-learning:build:production"
             },
             "development": {
-              "browserTarget": "shader-learning:build:development"
+              "browserTarget": "shader-learning:build:development",
+              "headers": {
+                "Cross-Origin-Opener-Policy": "same-origin-allow-popups"
+              }
             }
           },
           "defaultConfiguration": "development"

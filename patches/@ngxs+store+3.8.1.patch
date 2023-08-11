@@ -1,0 +1,11 @@
+diff --git a/node_modules/@ngxs/store/operators/patch.d.ts b/node_modules/@ngxs/store/operators/patch.d.ts
+index be339ad..137a93a 100644
+--- a/node_modules/@ngxs/store/operators/patch.d.ts
++++ b/node_modules/@ngxs/store/operators/patch.d.ts
+@@ -1,5 +1,5 @@
+ import { NoInfer, StateOperator } from './types';
+-declare type NotUndefined<T> = T extends undefined ? never : T;
++declare type NotUndefined<T> = T extends null | undefined ? never : T;
+ export declare type ɵPatchSpec<T> = {
+     [P in keyof T]?: T[P] | StateOperator<NotUndefined<T[P]>>;
+ };

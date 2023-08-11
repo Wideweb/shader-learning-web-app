@@ -5,8 +5,9 @@ import { catchError, firstValueFrom, of, tap, throwError } from "rxjs";
 import { hasAll, hasAny } from "../../common/services/utils";
 import { UserDto } from "../models/user.model";
 import { AuthService } from "../services/auth.service";
-import { IsTokenExpired, LoadMe, Login, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
+import { IsTokenExpired, LoadMe, Login, LoginWithGoogle, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
 import { isExpired } from "../services/token.utils";
+import { SocialAuthService } from "@abacritt/angularx-social-login";
 
 export interface AuthStateModel {
   user: UserDto | null;
@@ -97,7 +98,7 @@ export class AuthState {
     });
   }
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private socialAuthService: SocialAuthService) {}
 
   @Action(SignUp)
   async signUp(ctx: StateContext<AuthStateModel>, action: SignUp) {
@@ -175,6 +176,44 @@ export class AuthState {
     }
   }
 
+  @Action(LoginWithGoogle)
+  async loginWithGoogle(ctx: StateContext<AuthStateModel>, action: LoginWithGoogle) {
+    ctx.patchState({
+      loaded: false,
+      loading: true,
+    });
+
+    try 
+    {
+      const sesionData = await firstValueFrom(this.authService.loginWithGoogle(action.token));
+      ctx.setState(patch<AuthStateModel>({ 
+        user: sesionData.user,
+        accessToken: {
+          value: sesionData.tokenData.accessToken,
+          expiresAt: sesionData.tokenData.accessTokenExpiresAt,
+        },
+        refreshToken: {
+          value: sesionData.tokenData.refreshToken,
+          expiresAt: sesionData.tokenData.refreshTokenExpiresAt,
+        },
+        loginError: null,
+        signUpError: null,
+       }));
+    } 
+    catch(signUpError)
+    {
+      ctx.setState(patch<AuthStateModel>({ signUpError  }));
+      throw signUpError;
+    }
+    finally
+    {
+      ctx.patchState({ 
+        loaded: true,
+        loading: false,
+      });
+    }
+  }
+
   @Action(RequestResetPassword)
   resetPasswordRequest(ctx: StateContext<AuthStateModel>, action: RequestResetPassword) {
     return this.authService.requestResetPassword(action.email).pipe(
@@ -241,6 +280,7 @@ export class AuthState {
     }
 
     return this.authService.logout().pipe(
+      tap(() => this.socialAuthService.signOut()),
       tap(() => ctx.setState(defaults())),
       catchError(() => {
         ctx.patchState(defaults());
