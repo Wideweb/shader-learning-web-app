@@ -78,7 +78,7 @@
           <div class="nav-menu">
             <ng-container *ngIf="!(isAuthenticated$ | async)">
               <a class="btn-text btn-login" routerLink="/login">Log in</a>
-              <a class="btn-link" routerLink="/sign-up">Sign in</a>
+              <a class="btn-link" routerLink="/sign-up">Sign up</a>
             </ng-container>
             <ng-container *ngIf="isAuthenticated$ | async">
               <a [matMenuTriggerFor]="menu" class="p2-bold btn-circle"><span class="user-symbol">{{ userSymbol$ | async }}</span></a>
@@ -101,7 +101,7 @@
             <a class="nav-link p2" routerLink="/about">About</a>
           </div>
           <div class="scroll-ctrl">
-            <a class="btn-circle" (click)="scrollTop()"><i class="ico arrow-up-ico"></i></a>
+            <a class="btn-circle secondary" (click)="scrollTop()"><i class="ico arrow-up-ico"></i></a>
           </div>
         </div>
       </div>

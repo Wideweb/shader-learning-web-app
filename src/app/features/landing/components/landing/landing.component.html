@@ -39,7 +39,11 @@
     <feedback [loaded]="(feedbackLoaded$ | async)!" [data]="(feedback$ | async)!" [size]="size"></feedback>
   </div>
 
-  <donate class="max-width"></donate>
+  <div class="donate">
+    <div class="container max-width">
+      <donate></donate>
+    </div>
+  </div>
 
   <div class="contact-us">
     <div class="container max-width">

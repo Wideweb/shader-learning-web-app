@@ -114,18 +114,22 @@
     }
 }
 
-.contact-us {
+.donate {
     width: 100%;
-    border-top-left-radius: toRem(40);
-    border-top-right-radius: toRem(40);
+    border-radius: toRem(40);
     background-color: #4F6AF4;
+    box-sizing: border-box;
+    padding: toRem(120) 0;
+
+    @include for-phone-only {    
+        padding: toRem(80) 0;
+    }
 }
 
-.contact-us .container {
-    margin: auto;
+.contact-us {
+    width: 100%;
 
-    height: toRem(530);
-    @include for-phone-only {    
-        height: toRem(600);
+    .container {
+        margin: auto;
     }
 }

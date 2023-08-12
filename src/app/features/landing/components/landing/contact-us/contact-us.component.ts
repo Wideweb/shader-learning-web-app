@@ -145,7 +145,7 @@ export class LandingContactUsComponent {
 
   constructor() {
     this.cubeGlScene = new GlScene();
-    this.cubeGlScene.background = 0x4F6AF4;
+    this.cubeGlScene.background = 0xFAFAFA;
     this.cubeGlScene.camera.isOrthographic = false;
     this.cubeGlScene.camera.fov = 45;
     this.cubeGlScene.camera.position = new Vec3(0, 0, 2.5);

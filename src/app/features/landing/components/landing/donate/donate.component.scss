@@ -3,32 +3,62 @@
 .container {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding: toRem(30) 0 toRem(120) 0;
+
+    @include for-desktop-up {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    @include for-tablet-down {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+}
+
+.slogan-column {
+    @include for-tablet-down {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    @include for-phone-only {
+        align-items: flex-start;
+    }
 }
 
 .slogan {
     position: relative;
-    max-width: toRem(440);
-    margin-bottom: toRem(30);
     box-sizing: border-box;
-    padding-right: toRem(20);
 
-    // @include for-tablet-up {    
-    //     max-width: toRem(360);
-    // }
+    @include for-desktop-up {
+        margin: 0 0 toRem(30) 0;
+        max-width: toRem(440);
+        padding-right: toRem(20);
+    }
+    
+    @include for-tablet-down {
+        margin: toRem(40) 0 toRem(30) 0;
+    }
 
-    // @include for-desktop-up {    
-    //     max-width: toRem(440);
-    // }
+    @include for-phone-only {
+        margin: toRem(70) 0 toRem(30) 0;
+    }
+
+    .quote-filled-ico, .quote-blank-ico {
+        background-color: $white;
+    }
 
     .quotes {
         position: absolute;
         white-space: nowrap;
         top: 0;
         left: toRem(-42);
+
+        @include for-phone-only {
+            top: toRem(-40);
+            left: toRem(0);
+        }
 
         i + i {
             margin-left: toRem(4);
@@ -37,6 +67,7 @@
 
     .p1 {
         width: 100%;
+        color: $white;
     }
 }
 
@@ -48,7 +79,6 @@
     @include for-phone-only {    
         flex-direction: column;
         gap: toRem(30);
-        margin-top: toRem(50);
     }
 }
 
@@ -63,8 +93,11 @@
     min-height: toRem(220);
 
     flex-direction: column;
-    &.second {
-        flex-direction: column-reverse;
+
+    @include for-tablet-up {
+        &.second {
+            flex-direction: column-reverse;
+        }
     }
 
     .photo {
@@ -77,13 +110,13 @@
     }
     
     .name {
-        color: $black;
+        color: $white;
         white-space: nowrap;
         text-align: center;
     }
     
     .title {
-        color: $grey;
+        color: $white;
         white-space: nowrap;
         text-align: center
     }
