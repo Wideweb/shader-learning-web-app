@@ -998,7 +998,7 @@ a.link {
 @include for-desktop-up {
 
     .btn-circle:hover, .btn-circle.secondary:hover {
-        background-color: $grey;
+        background-color: $blue-secondary;
     }
 
     .btn-circle.secondary:hover .ico {
@@ -1052,7 +1052,7 @@ a.link {
 
     @include for-desktop-up {
         &:hover {
-            background-color: $grey;
+            background-color: $blue-secondary;
         }
     }
 
@@ -1080,7 +1080,7 @@ a.link {
 
 @include for-desktop-up {
     .btn-link:hover {
-        background-color: $grey;
+        background-color: $blue-secondary;
     }
 }
 
@@ -1151,7 +1151,7 @@ a.link {
 
 @include for-desktop-up {
     .btn-link.darker:hover {
-        background-color: $grey;
+        background-color: $blue-secondary;
     }
 }
 
@@ -1177,7 +1177,7 @@ a.link {
 
 @include for-desktop-up {
     .btn-link.white:hover {
-        background-color: $grey;
+        background-color: $blue-secondary;
         color: $white;
         box-shadow: unset;
     }
@@ -1226,7 +1226,7 @@ a.link {
         &:hover {
             background-color: $white;
             color: $black;
-            box-shadow: inset 0 0 0 toRem(1) $black;
+            box-shadow: inset 0 0 0 toRem(1) $blue;
         }
     }
     

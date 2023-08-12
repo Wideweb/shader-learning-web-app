@@ -70,12 +70,6 @@
   @include for-desktop-up {    
       display: none;
   }
-
-  @include for-tablet-up {    
-      .site-brand {
-          padding-left: toRem(120);
-      }
-  }
 }
 
 .navbar-big {
@@ -117,6 +111,11 @@
 
 .navbar-menu-toggle {
   margin-left: toRem(-8);
+  margin-right: toRem(16);
+
+  @include for-phone-only {    
+    margin-right: toRem(4);
+  }
 }
 
 .navbar-menu-collapsible {
@@ -259,9 +258,19 @@
 }
 
 .spacer-5 {
-  width: toRem(200);
+  width: toRem(160);
 }
 
 .user-menu {
   margin-top: toRem(20);
+}
+
+.btn-login {
+  margin-right: toRem(20);
+}
+
+@include for-phone-only {
+  .btn-login {
+    display: none;
+  }
 }
