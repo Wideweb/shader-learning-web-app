@@ -7,7 +7,6 @@ import { AuthState } from '../../auth/state/auth.state';
 import { LocalService } from '../../common/services/local-storage.service';
 import { LocationHistoryService } from '../../common/services/location-history.service';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { GOOGLE_OATH_CLIENT_ID } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',

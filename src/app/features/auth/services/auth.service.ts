@@ -20,8 +20,8 @@ export class AuthService {
     );
   }
 
-  public signUp(user: UserSignUp): Observable<SessionData> {
-    return this.http.post<SessionData>(`${API}/signup`, user).pipe(
+  public signUp(user: UserSignUp, ref: string): Observable<SessionData> {
+    return this.http.post<SessionData>(`${API}/signup`, {...user, ref}).pipe(
       shareReplay(1),
     );
   }
@@ -32,8 +32,8 @@ export class AuthService {
     );
   }
 
-  public loginWithGoogle(token: string): Observable<SessionData> {
-    return this.http.post<SessionData>(`${API}/google-login`, { token }).pipe(
+  public loginWithGoogle(token: string, ref: string): Observable<SessionData> {
+    return this.http.post<SessionData>(`${API}/google-login`, { token, ref }).pipe(
       shareReplay(1),
     );
   }
