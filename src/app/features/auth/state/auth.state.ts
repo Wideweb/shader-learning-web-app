@@ -8,6 +8,8 @@ import { AuthService } from "../services/auth.service";
 import { IsTokenExpired, LoadMe, Login, LoginWithGoogle, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
 import { isExpired } from "../services/token.utils";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { LocalService } from "../../common/services/local-storage.service";
+import { REF_KEY } from "../auth.constants";
 
 export interface AuthStateModel {
   user: UserDto | null;
@@ -98,7 +100,11 @@ export class AuthState {
     });
   }
 
-  constructor(private authService: AuthService, private socialAuthService: SocialAuthService) {}
+  constructor(
+    private authService: AuthService,
+    private socialAuthService: SocialAuthService,
+    private storage: LocalService,
+  ) {}
 
   @Action(SignUp)
   async signUp(ctx: StateContext<AuthStateModel>, action: SignUp) {
@@ -109,7 +115,8 @@ export class AuthState {
 
     try 
     {
-      const sesionData = await firstValueFrom(this.authService.signUp(action.payload));
+      const ref = this.storage.getData(REF_KEY);
+      const sesionData = await firstValueFrom(this.authService.signUp(action.payload, ref));
       ctx.setState(patch<AuthStateModel>({ 
         user: sesionData.user,
         accessToken: {
@@ -185,7 +192,8 @@ export class AuthState {
 
     try 
     {
-      const sesionData = await firstValueFrom(this.authService.loginWithGoogle(action.token));
+      const ref = this.storage.getData(REF_KEY);
+      const sesionData = await firstValueFrom(this.authService.loginWithGoogle(action.token, ref));
       ctx.setState(patch<AuthStateModel>({ 
         user: sesionData.user,
         accessToken: {
