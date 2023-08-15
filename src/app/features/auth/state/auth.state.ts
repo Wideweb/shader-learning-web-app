@@ -5,8 +5,11 @@ import { catchError, firstValueFrom, of, tap, throwError } from "rxjs";
 import { hasAll, hasAny } from "../../common/services/utils";
 import { UserDto } from "../models/user.model";
 import { AuthService } from "../services/auth.service";
-import { IsTokenExpired, LoadMe, Login, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
+import { IsTokenExpired, LoadMe, Login, LoginWithGoogle, Logout, RefreshAccessToken, RequestResetPassword, ResetPassword, SignUp, UpdateToken } from "./auth.actions";
 import { isExpired } from "../services/token.utils";
+import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { LocalService } from "../../common/services/local-storage.service";
+import { REF_KEY } from "../auth.constants";
 
 export interface AuthStateModel {
   user: UserDto | null;
@@ -97,7 +100,11 @@ export class AuthState {
     });
   }
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private socialAuthService: SocialAuthService,
+    private storage: LocalService,
+  ) {}
 
   @Action(SignUp)
   async signUp(ctx: StateContext<AuthStateModel>, action: SignUp) {
@@ -108,7 +115,8 @@ export class AuthState {
 
     try 
     {
-      const sesionData = await firstValueFrom(this.authService.signUp(action.payload));
+      const ref = this.storage.getData(REF_KEY);
+      const sesionData = await firstValueFrom(this.authService.signUp(action.payload, ref));
       ctx.setState(patch<AuthStateModel>({ 
         user: sesionData.user,
         accessToken: {
@@ -165,6 +173,45 @@ export class AuthState {
     {
       ctx.setState(patch<AuthStateModel>({ loginError  }));
       throw loginError;
+    }
+    finally
+    {
+      ctx.patchState({ 
+        loaded: true,
+        loading: false,
+      });
+    }
+  }
+
+  @Action(LoginWithGoogle)
+  async loginWithGoogle(ctx: StateContext<AuthStateModel>, action: LoginWithGoogle) {
+    ctx.patchState({
+      loaded: false,
+      loading: true,
+    });
+
+    try 
+    {
+      const ref = this.storage.getData(REF_KEY);
+      const sesionData = await firstValueFrom(this.authService.loginWithGoogle(action.token, ref));
+      ctx.setState(patch<AuthStateModel>({ 
+        user: sesionData.user,
+        accessToken: {
+          value: sesionData.tokenData.accessToken,
+          expiresAt: sesionData.tokenData.accessTokenExpiresAt,
+        },
+        refreshToken: {
+          value: sesionData.tokenData.refreshToken,
+          expiresAt: sesionData.tokenData.refreshTokenExpiresAt,
+        },
+        loginError: null,
+        signUpError: null,
+       }));
+    } 
+    catch(signUpError)
+    {
+      ctx.setState(patch<AuthStateModel>({ signUpError  }));
+      throw signUpError;
     }
     finally
     {
@@ -241,6 +288,7 @@ export class AuthState {
     }
 
     return this.authService.logout().pipe(
+      tap(() => this.socialAuthService.signOut()),
       tap(() => ctx.setState(defaults())),
       catchError(() => {
         ctx.patchState(defaults());

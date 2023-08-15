@@ -20,14 +20,20 @@ export class AuthService {
     );
   }
 
-  public signUp(user: UserSignUp): Observable<SessionData> {
-    return this.http.post<SessionData>(`${API}/signup`, user).pipe(
+  public signUp(user: UserSignUp, ref: string): Observable<SessionData> {
+    return this.http.post<SessionData>(`${API}/signup`, {...user, ref}).pipe(
       shareReplay(1),
     );
   }
 
   public login(user: UserLogIn): Observable<SessionData> {
     return this.http.post<SessionData>(`${API}/login`, user).pipe(
+      shareReplay(1),
+    );
+  }
+
+  public loginWithGoogle(token: string, ref: string): Observable<SessionData> {
+    return this.http.post<SessionData>(`${API}/google-login`, { token, ref }).pipe(
       shareReplay(1),
     );
   }
