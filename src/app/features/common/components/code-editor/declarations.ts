@@ -87,6 +87,20 @@ export class FileEditorInstance {
     }
 };
 
+export class FileViewInstance {
+    public name: string;
+    
+    public mode: string;
+    
+    public state: EditorState;
+
+    constructor(name: string, mode: string, state: EditorState) {
+        this.name = name;
+        this.mode = mode;
+        this.state = state;
+    }
+};
+
 export interface CodeEditorPrompts {
     [fileName: string]: CodeEditorPrompt[];
 }
