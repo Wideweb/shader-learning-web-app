@@ -38,6 +38,9 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
   @Select(ModuleProgressState.userTask)
   public userTask$!: Observable<UserTaskDto>;
 
+  @Select(ModuleProgressState.userTaskAccepted)
+  public accepted$!: Observable<boolean>;
+
   @Select(ModuleProgressState.userTaskLiked)
   public liked$!: Observable<boolean>;
 
