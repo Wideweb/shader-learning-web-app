@@ -97,6 +97,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   public compilationStatusShown = false;
 
+  public isOutputHidden = false;
+
   private vertexFile: FileEditorInstance | null = null;
 
   private fragmentFile: FileEditorInstance | null = null;
@@ -165,6 +167,7 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.vertexShaderApplied = this.getVertexCode();
     this.fragmentShaderApplied = this.getFragmentCode();
     this.compileTrigger++;
+    this.isOutputHidden = false;
   }
 
   submit(): void {
@@ -286,6 +289,10 @@ export class TaskComponent implements OnChanges, OnDestroy {
     if (this.isPrevTaskAvailable) {
       this.onSwitchToPrev.emit();
     }
+  }
+
+  toggleOutputVisibility() {
+    this.isOutputHidden = !this.isOutputHidden;
   }
 
   ngOnDestroy(): void {

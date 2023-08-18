@@ -14,8 +14,9 @@
 
 @font-face {
     font-family: $font-code;
-    src: url("/assets/CutiveMono-Regular.ttf") format("truetype") ;
+    src: url("/assets/Consolas.ttf") format("truetype") ;
 }
+
 
 @import '/node_modules/codemirror/lib/codemirror.css';
 @import '/node_modules/codemirror/addon/hint/show-hint.css';
@@ -552,6 +553,23 @@ h3 {
     mask-size: toRem(24);
 }
 
+.chevron-down-ico {
+    position: absolute;
+    display: inline-block;
+    width: toRem(24);
+    height: toRem(24);
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: $black;
+    -webkit-mask-image: url(/assets/chevron-down.svg);
+    mask-image: url(/assets/chevron-down.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: toRem(24);
+    mask-size: toRem(24);
+}
+
 .chevrons-left-ico {
     position: absolute;
     display: inline-block;
@@ -974,7 +992,9 @@ a.link {
     justify-content: center;
     align-items: center;
     width: toRem(40);
+    min-width: toRem(40);
     height: toRem(40);
+    min-height: toRem(40);
     border-radius: 100%;
     color: $white;
     background-color: $blue;
@@ -995,23 +1015,45 @@ a.link {
     background-color: $blue;
 }
 
+.btn-circle.stroked {
+    background-color: $light-blue;
+    box-shadow: inset 0 0 0 toRem(1) $blue;
+}
+
+.btn-circle.stroked .ico {
+    color: $blue;
+    background-color: $blue;
+}
+
 @include for-desktop-up {
 
-    .btn-circle:hover, .btn-circle.secondary:hover {
+    .btn-circle:hover, .btn-circle.secondary:hover, .btn-circle.stroked:hover {
         background-color: $blue-secondary;
+        box-shadow: none;
     }
 
     .btn-circle.secondary:hover .ico {
         color: $white;
         background-color: $white;
     }
+
+    .btn-circle.stroked:hover .ico {
+        color: $white;
+        background-color: $white;
+    }
 }
 
-.btn-circle:active, .btn-circle.secondary:active {
+.btn-circle:active, .btn-circle.secondary:active, .btn-circle.stroked:active {
     background-color: $black;
+    box-shadow: none;
 }
 
 .btn-circle.secondary:active .ico {
+    color: $white;
+    background-color: $white;
+}
+
+.btn-circle.stroked:active .ico {
     color: $white;
     background-color: $white;
 }

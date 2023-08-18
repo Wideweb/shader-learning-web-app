@@ -5,7 +5,8 @@
                 <img class="logo" src="assets/logo.svg" alt="Shader Learning">
             </a>
         </div>
-        <h2 class="title">Sign in</h2>
+        <div class="spacer-top"></div>
+        <h2 class="title">Log in</h2>
         <div class="form-wrapper">
             <a class="btn-link google">
                 <app-svg-icon name="google"></app-svg-icon><p class="p2 label">Log in with Google</p>
@@ -46,11 +47,12 @@
 
                 <a class="link p3 link-standout" routerLink="/password-reset">Forgot password?</a>
 
-                <button type="submit" class="btn-submit btn-link" (click)="login()">Sign in</button>
+                <button type="submit" class="btn-submit btn-link" (click)="login()">Log in</button>
             </form>
 
             <p class="p3 underlying-message">Don't have an account?&nbsp;<a class="link link-standout" routerLink="/password-reset" (click)="toSignUp()">Create account</a></p>
         </div>
+        <div class="spacer-bottom"></div>
     </div>
     <div class="image-part">
         <div class="image-wrapper">

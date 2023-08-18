@@ -115,8 +115,6 @@
             max-width: toRem(120);
             box-sizing: border-box;
             padding-left: toRem(40);
-            color: $grey;
-            text-align: left;
 
             @include for-tablet-down {
                 min-width: toRem(80);
@@ -124,10 +122,21 @@
             }
 
             @include for-phone-only {
-                text-align: center;
-                padding-left: 0;
-                min-width: toRem(40);
-                max-width: toRem(40);
+                padding-left: toRem(20);
+                min-width: toRem(60);
+                max-width: toRem(60);
+            }
+
+            .container {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: toRem(8);
+            }
+
+            .p2 {
+                color: $grey;
             }
         }
     

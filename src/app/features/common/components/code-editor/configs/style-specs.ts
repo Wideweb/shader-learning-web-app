@@ -7,7 +7,7 @@ const styleSpecs = {
         height: '100%',
     },
     '.cm-content': {
-        fontFamily: 'Cutive Mono Regular, Source Code Pro, monospace',
+        fontFamily: 'Source Code',
         fontSize: toRem(16),
         fontStyle: 'normal',
         fontWeight: 400,
@@ -74,7 +74,7 @@ const styleSpecs = {
     },
     '.cm-tooltip.cm-tooltip-autocomplete > ul': {
         maxHeight: toRem(164),
-        fontFamily: 'Cutive Mono Regular, Source Code Pro, monospace',
+        fontFamily: 'Source Code',
         fontSize: toRem(16),
         fontStyle: 'normal',
         fontWeight: 400,
