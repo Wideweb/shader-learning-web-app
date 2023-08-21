@@ -32,6 +32,7 @@ export class AchievementsService {
                 .open<AchievementDialogComponent, AchievementDialogModel, void>(AchievementDialogComponent, { 
                     disableClose: true,
                     data: {
+                        id: achievement.achievementId,
                         name: achievement.name,
                         message: achievement.message,
                     }
