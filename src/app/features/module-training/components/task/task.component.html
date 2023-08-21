@@ -10,8 +10,9 @@
     </div>
 
     <div class="tabs">
-      <a class="p2 tab" [ngClass]="{active: isActiveTab('task')}" (click)="activataTab('task')">Task</a>
-      <a class="p2 tab" [ngClass]="{active: isActiveTab('theory')}" (click)="activataTab('theory')">Theory</a>
+      <a class="p2 tab" [ngClass]="{active: isActiveTab('task')}" (click)="activateTab('task')">Task</a>
+      <a class="p2 tab" [ngClass]="{active: isActiveTab('theory')}" (click)="activateTab('theory')">Theory</a>
+      <a class="p2 tab" [ngClass]="{active: isActiveTab('answer'), disabled: !accepted}" (click)="accepted && activateTab('answer')">Answer</a>
     </div>
 
     <div class="tab-content">
@@ -30,6 +31,10 @@
 
       <ng-container *ngIf="isActiveTab('theory')">
         <div *ngIf="model?.description" class="p2 description-markdown-compiled" [innerHtml]="compiledTheoryDescription"></div>
+      </ng-container>
+
+      <ng-container *ngIf="isActiveTab('answer')">
+        <task-answer [model]="model!"></task-answer>
       </ng-container>
 
       <!-- <ng-container *ngIf="isActiveTab('theory')">
@@ -72,7 +77,9 @@
       </div>
     </div>
 
-    <div class="output-section">
+    <div class="output-section" [ngClass]="{ 'hidden': isOutputHidden }">
+      <a class="btn-circle stroked toggle" (click)="toggleOutputVisibility()"><i class="ico chevron-down-ico"></i></a>
+
       <div class="container">
         <div class="output">
           <p class="p3 title">Expected</p>

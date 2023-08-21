@@ -1,0 +1,14 @@
+<div class="container">
+    <div *ngIf="model.vertexCodeEditable">
+        <p class="p2 filename">vertex.glsl</p>
+        <div class="code">
+            <file-view [file]="vertexFile"></file-view>
+        </div>
+    </div>
+    <div *ngIf="model.fragmentCodeEditable">
+        <p class="p2 filename">fragment.glsl</p>
+        <div class="code">
+            <file-view [file]="fragmentFile"></file-view>
+        </div>
+    </div>
+</div>

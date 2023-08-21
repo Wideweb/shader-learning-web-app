@@ -28,6 +28,9 @@ export class TaskComponent implements OnChanges, OnDestroy {
   public submissions!: UserTaskSubmissionDto[];
 
   @Input()
+  public accepted: boolean = false;
+
+  @Input()
   public liked: boolean = false;
 
   @Input()
@@ -94,11 +97,13 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   public compilationStatusShown = false;
 
+  public isOutputHidden = false;
+
   private vertexFile: FileEditorInstance | null = null;
 
   private fragmentFile: FileEditorInstance | null = null;
 
-  private activeTask: 'task' | 'theory' = 'task';
+  private activeTask: 'task' | 'theory' | 'answer' = 'task';
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -125,6 +130,8 @@ export class TaskComponent implements OnChanges, OnDestroy {
         this.compiledTheoryDescription = marked.Parser.parse(marked.Lexer.lex(descSrc[0]));
         this.compiledTaskDescription = marked.Parser.parse(marked.Lexer.lex(descSrc[1]));
       }
+
+      this.activateTab('task');
     }
   }
 
@@ -160,6 +167,7 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.vertexShaderApplied = this.getVertexCode();
     this.fragmentShaderApplied = this.getFragmentCode();
     this.compileTrigger++;
+    this.isOutputHidden = false;
   }
 
   submit(): void {
@@ -259,11 +267,11 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.onSubmissionSelect.emit(submission);
   }
 
-  activataTab(tab: 'task' | 'theory') {
+  activateTab(tab: 'task' | 'theory' | 'answer') {
     this.activeTask = tab;
   }
 
-  isActiveTab(tab: 'task' | 'theory'): boolean {
+  isActiveTab(tab: 'task' | 'theory' | 'answer'): boolean {
     return tab === this.activeTask;
   }
 
@@ -281,6 +289,10 @@ export class TaskComponent implements OnChanges, OnDestroy {
     if (this.isPrevTaskAvailable) {
       this.onSwitchToPrev.emit();
     }
+  }
+
+  toggleOutputVisibility() {
+    this.isOutputHidden = !this.isOutputHidden;
   }
 
   ngOnDestroy(): void {

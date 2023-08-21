@@ -144,6 +144,11 @@
                 border-radius: toRem(16);
                 color: $blue;
             }
+
+            &.disabled {
+                color: $light-grey;
+                cursor: not-allowed;
+            }
         }
     }
 
@@ -226,7 +231,7 @@
         // height: fit-content;
         box-sizing: border-box;
         position: absolute;
-        bottom: toRem(10);
+        bottom: toRem(30);
 
         padding: 0 toRem(55) 0 toRem(44 + 8);
         @include for-phone-only {
@@ -320,10 +325,18 @@
 }
 
 .output-section {
+    position: relative;
     box-sizing: border-box;
-    padding: toRem(20) toRem(55) toRem(0) toRem(44);
+    padding: toRem(30) toRem(55) toRem(0) toRem(44);
     @include for-phone-only {
         padding: toRem(20) toRem(40) toRem(0) toRem(40);
+    }
+
+    .toggle {
+        position: absolute;
+        top: toRem(-20);
+        right: 50%;
+        transform: translate(50%, 0);
     }
 
     .container {
@@ -353,6 +366,20 @@
         .render-img {
             flex: 1;
             overflow: hidden;
+        }
+    }
+
+    &.hidden {
+        padding-top: toRem(10);
+
+        .container {
+            visibility: hidden;
+            height: 0;
+            padding: 0;
+        }
+
+        .toggle {
+            transform: rotate(180deg);
         }
     }
 }

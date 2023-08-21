@@ -3,6 +3,7 @@
     [model]="(task$ | async)!"
     [shaderProgram]="(userShaderProgram$ | async)!"
     [submissions]="(submissions$ | async)!"
+    [accepted]="(accepted$ | async) === true"
     [liked]="(liked$ | async) === true"
     [disliked]="(disliked$ | async) === true"
     [canEdit]="(canEdit$ | async) === true"

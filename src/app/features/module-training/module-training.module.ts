@@ -18,12 +18,14 @@ import { TaskResovler } from "./guards/task.resolver";
 import { TaskGuard } from "./guards/task.guard";
 import { ModuleFinishedGuard } from "./guards/module-fnished.guard";
 import { ModuleResovler } from "./guards/module.resolver";
+import { TaskAnswerComponent } from "./components/task/answer/answer.component";
 
 @NgModule({
   declarations: [
     ModuleComponent,
     ModuleFinishComponent,
     TaskComponent,
+    TaskAnswerComponent,
     TaskSubmissionsComponent,
     TaskSubmitDialogComponent,
     TaskSubmitResultDialogComponent,

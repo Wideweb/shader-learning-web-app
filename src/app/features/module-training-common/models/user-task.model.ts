@@ -9,6 +9,7 @@ export interface UserTaskDto {
     liked: boolean;
     disliked: boolean;
     submissions: UserTaskSubmissionDto[];
+    accepted: boolean;
 }
 
 export interface UserTaskSubmissionDto {

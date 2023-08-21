@@ -167,6 +167,11 @@ export class ModuleProgressState {
   }
 
   @Selector()
+  static userTaskAccepted(state: ModuleProgressStateModel): boolean {
+    return state.userTask?.accepted === true;
+  }
+
+  @Selector()
   static task(state: ModuleProgressStateModel): TaskDto | null {
     return state.userTask?.task || null;
   }
@@ -537,10 +542,12 @@ export class ModuleProgressState {
           })),
         }),
         userTask: patch<UserTaskDto>({
+          accepted,
           fragmentShader: action.payload.fragmentShader,
           submissions: insertItem(submission, 0)
         }),
-        userTasks: updateItem(it => it?.task.id == userTask.task.id, patch({ 
+        userTasks: updateItem(it => it?.task.id == userTask.task.id, patch({
+          accepted,
           fragmentShader: action.payload.fragmentShader,
           submissions: insertItem(submission, 0)
         })),

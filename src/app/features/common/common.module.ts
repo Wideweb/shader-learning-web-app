@@ -39,6 +39,7 @@ import { LocationHistoryService } from "./services/location-history.service";
 import { AppSvgImageComponent } from "./components/svg-img/svg-img.component";
 import { AppServerErrorToastComponent } from "./components/server-error-toast/server-error-toast.component";
 import { AchievementDialogComponent } from "./components/achievements-dialog/achievements-dialog.component";
+import { FileViewComponent } from "./components/code-editor/file-view/file-view.component";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { AchievementDialogComponent } from "./components/achievements-dialog/ach
     AppStickyComponent,
     AppSvgIconComponent,
     AppSvgImageComponent,
+    FileViewComponent,
     FileEditorComponent,
     CodeEditorComponent,
     AppCheckboxComponent,
@@ -111,6 +113,7 @@ import { AchievementDialogComponent } from "./components/achievements-dialog/ach
     AppStickyComponent,
     AppSvgIconComponent,
     AppSvgImageComponent,
+    FileViewComponent,
     FileEditorComponent,
     CodeEditorComponent,
     AppCheckboxComponent,
