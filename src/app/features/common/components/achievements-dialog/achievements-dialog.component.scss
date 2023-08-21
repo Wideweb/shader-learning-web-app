@@ -1,0 +1,47 @@
+
+@import 'common.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding: toRem(40);
+    max-width: toRem(380);
+    min-width: toRem(380);
+
+    @include for-phone-only {    
+        min-width: 0;
+    }
+}
+
+.ico {
+    margin-bottom: toRem(30);
+    width: toRem(220);
+    min-width: toRem(220);
+    height: toRem(166);
+    min-height: toRem(166);
+}
+
+.title {
+    margin-bottom: toRem(20);
+    text-align: center;
+    color: $blue;
+}
+
+.message {
+    margin-bottom: toRem(30);
+    text-align: center;
+
+    // @include for-tablet-up {    
+    //     padding: 0 toRem(15);
+    // }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: toRem(10);
+    width: 100%;
+    box-sizing: border-box;
+}

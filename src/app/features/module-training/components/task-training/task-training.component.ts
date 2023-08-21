@@ -25,6 +25,7 @@ import { AuthState } from 'src/app/features/auth/state/auth.state';
 import { PageMetaService } from 'src/app/features/common/services/page-meta.service';
 import { UserTaskDto, UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
 import { TaskDto, TaskFeedbackDto, TaskSubmitDto, TaskSubmitResultDto } from 'src/app/features/module-training-common/models/task.model';
+import { AchievementsService } from 'src/app/features/common/services/achievements.service';
 
 @Component({
   selector: 'task-training',
@@ -74,6 +75,7 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private router: Router,
     private pageMeta: PageMetaService,
+    private achievements: AchievementsService
     ) {
 
     const hasEditTaskPermission$ = this.store.select(AuthState.hasAllPermissions(['task_edit']));
@@ -111,7 +113,7 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
     }
   }
 
-  showSubmitResult(taskSubmitResult: TaskSubmitResultDto) {
+  async showSubmitResult(taskSubmitResult: TaskSubmitResultDto) {
     const isLastTask = this.store.selectSnapshot(ModuleProgressState.isLastTask);
 
     let type = TaskSubmitResultType.TaskAccepted;
@@ -124,7 +126,7 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
       type = TaskSubmitResultType.TaskRejected;
     }
 
-    this.dialog
+    const dialog$ = this.dialog
       .open<TaskSubmitResultDialogComponent, TaskSubmitResultDialogModel, TaskSubmitResultDialogSelection>(TaskSubmitResultDialogComponent, { 
         disableClose: true,
         data: {
@@ -132,25 +134,27 @@ export class TaskTrainingComponent implements OnInit, OnDestroy {
           nextModuleId: taskSubmitResult.nextModuleId
         }
       })
-      .afterClosed()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result == TaskSubmitResultDialogSelection.RetryTask) {
-          this.retry();
-        }
+      .afterClosed();
 
-        if (result == TaskSubmitResultDialogSelection.NextTask) {
-          this.next();
-        }
+      const result = await firstValueFrom(dialog$);
+      
+      await this.achievements.checkForUpdates();
 
-        if (result == TaskSubmitResultDialogSelection.NextModule) {
-          this.router.navigate([`/module-view/${taskSubmitResult.nextModuleId}`]);
-        }
+      if (result == TaskSubmitResultDialogSelection.RetryTask) {
+        this.retry();
+      }
 
-        if (result == TaskSubmitResultDialogSelection.ToExlore) {
-          this.router.navigate([`/explore`]);
-        }
-      });
+      if (result == TaskSubmitResultDialogSelection.NextTask) {
+        this.next();
+      }
+
+      if (result == TaskSubmitResultDialogSelection.NextModule) {
+        this.router.navigate([`/module-view/${taskSubmitResult.nextModuleId}`]);
+      }
+
+      if (result == TaskSubmitResultDialogSelection.ToExlore) {
+        this.router.navigate([`/explore`]);
+      }
   }
 
   edit() {
