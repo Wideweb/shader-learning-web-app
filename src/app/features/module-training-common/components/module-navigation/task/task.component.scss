@@ -10,6 +10,10 @@
     gap: toRem(16);
     cursor: default;
 
+    .name {
+        width: toRem(206);
+    }
+
     &.default {
         .name {
             color: $black;

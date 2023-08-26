@@ -379,7 +379,7 @@
         }
 
         .toggle {
-            transform: rotate(180deg);
+            transform: translate(50%, 0) rotate(180deg);
         }
     }
 }

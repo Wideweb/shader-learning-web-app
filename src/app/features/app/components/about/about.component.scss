@@ -30,12 +30,16 @@
     display: flex;
     flex-direction: row;
     gap: toRem(13);
-    margin-bottom: toRem(50);
+    margin-bottom: toRem(80);
+
+    @include for-tablet-down {
+        margin-bottom: toRem(60);
+    }
 
     @include for-phone-only {    
         flex-direction: column;
         gap: toRem(16);
-        margin-bottom: toRem(30);
+        margin-bottom: toRem(40);
     }
 }
 

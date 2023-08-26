@@ -2,11 +2,12 @@
 
 <ng-template #available>
     <a class="task"
+        [title]="task.name"
         [ngClass]="{'selected': selected, 'accepted': !selected && task.accepted, 'default': !selected && !task.accepted }"
         routerLink="/module-training/{{ moduleId }}/task/{{ task.id }}">
         <div class="status"><i class="checked-ico"></i></div>
         <div>
-            <h3 class="name">{{ task.name }}</h3>
+            <h3 class="name cut-text">{{ task.name }}</h3>
             <p class="p3 status-name" *ngIf="showStatusName">
                 <ng-container *ngIf="task.accepted">completed</ng-container>
                 <ng-container *ngIf="!task.accepted && selected">in progress</ng-container>
