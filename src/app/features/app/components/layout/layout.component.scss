@@ -27,6 +27,41 @@
   padding-top: toRem(2);
 }
 
+.discord-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: toRem(32);
+  min-height: toRem(32);
+  background-color: $dark-blue;
+
+  .speech-balloon {
+    width: toRem(16);
+    height: toRem(16);
+  }
+
+  .msg-prefix {
+    color: $white;
+    padding: 0 toRem(12);
+  }
+
+  a.link-to-chat {
+    cursor: pointer;
+    text-decoration: underline;
+    color: $white;
+    font-family: $font-regular;
+    font-size: toRem(14);
+    font-style: normal;
+    font-weight: 600;
+    line-height: toRem(24);
+
+    &:hover {
+      color: $blue;
+    }
+  }
+}
+
 .navbar {
   position: relative;
   margin: toRem(30) 0;

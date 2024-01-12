@@ -34,6 +34,10 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
 
   public userSymbol$: Observable<string | null>;
 
+  public hideDiscordLinkSubject = new BehaviorSubject<boolean>(false);
+
+  public hideDiscordLink$: Observable<boolean>;
+
   public hidePageOverflowSubject = new BehaviorSubject<boolean>(false);
 
   public hidePageOverflow$: Observable<boolean>;
@@ -64,6 +68,7 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
     this.userEmail$ = this.user$.pipe(map(u => u?.email || ''));
     this.userSymbol$ = this.user$.pipe(map(u => u?.email[0].toUpperCase() || ''));
 
+    this.hideDiscordLink$ = this.hideDiscordLinkSubject.asObservable().pipe(delay(0));
     this.hidePageOverflow$ = this.hidePageOverflowSubject.asObservable().pipe(delay(0));
     this.showFooterScrollCtrl$ = this.showFooterScrollCtrlSubject.asObservable().pipe(delay(0));
   }
@@ -75,6 +80,7 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     this.resize();
+    this.updateDiscordLink();
     this.updatePageOverflow();
     this.updateFooterScrollCtrlVisibility();
   }
@@ -86,6 +92,7 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
         takeUntil(this.destroy$)
       ).subscribe(() => {
         this.scrollTop(true);
+        this.updateDiscordLink();
         this.updatePageOverflow();
         this.updateFooterScrollCtrlVisibility();
       });
@@ -118,6 +125,18 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
     });
   }
 
+  updateDiscordLink() :void {
+    let snapshot: ActivatedRouteSnapshot | null = this.route.snapshot;
+    while (snapshot !== null) {
+      if (snapshot.data['hideDiscordLink']) {
+        this.hideDiscordLinkSubject.next(true);
+        return;
+      }
+      snapshot = snapshot.firstChild;
+    }
+    this.hideDiscordLinkSubject.next(false);
+  }
+
   updatePageOverflow() :void {
     let snapshot: ActivatedRouteSnapshot | null = this.route.snapshot;
     while (snapshot !== null) {
@@ -148,8 +167,9 @@ export class AppLayoutComponent implements AfterViewInit, OnInit {
   }
 
   ngOnDestroy(): void {
+    this.hideDiscordLinkSubject.unsubscribe();
     this.showFooterScrollCtrlSubject.unsubscribe();
-    this.showFooterScrollCtrlSubject.unsubscribe();
+    this.hidePageOverflowSubject.unsubscribe();
 
     this.destroy$.next(true);
     this.destroy$.unsubscribe();

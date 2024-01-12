@@ -6,6 +6,7 @@ export const routes: Routes = [
   { 
     path: ':moduleId',
     component: ModuleComponent,
+    data: {hideDiscordLink: true}
   },
 
 ];

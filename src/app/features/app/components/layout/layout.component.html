@@ -20,6 +20,10 @@
   <div class="page">
     <div class="page-scroll" (scroll)="onScroll($event)">
 
+      <ng-container *ngIf="!(hideDiscordLink$ | async)">
+        <div class="discord-link"><img class="speech-balloon" src="assets/speech-balloon.png"><span class="p3 msg-prefix">Join us on Discord</span><a href="https://discord.gg/g87bKBdDbC" target="_blank" class="link-to-chat">Link to chat</a></div>
+      </ng-container>
+
       <div class="navbar navbar-big max-width">
         <div class="nav-group">
           <a class="site-brand" routerLink="/" *ngIf="!(isAuthenticated$ | async)">
