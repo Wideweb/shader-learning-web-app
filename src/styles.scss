@@ -98,6 +98,19 @@ body,
     // border: toRem(1) solid $light-grey;
 }
 
+.description-markdown-compiled img.markdown-image {
+    display: block;
+    max-width: 100%;
+    max-height: toRem(300);
+    margin: 0 auto;
+}
+
+.description-markdown-compiled .markdown-image-alt {
+    font-family: $font-bold;
+    text-align: center;
+    padding-top: toRem(10);
+}
+
 // .description-markdown-compiled pre {
 //     font-family: monospace;
 //     white-space: pre;
@@ -888,7 +901,7 @@ h3 {
     transform: translate(50%, -50%);
     background-color: $blue;
     -webkit-mask-image: url(/assets/clock.svg);
-    mask-image: url(/assets/.svg);
+    mask-image: url(/assets/clock.svg);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-size: toRem(24);
