@@ -27,6 +27,7 @@ export class SceneObjectFormComponent {
     { label: 'Triangle', value: GlGeometry.Triangle },
     { label: 'Box', value: GlGeometry.Box },
     { label: 'Sphere', value: GlGeometry.Sphere },
+    { label: 'Sprite: Directed Quad', value: GlGeometry.SpriteDirectedQuad },
   ]
 
   public static createForm(fb: FormBuilder) {
