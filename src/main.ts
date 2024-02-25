@@ -18,7 +18,7 @@ marked.use({
   renderer: {
     image(src, title, alt) {
       const width = title?.split(" ")?.find(it => it.startsWith("w:"))?.slice(2);
-      const height = title?.split(" ")?.find(it => it.startsWith("h:"))?.slice(2)
+      const height = title?.split(" ")?.find(it => it.startsWith("h:"))?.slice(2);
 
       let out = `<img class="markdown-image" `;
       out += `src="${sanitize(src!)}" `;

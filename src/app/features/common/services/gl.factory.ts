@@ -68,9 +68,61 @@ export class GlFactory {
     private createBufferGeometry(geometry: GlGeometry): THREE.BufferGeometry {
         if (geometry == GlGeometry.Triangle)
         {
+            var positions = new Float32Array([
+              -0.5, -0.5, 0.0, // v0
+               0.5, -0.5, 0.0, // v1
+               0.0,  0.5, 0.0  // v2
+            ]);
+
+            var uv = new Float32Array([
+              0.0, 0.0, // v0
+              1.0, 0.0, // v1
+              0.5, 1.0  // v2
+            ]);
+
             var g = new THREE.BufferGeometry();
-            var positions = new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0]);
             g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+
+            return g;
+        }
+        if (geometry == GlGeometry.SpriteDirectedQuad)
+        {
+            const positions = new Float32Array( [
+              -0.5, -0.7,  0.0, // v0
+              -0.5, -0.7,  0.0, // v1
+               0.5,  0.7,  0.0, // v2
+               0.5,  0.7,  0.0, // v3
+            ]);
+
+            const nextPositions = new Float32Array( [
+               0.5,  0.7,  0.0, // v2
+               0.5,  0.7,  0.0, // v3
+              -0.5, -0.7,  0.0, // v0
+              -0.5, -0.7,  0.0, // v1
+            ]);
+
+            const indices = new Int32Array([0, 1, 2, 3]);
+
+            var texCoord = new Float32Array([
+              0.0, 0.0, // v0
+              1.0, 0.0, // v1
+              0.0, 1.0, // v2
+              1.0, 1.0  // v3
+            ]);
+            
+            const bufferIndices = [
+              0, 1, 2,
+              2, 3, 0,
+            ];
+
+            var g = new THREE.BufferGeometry();
+            g.setIndex(bufferIndices);
+            g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            g.setAttribute('nextPosition', new THREE.BufferAttribute(nextPositions, 3));
+            g.setAttribute('index', new THREE.BufferAttribute(indices, 1));
+            g.setAttribute('uv', new THREE.BufferAttribute(texCoord, 2));
+
             return g;
         }
 
