@@ -18,4 +18,7 @@ export class ModuleNavigationTaskComponent {
 
   @Input()
   public showStatusName: boolean = true;
+
+  @Input()
+  public truncate: boolean = false;
 }

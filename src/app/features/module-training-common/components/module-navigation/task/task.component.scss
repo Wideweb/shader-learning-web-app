@@ -10,7 +10,11 @@
     gap: toRem(16);
     cursor: default;
 
-    .name {
+    &.truncate .name {
+        width: toRem(206);
+    }
+
+    @include for-phone-only {
         width: toRem(206);
     }
 
