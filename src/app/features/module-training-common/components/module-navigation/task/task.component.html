@@ -3,7 +3,7 @@
 <ng-template #available>
     <a class="task"
         [title]="task.name"
-        [ngClass]="{'selected': selected, 'accepted': !selected && task.accepted, 'default': !selected && !task.accepted }"
+        [ngClass]="{'selected': selected, 'accepted': !selected && task.accepted, 'default': !selected && !task.accepted, 'truncate': truncate }"
         routerLink="/module-training/{{ moduleId }}/task/{{ task.id }}">
         <div class="status"><i class="checked-ico"></i></div>
         <div>
@@ -18,7 +18,7 @@
 </ng-template>
 
 <ng-template #locked>
-    <div class="task locked" [ngClass]="{'selected': selected }">
+    <div class="task locked" [ngClass]="{'selected': selected, 'truncate': truncate }">
         <i class="status"></i>
         <div>
             <h3 class="name">{{ task.name }}</h3>

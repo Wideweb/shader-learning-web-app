@@ -19,6 +19,9 @@ export class ModuleNavigationComponent {
   @Input()
   public showStatusName: boolean = true;
 
+  @Input()
+  public truncate: boolean = false;
+
   isCurrentTask(task: TaskProgressDto) {
     return task.id == this.selectedId;
   }
