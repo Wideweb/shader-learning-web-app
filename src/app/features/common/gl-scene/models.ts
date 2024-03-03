@@ -36,6 +36,8 @@ export enum GlGeometry
   Box,
   Sphere,
   SpriteDirectedQuad,
+  SpriteCircle,
+  SpriteCircleQuad,
 }
 
 export class GlSceneObject

@@ -400,10 +400,11 @@ export class ModuleProgressState {
       }
 
       const isLast = currentTaskIndex == module.tasks.length - 1;
+      const isNextLocked = !isLast && module.tasks[currentTaskIndex + 1]?.locked;
       const allPrevAccepted = module.tasks.filter(task => task.order <= currentTask.order).every(task => task.accepted);
       const isNextAccepted = !isLast && module.tasks[currentTaskIndex + 1]?.accepted;
 
-      if (isLast || (!allPrevAccepted && !isNextAccepted))
+      if (isLast || (isNextLocked && !allPrevAccepted && !isNextAccepted))
       {
         ctx.setState(patch<ModuleProgressStateModel>({ userTaskLoaded: true }));
         return ctx.getState().userTask;
