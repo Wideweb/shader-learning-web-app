@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, OnDestroy} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, OnDestroy, HostListener} from '@angular/core';
 import { DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER } from 'src/app/features/app/app.constants';
 import * as marked from 'marked';
 import { CodeEditorLinterRule, FileEditorInstance, FileError } from 'src/app/features/common/components/code-editor/declarations';
@@ -8,6 +8,9 @@ import { TaskDto, TaskHintDto, TaskSubmitDto } from 'src/app/features/module-tra
 import { UserTaskSubmissionDto } from 'src/app/features/module-training-common/models/user-task.model';
 import { GlProgramErrors } from 'src/app/features/common/components/gl-scene/gl-scene.component';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CompilationErrorToastToastComponent } from './compilation-error-toast/compilation-error-toast.component';
+import { CompilationSuccessToastComponent } from './compilation-success-toast/compilation-success-toast.component';
 
 @Component({
   selector: 'task',
@@ -107,11 +110,19 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private ref: ElementRef) {
+  constructor(private ref: ElementRef, private snackBar: MatSnackBar) {
     this.hideCompilationStatus$.pipe(
       debounceTime(2000),
       takeUntil(this.destroy$),
     ).subscribe(() => (this.compilationStatusShown = false));
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'r') {
+      event.preventDefault();
+      this.run();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -197,8 +208,16 @@ export class TaskComponent implements OnChanges, OnDestroy {
 
     if (vertexErrors.length > 0 || fragmentErrors.length > 0) {
       this.hasCompilationError = true;
-      this.compilationStatusShown = true;
-      this.hideCompilationStatus$.next(true);
+      // this.compilationStatusShown = true;
+      // this.hideCompilationStatus$.next(true);
+
+      this.snackBar.openFromComponent(CompilationErrorToastToastComponent, {
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        duration: 2000,
+        panelClass: 'snack-bar-item-error'
+      });
+
       return true;
     }
 
@@ -218,8 +237,15 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.fragmentFile?.setErrors(errors.fragment.map(error => ({ ...error, type: 'error' } as FileError)));
 
     this.hasCompilationError = true;
-    this.compilationStatusShown = true;
-    this.hideCompilationStatus$.next(true);
+    // this.compilationStatusShown = true;
+    // this.hideCompilationStatus$.next(true);
+
+    this.snackBar.openFromComponent(CompilationErrorToastToastComponent, {
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      duration: 2000,
+      panelClass: 'snack-bar-item-error'
+    });
   }
 
   handleProgramCompilationSuccess(): void {
@@ -227,8 +253,15 @@ export class TaskComponent implements OnChanges, OnDestroy {
     this.fragmentFile?.setErrors([]);
 
     this.hasCompilationError = false;
-    this.compilationStatusShown = true;
-    this.hideCompilationStatus$.next(true);
+    // this.compilationStatusShown = true;
+    // this.hideCompilationStatus$.next(true);
+
+    this.snackBar.openFromComponent(CompilationSuccessToastComponent, {
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      duration: 2000,
+      panelClass: 'snack-bar-item-success'
+    });
   }
 
   hasHints(): boolean {

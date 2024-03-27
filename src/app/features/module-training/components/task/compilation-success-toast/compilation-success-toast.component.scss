@@ -1,0 +1,34 @@
+@import 'common.scss';
+
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: $white;
+    box-sizing: border-box;
+    padding: toRem(12) toRem(16) toRem(14) toRem(16);
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.status-ico {
+    margin-right: toRem(12);
+}
+
+.message {
+    margin-right: toRem(28);
+
+    .p3 {
+        line-height: toRem(24);
+        color: $green-secondary;
+    }
+}
+
+.check-circle-ico {
+    background-color: $green-secondary;
+}

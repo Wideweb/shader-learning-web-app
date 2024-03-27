@@ -19,6 +19,8 @@ import { TaskGuard } from "./guards/task.guard";
 import { ModuleFinishedGuard } from "./guards/module-fnished.guard";
 import { ModuleResovler } from "./guards/module.resolver";
 import { TaskAnswerComponent } from "./components/task/answer/answer.component";
+import { CompilationErrorToastToastComponent } from "./components/task/compilation-error-toast/compilation-error-toast.component";
+import { CompilationSuccessToastComponent } from "./components/task/compilation-success-toast/compilation-success-toast.component";
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { TaskAnswerComponent } from "./components/task/answer/answer.component";
     TaskChannelComponent,
     FeedbackComponent,
     LikeDialogComponent,
+    CompilationErrorToastToastComponent,
+    CompilationSuccessToastComponent
   ],
   imports: [
     AppCommonModule.forChild(),
